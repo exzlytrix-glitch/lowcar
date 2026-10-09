@@ -7,7 +7,7 @@ extends Node
 const POLICE_MODEL: String = "res://assets/models/vehicles/police_cruiser/police_cruiser.glb"
 const PLAYER_MODEL: String = "res://scenes/vehicles/red_muscle_car.tscn"
 const RATE: float = 60.0
-const MODE_NAMES: PackedStringArray = ["route", "direct", "brain", "windup", "ram", "slam", "pit", "brake", "recover"]
+const MODE_NAMES: PackedStringArray = ["route", "direct", "brain", "windup", "ram", "slam", "pit", "brake", "recover", "charge"]
 
 
 class Track:

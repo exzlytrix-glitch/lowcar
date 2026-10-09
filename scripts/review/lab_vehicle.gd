@@ -11,12 +11,12 @@ const WALL_DAMAGE_MAX: float = 40.0
 
 ## Car-to-car crashes: speed changes are shared by weight (cartoon-exaggerated), off-centre hits spin
 ## the car that was hit, and big hits leave it staggered (loose grip, weak steering) for a moment.
-const CRASH_PUSH: float = 1.5
+const CRASH_PUSH: float = 1.2
 const SPIN_GAIN: float = 0.35
 const SPIN_DECAY: float = 2.5
 const BOOST_MASS: float = 3.0
 const CAR_DAMAGE_PER_HIT: float = 0.35
-const CAR_DAMAGE_MAX: float = 10.0
+const CAR_DAMAGE_MAX: float = 6.0
 ## Nudges below this closing speed push but do no damage.
 const CAR_DAMAGE_THRESHOLD: float = 3.0
 ## Two cars that just hit cannot hit again for this long (scraping does not stack hits).

@@ -7,7 +7,9 @@ extends Node
 ## Attacks: a cop close to you asks the chase for an attack slot, shows a "!" while it winds up,
 ## then commits to the move for a moment without dodging anything (that is where cops end up in
 ## each other) and swings wide to recover. Moves: rear ram, side slam, PIT (clip the rear corner
-## to spin you), brake check (get ahead in your lane and stand on the brakes).
+## to spin you), brake check (get ahead in your lane and stand on the brakes), and charge (any cop
+## facing you floors it into you; against a slow or stopped car every nearby cop does, backing up
+## and charging again, because stopping should be deadly).
 
 const SIGHT_RANGE: float = 70.0
 const TAIL_GAP: float = 10.0
@@ -33,6 +35,9 @@ var _last_steer: float = 0.0
 
 enum Phase { NONE, WINDUP, COMMIT, RECOVER }
 const ATTACK_RANGE: float = 32.0
+## Below this speed (m/s) you count as stopped: no attack-slot limit, quick repeat charges.
+const STOPPED_SPEED: float = 4.0
+const SLOW_SPEED: float = 8.0
 ## True while ramming: the chase lets the cop exceed its normal top speed.
 var burst: bool = false
 var phase: Phase = Phase.NONE
@@ -85,10 +90,19 @@ func _physics_process(delta: float) -> void:
 	var target_velocity: Vector2 = _flat(target.velocity)
 	var aim: Vector2
 	var desired: float
+	if phase == Phase.RECOVER and target_velocity.length() < SLOW_SPEED and distance < 16.0:
+		# Back straight up for a run-up, then charge the stopped car again.
+		car.set_driver_command(-1.0, 0.0, false)
+		return
 	if phase == Phase.WINDUP or phase == Phase.COMMIT:
 		var plan: Array = _attack_plan(here, goal, target_velocity)
 		aim = plan[0]
 		desired = plan[1]
+	elif _sees_target and target_velocity.length() < SLOW_SPEED:
+		# You are slow or stopped: close in hard instead of matching your speed.
+		mode = "direct"
+		aim = goal
+		desired = car.tuning.maximum_speed_mps
 	elif _sees_target:
 		mode = "direct"
 		if distance < TAIL_GAP * 2.0:
@@ -124,7 +138,10 @@ func _update_attack(delta: float, distance: float) -> void:
 	if not _sees_target or _cooldown > 0.0 or distance > ATTACK_RANGE:
 		return
 	var kind: String = _choose_attack()
-	if kind.is_empty() or not chase.claim_attack(self):
+	if kind.is_empty():
+		return
+	var stopped: bool = _flat(target.velocity).length() < STOPPED_SPEED
+	if not chase.claim_attack(self, stopped):
 		return
 	attack = kind
 	phase = Phase.WINDUP
@@ -139,7 +156,7 @@ func _next_phase() -> void:
 			phase = Phase.COMMIT
 			_phase_left = chase.commit_time()
 			mode = attack
-			burst = attack == "ram"
+			burst = attack == "ram" or (attack == "charge" and _flat(target.velocity).length() < SLOW_SPEED)
 			_warning.visible = false
 		Phase.COMMIT:
 			_end_attack()
@@ -154,7 +171,7 @@ func _end_attack() -> void:
 	mode = "recover"
 	burst = false
 	_warning.visible = false
-	_cooldown = chase.attack_cooldown()
+	_cooldown = 1.0 if _flat(target.velocity).length() < SLOW_SPEED else chase.attack_cooldown()
 	chase.release_attack(self)
 
 
@@ -170,8 +187,15 @@ func _choose_attack() -> String:
 	var offset: Vector2 = _flat(car.global_position) - _flat(target.global_position)
 	var along: float = offset.dot(t_forward)
 	var lateral: float = offset.dot(t_right)
-	var aligned: float = _flat(-car.global_basis.z).normalized().dot(t_forward)
+	var cop_forward: Vector2 = _flat(-car.global_basis.z).normalized()
+	var aligned: float = cop_forward.dot(t_forward)
+	var facing: float = cop_forward.dot(-offset.normalized())
 	_side = 1.0 if lateral >= 0.0 else -1.0
+	# Pointed at you and close: charge. Any direction on a slow car; on a moving car only from the
+	# side (a T-bone), never head-on into your nose at combined top speeds.
+	if facing > 0.8 and offset.length() < 30.0:
+		if _flat(target.velocity).length() < SLOW_SPEED or absf(aligned) < 0.5:
+			return "charge"
 	if aligned < 0.5:
 		return ""
 	if along < -4.0 and along > -28.0 and absf(lateral) < 3.0:
@@ -202,6 +226,10 @@ func _attack_plan(here: Vector2, goal: Vector2, target_velocity: Vector2) -> Arr
 			if winding:
 				return [goal - t_forward * 3.5 + t_right * _side * 2.5, speed + 1.0]
 			return [goal - t_forward * 1.8 - t_right * _side * 2.5, speed + 6.0]
+		"charge":
+			if winding:
+				return [goal, 6.0]
+			return [goal + target_velocity * 0.2, car.tuning.maximum_speed_mps]
 		"brake":
 			var ahead: float = (here - goal).dot(t_forward)
 			if winding:

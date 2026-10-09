@@ -112,11 +112,12 @@ func attack_cooldown() -> float:
 	return lerpf(4.5, 2.0, clampf(minute() / 12.0, 0.0, 1.0)) * randf_range(0.8, 1.2)
 
 
-func claim_attack(driver: Node) -> bool:
+## A slot to attack; against a stopped car every cop gets one.
+func claim_attack(driver: Node, target_stopped: bool = false) -> bool:
 	for key: Variant in _attackers.keys():
 		if not is_instance_valid(key):
 			_attackers.erase(key)
-	if _attackers.size() >= attack_slots():
+	if _attackers.size() >= attack_slots() and not target_stopped:
 		return false
 	_attackers[driver] = true
 	return true
