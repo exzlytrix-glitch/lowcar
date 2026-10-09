@@ -329,7 +329,7 @@ func bursting(cop: LabVehicle) -> bool:
 	if driver is LabCopDriver:
 		return (driver as LabCopDriver).burst
 	if driver is ChaseBrainDriver:
-		return (driver as ChaseBrainDriver).burst.active()
+		return (driver as ChaseBrainDriver).agent.burst.active()
 	return false
 
 

@@ -5,11 +5,13 @@ extends Node3D
 ##
 ## Args after "--": --port=N --matches=6 --seed=1 --repeat=6 --city-steps=3000 --radius=450
 ## --selftest=STEPS drives every slot with simple scripted driving (no Python) and prints a report.
+## --eval=STEPS does the same with trained brains driving exactly as in the game (their best guess, no
+## randomness): --cop-brain=PATH --runner-brain=PATH, default resources/ai/chase_*_brain.json.
 ##
 ## Wire format (little endian): on connect one JSON line describing the sizes. Then per decision Godot
-## sends int32 byte count + float32[obs S*O, priv S*P, parts S*C, flags S*3 (done, active, truncated),
-## stats T] for S = matches * 6 slots (slot 0 of each match is the runner), and Python answers with
-## float32[S*4] actions.
+## sends int32 byte count + float32[obs S*O, priv S*P, parts S*C, flags S*4 (done, active, truncated,
+## navigation choice used), stats T] for S = matches * 6 slots (slot 0 of each match is the runner), and
+## Python answers with float32[S*5] actions in ChaseAgent's wire order.
 
 var port: int = 0
 var matches: int = 6
@@ -18,6 +20,10 @@ var repeat: int = 6
 var city_steps: int = 3000
 var radius: float = 450.0
 var selftest: int = 0
+var cop_brain_path: String = "res://resources/ai/chase_cop_brain.json"
+var runner_brain_path: String = "res://resources/ai/chase_runner_brain.json"
+var _cop_net: PolicyNet
+var _runner_net: PolicyNet
 var _peer: StreamPeerTCP
 var _rng := RandomNumberGenerator.new()
 var _city: CityBuilder
@@ -49,6 +55,20 @@ func _ready() -> void:
 				radius = float(value)
 			"--selftest":
 				selftest = int(value)
+			"--eval":
+				selftest = int(value)
+				_cop_net = PolicyNet.new()
+			"--cop-brain":
+				cop_brain_path = value
+			"--runner-brain":
+				runner_brain_path = value
+	if _cop_net != null:
+		_cop_net = PolicyNet.load_file(cop_brain_path)
+		_runner_net = PolicyNet.load_file(runner_brain_path)
+		if _cop_net == null or _runner_net == null:
+			printerr("CHASE_ARENA cannot load brains %s / %s" % [cop_brain_path, runner_brain_path])
+			get_tree().quit(1)
+			return
 	_rng.seed = seed_value
 	var built: int = Time.get_ticks_msec()
 	_build_city()
@@ -80,7 +100,10 @@ func _physics_process(_delta: float) -> void:
 	_decisions += 1
 	if selftest > 0:
 		for index: int in matches:
-			_matches[index].autopilot(_actions, index * ChaseMatch.SLOTS * ChaseSenses.ACT_DIM)
+			if _cop_net != null:
+				_brain_actions(_matches[index], index * ChaseMatch.SLOTS * ChaseSenses.ACT_DIM)
+			else:
+				_matches[index].autopilot(_actions, index * ChaseMatch.SLOTS * ChaseSenses.ACT_DIM)
 		if _decisions >= selftest:
 			_report_selftest()
 			get_tree().quit()
@@ -127,6 +150,17 @@ func _collect(dt: float) -> PackedFloat32Array:
 	return packet
 
 
+func _brain_actions(chase: ChaseMatch, base: int) -> void:
+	for slot: int in ChaseMatch.SLOTS:
+		if not chase.active[slot]:
+			continue
+		var at: int = slot * ChaseSenses.OBS_DIM
+		var net: PolicyNet = _runner_net if slot == 0 else _cop_net
+		var action: PackedFloat32Array = net.decide(chase.obs.slice(at, at + ChaseSenses.OBS_DIM), _rng)
+		for k: int in ChaseSenses.ACT_DIM:
+			_actions[base + slot * ChaseSenses.ACT_DIM + k] = action[k]
+
+
 static func _put(packet: PackedFloat32Array, at: int, values: PackedFloat32Array) -> void:
 	for k: int in values.size():
 		packet[at + k] = values[k]
@@ -154,8 +188,7 @@ func _new_city() -> void:
 	old.queue_free()
 	_build_city()
 	for chase: ChaseMatch in _matches:
-		chase.nav = _nav
-		chase.abort = true
+		chase.set_nav(_nav)
 
 
 func _connect() -> bool:
@@ -208,3 +241,10 @@ func _report_selftest() -> void:
 	print("CHASE_SELFTEST runner damage/min: total=%.1f from_cops=%.1f walls=%.1f damaging_hits=%d | cop wall dmg/cop-min=%.1f cop_wrecks=%d cop_on_cop=%.1f cop_kmh=%.0f" % [
 		t[3] / runner_minutes, t[4] / runner_minutes, t[5] / runner_minutes, t[15], t[6] / cop_minutes, t[7], t[8],
 		t[14] / maxf(t[11], 1.0) * 3.6])
+	var runner_decisions: float = maxf(t[10], 1.0)
+	var cop_decisions: float = maxf(t[11], 1.0)
+	print("CHASE_SELFTEST abilities: cop bursts/cop-min=%.2f (landed a hit: %d) | runner boosts/min=%.2f (charging %.0f%% of the time, boost rams %d)" % [
+		t[16] / cop_minutes, t[24], t[17] / runner_minutes, t[18] / runner_decisions * 100.0, t[25]])
+	print("CHASE_SELFTEST controls: drifting cops %.1f%% runner %.1f%% | handbrake cops %.1f%% runner %.1f%% | cops reversing %.1f%%" % [
+		t[19] / cop_decisions * 100.0, t[20] / runner_decisions * 100.0, t[21] / cop_decisions * 100.0,
+		t[22] / runner_decisions * 100.0, t[23] / cop_decisions * 100.0])

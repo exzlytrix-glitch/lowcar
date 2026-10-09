@@ -39,7 +39,7 @@ from collections import deque
 import numpy as np
 import torch
 import torch.nn as nn
-from torch.distributions.normal import Normal
+from torch.distributions import Bernoulli, Categorical, Normal
 
 from chase_env import ChaseWorlds
 
@@ -61,8 +61,20 @@ RUNNER_STYLES = {
     "speedy": {5: 0.002},                 # rewarded for keeping its speed up, like the real game
     "careful": {1: -0.08, 6: -0.03},      # hates every scratch
 }
-ACTION_NAMES = {"cop": ["steer", "throttle", "handbrake", "burst"],
-                "runner": ["steer", "throttle", "handbrake", "boost"]}
+# Brain outputs per side, in the order the game reads them (scripts/ai/chase_agent.gd):
+# smooth controls (gauss), on/off (bern) and pick-one (cat). The last pick is the navigation choice,
+# which only counts on decisions where the car is choosing (flag 3 from the arena).
+HEADS = {
+    "cop": [("gauss", 2), ("bern", 2), ("cat", 5)],               # steer, throttle | handbrake, burst | route
+    "runner": [("gauss", 2), ("bern", 1), ("cat", 5), ("cat", 5)],  # steer, throttle | handbrake | boost | route
+}
+ACTION_NAMES = {"cop": ["steer", "throttle", "handbrake", "burst", "route"],
+                "runner": ["steer", "throttle", "handbrake", "boost", "route"]}
+COP_ROUTES = ["chase", "ahead", "far", "left", "right"]
+RUNNER_ROUTES = ["gps", "straight", "left", "right", "back"]
+# Starting odds for new outputs: route option 0 (chase / GPS) about 75% of the time, the rest explored
+# (and boost "none" likewise), so carried-over brains keep driving well while they try the new choices.
+ROUTE_PRIOR = 2.5
 
 
 def parse_args():
@@ -83,7 +95,10 @@ def parse_args():
     p.add_argument("--gamma", type=float, default=0.99)
     p.add_argument("--gae-lambda", type=float, default=0.95)
     p.add_argument("--clip", type=float, default=0.2)
-    p.add_argument("--ent", type=float, default=0.001)
+    p.add_argument("--ent", type=float, default=0.0, help="exploration bonus for steering and throttle")
+    p.add_argument("--ent-discrete", type=float, default=0.005,
+                   help="exploration bonus for on/off and pick outputs (route, boost, burst, handbrake), so the "
+                        "route choice does not collapse to 'chase directly' before cut-offs are discovered")
     p.add_argument("--vf", type=float, default=0.5)
     p.add_argument("--max-grad", type=float, default=0.5)
     p.add_argument("--actor-hidden", type=int, default=128)
@@ -98,6 +113,10 @@ def parse_args():
                    help="cop decisions over which the closing-in hint fades to zero")
     p.add_argument("--save-minutes", type=float, default=10.0)
     p.add_argument("--resume", default="")
+    p.add_argument("--route-prior", type=float, default=ROUTE_PRIOR,
+                   help="starting preference for route option 0 and no boost in new or carried-over brains")
+    p.add_argument("--export-only", action="store_true",
+                   help="just write the game brains from --resume (carried over to the current format) and stop")
     p.add_argument("--init", default="", help="driving-school brain (cop_brain.json or checkpoint.pt) to start both from")
     p.add_argument("--critic-warmup", type=int, default=6, help="updates that train only critics after --init")
     p.add_argument("--league-in", default="", help="folder of snapshots from earlier rounds / other lines")
@@ -113,19 +132,69 @@ def layer_init(layer, std=np.sqrt(2), bias=0.0):
 
 
 class Actor(nn.Module):
-    def __init__(self, obs_dim, act_dim, hidden):
+    """The in-game brain: observations in, one value per output head out (see HEADS)."""
+
+    def __init__(self, obs_dim, heads, hidden):
         super().__init__()
+        self.heads = [tuple(h) for h in heads]
+        self.n_gauss = sum(size for kind, size in self.heads if kind == "gauss")
+        width = sum(size for _, size in self.heads)
         self.net = nn.Sequential(
             layer_init(nn.Linear(obs_dim, hidden)), nn.Tanh(),
             layer_init(nn.Linear(hidden, hidden)), nn.Tanh(),
-            layer_init(nn.Linear(hidden, act_dim), std=0.01))
-        self.logstd = nn.Parameter(torch.full((1, act_dim), -0.5))
+            layer_init(nn.Linear(hidden, width), std=0.01))
+        self.logstd = nn.Parameter(torch.full((1, self.n_gauss), -0.5))
+        self.last_cat = max(i for i, (kind, _) in enumerate(self.heads) if kind == "cat")
         with torch.no_grad():
-            self.net[4].bias[3] = -1.0  # burst / boost starts mostly off
+            at = 0
+            for i, (kind, size) in enumerate(self.heads):
+                if kind == "bern":
+                    self.net[4].bias[at:at + size] = -1.5  # handbrake / burst start mostly off
+                elif kind == "cat":
+                    self.net[4].bias[at] = ROUTE_PRIOR  # boost "none" / route option 0 start most likely
+                at += size
 
-    def dist(self, x):
-        mean = self.net(x)
-        return Normal(mean, torch.exp(self.logstd.expand_as(mean)))
+    def evaluate(self, x, actions=None, nav_mask=None):
+        """Samples actions (actions=None) or scores given ones. Returns (actions in game order, log-prob,
+        (smooth entropy, on/off + pick entropy)); the navigation pick only counts where nav_mask is 1."""
+        raw = self.net(x)
+        outs, logp, smooth, discrete = [], 0.0, 0.0, 0.0
+        at, col = 0, 0
+        for i, (kind, size) in enumerate(self.heads):
+            part = raw[:, at:at + size]
+            at += size
+            if kind == "gauss":
+                dist = Normal(part, torch.exp(self.logstd.expand_as(part)))
+                act = dist.sample() if actions is None else actions[:, col:col + size]
+                lp, ent = dist.log_prob(act).sum(1), dist.entropy().sum(1)
+                col += size
+            elif kind == "bern":
+                dist = Bernoulli(logits=part)
+                act = dist.sample() if actions is None else actions[:, col:col + size]
+                lp, ent = dist.log_prob(act).sum(1), dist.entropy().sum(1)
+                col += size
+            else:
+                dist = Categorical(logits=part)
+                pick = dist.sample() if actions is None else actions[:, col].long()
+                lp, ent = dist.log_prob(pick), dist.entropy()
+                act = pick.float().unsqueeze(1)
+                col += 1
+                if i == self.last_cat and nav_mask is not None:
+                    lp, ent = lp * nav_mask, ent * nav_mask
+            outs.append(act)
+            logp = logp + lp
+            if kind == "gauss":
+                smooth = smooth + ent
+            else:
+                discrete = discrete + ent
+        return torch.cat(outs, 1), logp, (smooth, discrete)
+
+
+def to_game(actions, n_gauss):
+    """Smooth controls are clipped to -1..1; on/off and picks go as they are."""
+    out = np.array(actions, np.float32)
+    out[:, :n_gauss] = np.clip(out[:, :n_gauss], -1.0, 1.0)
+    return out
 
 
 class Critic(nn.Module):
@@ -174,7 +243,7 @@ class Learner:
 
     def __init__(self, role, obs_dim, priv_dim, act_dim, args):
         self.role, self.obs_dim, self.priv_dim, self.act_dim = role, obs_dim, priv_dim, act_dim
-        self.actor = Actor(obs_dim, act_dim, args.actor_hidden)
+        self.actor = Actor(obs_dim, HEADS[role], args.actor_hidden)
         self.critic = Critic(obs_dim + priv_dim, args.critic_hidden)
         self.optimizer = torch.optim.Adam(list(self.actor.parameters()) + list(self.critic.parameters()),
                                           lr=args.lr, eps=1e-5)
@@ -194,16 +263,37 @@ class Learner:
                 "priv_rms": self.priv_rms.state(), "ret_rms": self.ret_rms.state(), "steps": self.steps}
 
     def load(self, state):
-        self.actor.load_state_dict(state["actor"])
-        self.critic.load_state_dict(state["critic"])
-        self.optimizer.load_state_dict(state["optimizer"])
-        self.obs_rms.load(state["obs_rms"])
+        """Loads a checkpoint; one from before the current senses/outputs is carried over (upgrade())."""
+        old_obs = state["actor"]["net.0.weight"].shape[1]
+        if old_obs == self.obs_dim and "logstd" in state["actor"] and \
+                state["actor"]["net.4.weight"].shape[0] == self.actor.net[4].out_features:
+            self.actor.load_state_dict(state["actor"])
+            self.critic.load_state_dict(state["critic"])
+            self.optimizer.load_state_dict(state["optimizer"])
+            self.obs_rms.load(state["obs_rms"])
+        else:
+            transplant(self.actor, state["actor"], self.role)
+            critic = state["critic"]
+            with torch.no_grad():
+                for key, value in critic.items():
+                    target = dict(self.critic.named_parameters())[key]
+                    if key == "net.0.weight":
+                        target.zero_()
+                        target[:, :old_obs] = value[:, :old_obs]
+                        target[:, self.obs_dim:] = value[:, old_obs:]
+                    else:
+                        target.copy_(value)
+            self.obs_rms.load(state["obs_rms"])
+            self.obs_rms.mean = np.concatenate([self.obs_rms.mean, np.zeros(self.obs_dim - old_obs)])
+            self.obs_rms.var = np.concatenate([self.obs_rms.var, np.ones(self.obs_dim - old_obs)])
+            print(f"{self.role}: carried over a brain with {old_obs} senses into {self.obs_dim} senses and new outputs")
         self.priv_rms.load(state["priv_rms"])
         self.ret_rms.load(state["ret_rms"])
         self.steps = state["steps"]
 
     def snapshot_data(self, name):
         return {"role": self.role, "name": name, "obs_dim": self.obs_dim, "act_dim": self.act_dim,
+                "heads": HEADS[self.role],
                 "hidden": self.actor.net[0].out_features, "actor": copy.deepcopy(self.actor.state_dict()),
                 "obs_mean": self.obs_rms.mean.copy(), "obs_var": self.obs_rms.var.copy(), "steps": self.steps}
 
@@ -211,13 +301,20 @@ class Learner:
 class Snapshot:
     """A frozen past version of one side, used as an opponent."""
 
-    def __init__(self, data, imported=False):
+    def __init__(self, data, obs_dim, imported=False):
         self.role, self.name, self.imported = data["role"], data["name"], imported
-        self.actor = Actor(data["obs_dim"], data["act_dim"], data["hidden"])
-        self.actor.load_state_dict(data["actor"])
+        self.actor = Actor(obs_dim, HEADS[self.role], data["hidden"])
+        mean, var = np.asarray(data["obs_mean"]), np.asarray(data["obs_var"])
+        heads = [tuple(h) for h in data.get("heads", [])]
+        if data["obs_dim"] == obs_dim and heads == list(HEADS[self.role]):
+            self.actor.load_state_dict(data["actor"])
+        else:
+            transplant(self.actor, data["actor"], self.role)
+            mean = np.concatenate([mean, np.zeros(obs_dim - len(mean))])
+            var = np.concatenate([var, np.ones(obs_dim - len(var))])
         self.actor.eval()
-        self.rms = RunningMeanStd((data["obs_dim"],))
-        self.rms.mean, self.rms.var = np.asarray(data["obs_mean"]), np.asarray(data["obs_var"])
+        self.rms = RunningMeanStd((obs_dim,))
+        self.rms.mean, self.rms.var = mean, var
         self.data = data
         self.uid = -1
         self.learner_win = 0.5  # how often the current learner beats this version (moving average)
@@ -225,41 +322,77 @@ class Snapshot:
 
     @torch.no_grad()
     def act(self, raw_obs):
-        return self.actor.dist(torch.from_numpy(self.rms.normalize(raw_obs))).sample().numpy()
+        return self.actor.evaluate(torch.from_numpy(self.rms.normalize(raw_obs)))[0].numpy()
+
+
+def transplant(actor, old, role):
+    """Carries an older brain into the current shape so nothing it learned is lost: its senses keep their
+    weights (new senses start at zero influence), wider layers get new units that start silent, its
+    steering and throttle carry over, its old "above zero means on" outputs become on/off odds that
+    match (a Gaussian with mean m and spread s is on with odds about sigmoid(1.7 m / s)), and new
+    choices start at their default (no boost, route option 0 about half the time).
+    `old` is an actor state dict (keys net.0.weight ... logstd) or a list of (w, b) layers."""
+    if isinstance(old, dict):
+        layers = [(old[f"net.{k}.weight"].detach().numpy(), old[f"net.{k}.bias"].detach().numpy()) for k in (0, 2, 4)]
+        logstd = old["logstd"].detach().numpy().reshape(-1) if "logstd" in old else None
+    else:
+        layers, logstd = old, None
+    (w0, b0), (w1, b1), (w2, b2) = layers
+    hidden, old_in = w0.shape
+    spread = np.exp(logstd) if logstd is not None else np.full(w2.shape[0], 0.6)
+    net = actor.net
+    with torch.no_grad():
+        net[0].weight[hidden:, :].mul_(0.5)
+        net[0].weight[:hidden, :] = 0.0
+        net[0].weight[:hidden, :old_in] = torch.from_numpy(w0)
+        net[0].bias[:hidden] = torch.from_numpy(b0)
+        net[2].weight[hidden:, :].mul_(0.5)
+        net[2].weight[:hidden, :] = 0.0
+        net[2].weight[:hidden, :hidden] = torch.from_numpy(w1)
+        net[2].bias[:hidden] = torch.from_numpy(b1)
+        weight, bias = net[4].weight, net[4].bias
+        weight.zero_()
+        bias.zero_()
+
+        def put(row, source, scale=1.0, shift=0.0):
+            weight[row, :hidden] = torch.from_numpy(w2[source] * scale)
+            bias[row] = float(b2[source] * scale + shift)
+
+        put(0, 0)
+        put(1, 1)
+        put(2, 2, 1.7 / spread[2])
+        has_special = w2.shape[0] > 3
+        if role == "cop":
+            if has_special:
+                put(3, 3, 1.7 / spread[3])
+            else:
+                bias[3] = -1.5
+            bias[4] = ROUTE_PRIOR
+        else:
+            bias[3] = ROUTE_PRIOR
+            for row in range(4, 8):
+                if has_special:
+                    put(row, 3, 1.7 / spread[3], -np.log(4.0))
+                else:
+                    bias[row] = -1.5
+            bias[8] = ROUTE_PRIOR
+        actor.logstd[0, :] = torch.from_numpy(logstd[:2]) if logstd is not None else -1.0
 
 
 def warm_start(learner, path):
-    """Starts a side from the driving-school brain: its 61 inputs and 3 controls keep their weights and
-    the network is widened so it behaves exactly like the school driver at first (new inputs, units
-    and the burst/boost control start at zero influence)."""
+    """Starts a side from the driving-school brain (cop_brain.json or its checkpoint.pt)."""
     if path.endswith(".json"):
         with open(path) as handle:
             data = json.load(handle)
         layers = [(np.array(l["w"], np.float32), np.array(l["b"], np.float32)) for l in data["layers"]]
-        mean, std = np.array(data["obs_mean"]), np.array(data["obs_std"])
-        var = std ** 2
+        mean, var = np.array(data["obs_mean"]), np.array(data["obs_std"]) ** 2
     else:
         state = torch.load(path, weights_only=False)
         brain = state["brain"]
         layers = [(brain[f"actor_mean.{k}.weight"].numpy(), brain[f"actor_mean.{k}.bias"].numpy()) for k in (0, 2, 4)]
         mean, var = np.array(state["obs_rms"]["mean"]), np.array(state["obs_rms"]["var"])
+    transplant(learner.actor, layers, learner.role)
     old_in = layers[0][0].shape[1]
-    net = learner.actor.net
-    with torch.no_grad():
-        for index, linear in enumerate([net[0], net[2], net[4]]):
-            w, b = layers[index]
-            rows, cols = w.shape
-            if index < 2:
-                linear.weight[rows:, :].mul_(0.5)  # new units: small random weights
-            else:
-                linear.weight.zero_()  # outputs listen only to the school units at first
-                linear.bias.zero_()
-                linear.bias[3] = -1.0
-            linear.weight[:rows, :] = 0.0
-            linear.weight[:rows, :cols] = torch.from_numpy(w)
-            linear.bias[:rows] = torch.from_numpy(b)
-        learner.actor.logstd[:] = -1.0
-        learner.actor.logstd[0, 3] = -0.5
     learner.obs_rms.mean[:old_in] = mean
     learner.obs_rms.var[:old_in] = var
     learner.obs_rms.count = 1e4
@@ -277,7 +410,8 @@ def export_brain(path, learner, meta):
                  "steps": learner.steps,
                  "obs_mean": learner.obs_rms.mean.astype(float).round(6).tolist(),
                  "obs_std": np.sqrt(learner.obs_rms.var + 1e-8).astype(float).round(6).tolist(),
-                 "obs_clip": 10.0, "layers": layers, "action_names": ACTION_NAMES[learner.role]})
+                 "obs_clip": 10.0, "layers": layers, "action_names": ACTION_NAMES[learner.role],
+                 "heads": [{"kind": kind, "size": size} for kind, size in HEADS[learner.role]]})
     with open(path + ".tmp", "w") as handle:
         json.dump(data, handle)
     os.replace(path + ".tmp", path)
@@ -333,15 +467,20 @@ class League:
 
 
 def main():
+    global ROUTE_PRIOR
     args = parse_args()
+    ROUTE_PRIOR = args.route_prior
     budget = args.hours * 3600 + args.minutes * 60
-    if budget <= 0:
+    if budget <= 0 and not args.export_only:
         raise SystemExit("give --hours or --minutes")
     os.makedirs(os.path.join(args.out, "league"), exist_ok=True)
     torch.set_num_threads(args.threads)
     torch.manual_seed(args.seed)
     rng = np.random.default_rng(args.seed)
     started = time.time()
+    if args.export_only:
+        export_only(args)
+        return
 
     env = ChaseWorlds(args.godot, args.project, procs=args.procs, matches=args.matches, seed=args.seed,
                       city_steps=args.city_steps, radius=args.radius, log_dir=os.path.join(args.out, "logs"))
@@ -371,8 +510,9 @@ def main():
             except Exception as error:  # a damaged file should not stop training
                 print(f"skipping snapshot {path}: {error}")
                 continue
-            if data["obs_dim"] == dims[data["role"]]:
-                league.add(Snapshot(data, imported=not path.startswith(os.path.join(args.out, "league"))))
+            if data["obs_dim"] <= dims[data["role"]]:
+                league.add(Snapshot(data, dims[data["role"]],
+                                    imported=not path.startswith(os.path.join(args.out, "league"))))
     print(f"league: {len(league.pool['cop'])} past cop versions, {len(league.pool['runner'])} past runners")
 
     T, gamma, lam = args.steps, args.gamma, args.gae_lambda
@@ -380,7 +520,8 @@ def main():
     for role in ROLES:
         n, d = len(slots[role]), dims[role]
         bufs[role] = {"obs": torch.zeros((T, n, d)), "priv": torch.zeros((T, n, env.priv_dim)),
-                      "act": torch.zeros((T, n, A)), "logp": torch.zeros((T, n)), "val": torch.zeros((T, n)),
+                      "act": torch.zeros((T, n, A)), "nav": torch.zeros((T, n)),
+                      "logp": torch.zeros((T, n)), "val": torch.zeros((T, n)),
                       "rew": torch.zeros((T, n)), "done": torch.zeros((T, n)), "valid": torch.zeros((T, n))}
 
     raw_obs, raw_priv, _, flags, _ = env.reset()
@@ -393,7 +534,18 @@ def main():
     columns = ["hours", "updates", "cop_steps", "runner_steps", "sps", "kill_rate", "kill_vs_past", "survive_vs_past",
                "match_s", "runner_kmh", "runner_dmg_cops_min", "runner_dmg_walls_min", "cop_kmh", "cop_wall_dmg_min",
                "cop_wrecks_min", "cop_on_cop_min", "cops_per_chase", "known_pct", "cop_return", "runner_return",
-               "approach_hint"]
+               "approach_hint", "cop_bursts_min", "burst_hits", "runner_boosts_min", "runner_charging_pct",
+               "boost_rams", "cop_drift_pct", "runner_drift_pct", "cop_handbrake_pct", "runner_handbrake_pct",
+               "cop_reverse_pct"] + [f"cop_route_{name}" for name in COP_ROUTES] + \
+              [f"runner_route_{name}" for name in RUNNER_ROUTES]
+    if os.path.exists(csv_path):
+        with open(csv_path, newline="") as handle:
+            old_rows = list(csv.DictReader(handle))
+        if old_rows and list(old_rows[0].keys()) != columns:
+            with open(csv_path, "w", newline="") as handle:  # an older line's log: rewrite with the new columns
+                rewriter = csv.DictWriter(handle, columns, extrasaction="ignore")
+                rewriter.writeheader()
+                rewriter.writerows(old_rows)
     new_csv = not os.path.exists(csv_path)
     csv_file = open(csv_path, "a", newline="")
     writer = csv.writer(csv_file)
@@ -427,7 +579,7 @@ def main():
             name = f"{role}_line{args.line}_u{updates}"
             data = learners[role].snapshot_data(name)
             torch.save(data, os.path.join(args.out, "league", name + ".pt"))
-            league.add(Snapshot(data))
+            league.add(Snapshot(data, dims[role]))
         own = sorted(glob.glob(os.path.join(args.out, "league", "*.pt")), key=os.path.getmtime)
         for path in own[:-24]:
             os.remove(path)
@@ -449,18 +601,18 @@ def main():
                     valid = active[idx] & (ctrl == League.CURRENT)
                     o_n = torch.from_numpy(learner.obs_rms.normalize(o_raw))
                     p_n = torch.from_numpy(learner.priv_rms.normalize(raw_priv[idx]))
+                    nav = torch.from_numpy(flags[idx, 3].astype(np.float32))
                     with torch.no_grad():
-                        dist = learner.actor.dist(o_n)
-                        act = dist.sample()
-                        b["logp"][t] = dist.log_prob(act).sum(1)
+                        act, logp, _ = learner.actor.evaluate(o_n, None, nav)
+                        b["logp"][t] = logp
                         b["val"][t] = learner.critic(learner.value_input(o_n, p_n))
-                    act_np = act.numpy()
+                    act_np = act.numpy().copy()
                     for snap_index in np.unique(ctrl[active[idx] & (ctrl != League.CURRENT)]):
                         rows = np.nonzero(active[idx] & (ctrl == snap_index))[0]
                         act_np[rows] = league.by_uid[snap_index].act(o_raw[rows])
-                    b["obs"][t], b["priv"][t], b["act"][t] = o_n, p_n, act
+                    b["obs"][t], b["priv"][t], b["act"][t], b["nav"][t] = o_n, p_n, act, nav
                     b["valid"][t] = torch.from_numpy(valid.astype(np.float32))
-                    actions[idx] = np.clip(act_np, -1.0, 1.0)
+                    actions[idx] = to_game(act_np, learner.actor.n_gauss)
                 next_obs, next_priv, parts, next_flags, stats = env.step(actions)
                 stats_sum += stats
                 done_all = next_flags[:, 0] > 0.5
@@ -549,7 +701,22 @@ def main():
                    "cops_per_chase": round(s[11] / max(s[10], 1), 2), "known_pct": round(s[12] / max(s[10], 1) * 100, 1),
                    "cop_return": round(float(np.mean(finished["cop"])), 3) if finished["cop"] else 0.0,
                    "runner_return": round(float(np.mean(finished["runner"])), 3) if finished["runner"] else 0.0,
-                   "approach_hint": round(fade, 3)}
+                   "approach_hint": round(fade, 3),
+                   "cop_bursts_min": round(s[16] / cop_min, 2), "burst_hits": int(s[24]),
+                   "runner_boosts_min": round(s[17] / runner_min, 2),
+                   "runner_charging_pct": round(s[18] / max(s[10], 1) * 100, 1), "boost_rams": int(s[25]),
+                   "cop_drift_pct": round(s[19] / max(s[11], 1) * 100, 1),
+                   "runner_drift_pct": round(s[20] / max(s[10], 1) * 100, 1),
+                   "cop_handbrake_pct": round(s[21] / max(s[11], 1) * 100, 1),
+                   "runner_handbrake_pct": round(s[22] / max(s[10], 1) * 100, 1),
+                   "cop_reverse_pct": round(s[23] / max(s[11], 1) * 100, 1)}
+            for role, names in (("cop", COP_ROUTES), ("runner", RUNNER_ROUTES)):
+                b = bufs[role]
+                chosen = (b["valid"] * b["nav"]).reshape(-1) > 0.5
+                picks = b["act"].reshape(-1, A)[chosen][:, -1].long()
+                counts = torch.bincount(picks, minlength=len(names)).float() if len(picks) else torch.zeros(len(names))
+                for k, name in enumerate(names):
+                    row[f"{role}_route_{name}"] = round(float(counts[k] / max(counts.sum(), 1.0)) * 100, 1)
             writer.writerow([row[c] for c in columns])
             csv_file.flush()
             history.append(row)
@@ -569,6 +736,21 @@ def main():
         env.close()
 
 
+# Sizes the arena reports in its hello (scripts/ai/chase_senses.gd, chase_match.gd); only used by --export-only.
+GAME_DIMS = {"cop": 154, "runner": 165}
+GAME_PRIV, GAME_ACT = 12, 5
+
+
+def export_only(args):
+    state = torch.load(args.resume, weights_only=False)
+    for role in ROLES:
+        learner = Learner(role, GAME_DIMS[role], GAME_PRIV, GAME_ACT, args)
+        learner.load(state["learners"][role])
+        export_brain(os.path.join(args.out, f"{role}_brain.json"), learner,
+                     {"line": args.line, "trained_hours": round(state.get("trained_seconds", 0.0) / 3600, 3)})
+    print(f"wrote cop_brain.json and runner_brain.json to {args.out}")
+
+
 def train_side(learner, b, args, train_actor=True):
     mask = b["valid"].reshape(-1) > 0.5
     count = int(mask.sum().item())
@@ -577,6 +759,7 @@ def train_side(learner, b, args, train_actor=True):
     d, p, a = learner.obs_dim, learner.priv_dim, learner.act_dim
     obs, priv = b["obs"].reshape(-1, d)[mask], b["priv"].reshape(-1, p)[mask]
     act, logp_old = b["act"].reshape(-1, a)[mask], b["logp"].reshape(-1)[mask]
+    nav = b["nav"].reshape(-1)[mask]
     adv_all, ret, val_old = b["adv"].reshape(-1)[mask], b["ret"].reshape(-1)[mask], b["val"].reshape(-1)[mask]
     value_in = learner.value_input(obs, priv)
     pieces = max(1, min(args.minibatches, count // 64))
@@ -587,12 +770,12 @@ def train_side(learner, b, args, train_actor=True):
             v_loss = 0.5 * torch.max((new_value - ret[idx]) ** 2, (clipped - ret[idx]) ** 2).mean()
             loss = args.vf * v_loss
             if train_actor:
-                dist = learner.actor.dist(obs[idx])
-                ratio = (dist.log_prob(act[idx]).sum(1) - logp_old[idx]).exp()
+                _, new_logp, entropy = learner.actor.evaluate(obs[idx], act[idx], nav[idx])
+                ratio = (new_logp - logp_old[idx]).exp()
                 adv = adv_all[idx]
                 adv = (adv - adv.mean()) / (adv.std() + 1e-8)
                 pg_loss = torch.max(-adv * ratio, -adv * ratio.clamp(1 - args.clip, 1 + args.clip)).mean()
-                loss = loss + pg_loss - args.ent * dist.entropy().sum(1).mean()
+                loss = loss + pg_loss - args.ent * entropy[0].mean() - args.ent_discrete * entropy[1].mean()
             learner.optimizer.zero_grad()
             loss.backward()
             nn.utils.clip_grad_norm_(list(learner.actor.parameters()) + list(learner.critic.parameters()), args.max_grad)
@@ -625,6 +808,15 @@ def write_summary(args, history, final, league):
             f"| Cops in a chase (average) | {first['cops_per_chase']} | {last['cops_per_chase']} |",
             f"| Cops know where the runner is (%) | {first['known_pct']} | {last['known_pct']} |",
             f"| Decisions per second | {first['sps']} | {last['sps']} |",
+            "",
+            "Abilities and controls (latest): "
+            f"cop bursts {last.get('cop_bursts_min', 0)}/min ({last.get('burst_hits', 0)} landed hits last update), "
+            f"runner boosts {last.get('runner_boosts_min', 0)}/min ({last.get('boost_rams', 0)} boost rams), "
+            f"drifting cops {last.get('cop_drift_pct', 0)}% / runner {last.get('runner_drift_pct', 0)}%.",
+            "",
+            "Route choices (latest, % of choices): cops " + ", ".join(
+                f"{name} {last.get('cop_route_' + name, 0)}" for name in COP_ROUTES) +
+            "; runner " + ", ".join(f"{name} {last.get('runner_route_' + name, 0)}" for name in RUNNER_ROUTES) + ".",
             "",
             f"Past versions in the league: {len(league.pool['cop'])} cop, {len(league.pool['runner'])} runner.",
             "",

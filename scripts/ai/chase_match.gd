@@ -8,7 +8,9 @@ extends RefCounted
 ## Difficulty is a chase minute drawn per match: it sets cop top speed and burst recharge as in the lab.
 ##
 ## Slot 0 is the runner, slots 1-5 the cops. Every decision each slot reports its view, raw reward
-## parts for what happened since its last action (training/train_chase.py weighs them), and flags.
+## parts for what happened since its last action (training/train_chase.py weighs them), and flags
+## (episode ended, slot active, ended by the clock not by anyone, navigation choice used this decision).
+## How each car sees and acts is ChaseAgent (shared with the game).
 ##
 ## Reward parts, cop:    0 runner damage (team)  1 runner wrecked (team)  2 metres closed on the runner
 ##                       3 own wall damage  4 own damage from car hits  5 own wreck
@@ -20,13 +22,17 @@ const SLOTS: int = 6
 const MAX_COPS: int = 5
 const COMP_DIM: int = 8
 const PRIV_DIM: int = 12
-const FLAG_DIM: int = 3
-const STATS_DIM: int = 16
+const FLAG_DIM: int = 4
+const STATS_DIM: int = 26
 ## Stats summed over the arena between decisions (for training logs):
 ## 0 matches ended  1 runner wrecked  2 runner survived  3 runner damage  4 runner damage from cop hits
 ## 5 runner wall damage  6 cop wall damage  7 cop wrecks  8 cop-on-cop damage  9 runner speed sum
 ## 10 runner decisions  11 cop decisions  12 decisions the cops knew where the runner was
 ## 13 match seconds (summed at match end)  14 cop speed sum  15 damaging cop hits on the runner
+## Abilities and controls (are they used, and do they work):
+## 16 cop bursts fired  17 runner boosts fired  18 runner decisions spent charging  19 cop decisions drifting
+## 20 runner decisions drifting  21 cop decisions on the handbrake  22 runner decisions on the handbrake
+## 23 cop decisions reversing  24 damaging cop hits made during a burst  25 damaging runner hits on cops while boosting
 const MATCH_SECONDS: float = 120.0
 const RUNNER_TUNING: String = "res://resources/vehicles/red_muscle_car.tres"
 const POLICE_TUNING: String = "res://resources/vehicles/patrol_car.tres"
@@ -38,8 +44,6 @@ const CATCH_UP_START: float = 25.0
 const CATCH_UP_FULL: float = 85.0
 const CATCH_UP_BOOST: float = 1.3
 const RECYCLE_DISTANCE: float = 420.0
-const ROUTE_REPLAN: float = 0.5
-const RUNNER_REPLAN: float = 2.0
 ## Share of chases where the runner starts from a standstill (like the start of a real run) instead of
 ## already cruising, and share of cops that spawn parked and have to pull out.
 const RUNNER_STANDING_START: float = 0.35
@@ -66,18 +70,12 @@ var priv := PackedFloat32Array()
 var parts := PackedFloat32Array()
 var flags := PackedFloat32Array()
 var stats := PackedFloat32Array()
-var _senses: Array[ChaseSenses] = []
-var _bursts: Array[CopBurst] = []
-var _routes: Array[RouteTrack] = []
-var _progress := PackedFloat32Array()
-var _replan := PackedFloat32Array()
+var agents: Array[ChaseAgent] = []
 var _respawn_wait := PackedFloat32Array()
 var _last_gap := PackedFloat32Array()
 var _pending := PackedFloat32Array()
 var _accum := PackedFloat32Array()
 var _sightings: Array[bool] = []
-var _runner_goal := Vector2.ZERO
-var _runner_boost := RunnerBoost.new()
 var _reinforce_clock: float = 0.0
 var _dt: float = 0.1
 
@@ -93,8 +91,6 @@ func setup(match_index: int, parent: Node, road_nav: RoadNav, random: RandomNumb
 	flags.resize(SLOTS * FLAG_DIM)
 	stats.resize(STATS_DIM)
 	_accum.resize(SLOTS * COMP_DIM)
-	_progress.resize(SLOTS)
-	_replan.resize(SLOTS)
 	_respawn_wait.resize(SLOTS)
 	_last_gap.resize(SLOTS)
 	_pending.resize(SLOTS)
@@ -104,19 +100,26 @@ func setup(match_index: int, parent: Node, road_nav: RoadNav, random: RandomNumb
 		car.chamfer_collider()
 		cars.append(car)
 		active.append(false)
-		var senses := ChaseSenses.new()
-		senses.setup(car, layer)
-		_senses.append(senses)
-		_bursts.append(CopBurst.new())
-		_routes.append(RouteTrack.new())
+		var agent := ChaseAgent.new()
+		agent.setup(car, slot == 0, nav, layer, rng)
+		agents.append(agent)
 		if slot == 0:
 			car.damaged.connect(_on_runner_damaged)
 			car.bumped.connect(_on_runner_bumped)
+			car.boost_released.connect(func(_power: float) -> void: stats[17] += 1.0)
 		else:
 			car.damaged.connect(_on_cop_damaged.bind(slot))
 			car.bumped.connect(_on_cop_bumped.bind(slot))
 	runner = cars[0]
 	restart()
+
+
+## The arena swapped the city.
+func set_nav(road_nav: RoadNav) -> void:
+	nav = road_nav
+	for agent: ChaseAgent in agents:
+		agent.set_nav(road_nav)
+	abort = true
 
 
 ## Starts a fresh chase: new difficulty, runner on a random road, the first cops around it.
@@ -134,11 +137,8 @@ func restart() -> void:
 	var dir: Vector2 = spot.get("dir", Vector2(0.0, -1.0))
 	_place(runner, point, dir, 0.0 if rng.randf() < RUNNER_STANDING_START else rng.randf_range(15.0, 30.0))
 	runner.health = RUNNER_HEALTH
-	_runner_boost.reset()
 	active[0] = true
-	_senses[0].reset()
-	_pick_runner_goal()
-	_replan_runner()
+	agents[0].reset()
 	intel.reset(runner)
 	for count: int in target_cops:
 		_spawn_cop(_free_slot(), count == 0 or rng.randf() < 0.3)
@@ -219,21 +219,27 @@ func act(actions: PackedFloat32Array, base: int) -> void:
 		if not active[slot]:
 			continue
 		var offset: int = base + slot * ChaseSenses.ACT_DIM
+		var handbrake: bool = actions[offset + 2] > 0.5
+		agents[slot].apply(actions, offset)
 		if slot == 0:
-			ChaseSenses.apply(runner, actions, offset, _runner_boost.hold(_dt, actions[offset + 3], runner))
+			stats[18] += 1.0 if runner.boost.phase == ChargeBoost.Phase.CHARGING else 0.0
+			stats[20] += 1.0 if runner.drifting else 0.0
+			stats[22] += 1.0 if handbrake else 0.0
 			continue
 		var cop: LabVehicle = cars[slot]
-		_bursts[slot].tick(_dt, actions[offset + 3] > 0.0)
-		ChaseSenses.apply(cop, actions, offset, false)
+		stats[16] += 1.0 if agents[slot].burst.fired else 0.0
+		stats[19] += 1.0 if cop.drifting else 0.0
+		stats[21] += 1.0 if handbrake else 0.0
+		stats[23] += 1.0 if cop.forward_speed < -1.0 else 0.0
 		var at: Vector2 = _flat(cop.global_position)
 		var distance: float = at.distance_to(here)
 		var behind: bool = heading.dot(at - here) < 0.0
 		var lag: float = clampf((distance - CATCH_UP_START) / (CATCH_UP_FULL - CATCH_UP_START), 0.0, 1.0) if behind else 0.0
-		cop.tuning.maximum_speed_mps = cop_top_speed() * lerpf(1.0, CATCH_UP_BOOST, lag) * (CopBurst.SPEED_GAIN if _bursts[slot].active() else 1.0)
+		cop.tuning.maximum_speed_mps = cop_top_speed() * lerpf(1.0, CATCH_UP_BOOST, lag) * (CopBurst.SPEED_GAIN if agents[slot].burst.active() else 1.0)
 
 
 ## Simple scripted driving for every slot, for self-tests: the runner follows its route, cops drive
-## at where they think the runner is and burst when close and lined up.
+## at where they think the runner is and burst when close and lined up; navigation choices are random.
 func autopilot(actions: PackedFloat32Array, base: int) -> void:
 	var believed: Vector2 = intel.believed_position()
 	for slot: int in SLOTS:
@@ -242,17 +248,18 @@ func autopilot(actions: PackedFloat32Array, base: int) -> void:
 			continue
 		var car: LabVehicle = cars[slot]
 		var here: Vector2 = _flat(car.global_position)
-		var aim: Vector2 = _routes[slot].point_at(_progress[slot] + 18.0)
+		var aim: Vector2 = agents[slot].route.point_at(agents[slot].progress + 18.0)
 		var close: bool = slot > 0 and here.distance_to(believed) < 45.0
 		if close:
 			aim = believed + intel.last_velocity * 0.4
 		var angle: float = _forward(car).angle_to(aim - here)
 		actions[offset] = clampf(angle / 0.6, -1.0, 1.0)
 		actions[offset + 1] = 1.0 if absf(angle) < 2.2 or car.forward_speed > 6.0 else -1.0
-		actions[offset + 2] = 1.0 if absf(angle) > 0.7 and car.forward_speed > 16.0 else -1.0
-		actions[offset + 3] = 1.0 if close and absf(angle) < 0.3 else -1.0
+		actions[offset + 2] = 1.0 if absf(angle) > 0.7 and car.forward_speed > 16.0 else 0.0
+		actions[offset + 3] = 1.0 if close and absf(angle) < 0.3 else 0.0
 		if slot == 0:
-			actions[offset + 3] = rng.randf() if rng.randf() < 0.03 else -1.0
+			actions[offset + 3] = float(rng.randi_range(1, 4)) if rng.randf() < 0.03 else 0.0
+		actions[offset + 4] = float(rng.randi_range(0, ChaseNav.OPTIONS - 1))
 
 
 func cop_top_speed() -> float:
@@ -271,13 +278,13 @@ func _observe(dt: float, cops: Array) -> void:
 	match_cars.append_array(cops)
 	var bursting: Array = []
 	for cop: LabVehicle in cops:
-		bursting.append(_bursts[cars.find(cop)].active())
+		bursting.append(agents[cars.find(cop)].burst.active())
 	var time_left: float = 1.0 - clampf(elapsed / MATCH_SECONDS, 0.0, 1.0)
 	var pending: float = maxf(target_cops - cops.size(), 0.0) / 5.0
-	_runner_route(dt)
-	var view: PackedFloat32Array = _senses[0].observe_runner(_routes[0], _progress[0], match_cars, dt, cops, bursting, intel)
+	var view: PackedFloat32Array = agents[0].observe_runner(dt, match_cars, cops, bursting, intel)
 	_copy(obs, 0, view, ChaseSenses.OBS_DIM)
 	flags[1] = 1.0
+	flags[3] = 1.0 if agents[0].navigation.open else 0.0
 	var gaps: Array = []
 	var near: int = 0
 	var cop_speed: float = 0.0
@@ -300,11 +307,10 @@ func _observe(dt: float, cops: Array) -> void:
 		var cop: LabVehicle = cops[k]
 		var slot: int = cars.find(cop)
 		flags[slot * FLAG_DIM + 1] = 1.0
-		_cop_route(slot, dt)
 		var team: Array = cops.duplicate()
 		team.erase(cop)
-		view = _senses[slot].observe_cop(_routes[slot], _progress[slot], match_cars, dt, intel, _sightings[k], runner,
-			team, cops.size(), _bursts[slot])
+		view = agents[slot].observe_cop(dt, match_cars, intel, _sightings[k], runner, team, cops.size())
+		flags[slot * FLAG_DIM + 3] = 1.0 if agents[slot].navigation.open else 0.0
 		_copy(obs, slot * ChaseSenses.OBS_DIM, view, ChaseSenses.OBS_DIM)
 		var forward: Vector2 = _forward(cop)
 		var right := Vector2(-forward.y, forward.x)
@@ -319,44 +325,6 @@ func _observe(dt: float, cops: Array) -> void:
 
 func _gap_feature(gaps: Array, k: int) -> float:
 	return clampf(gaps[k] / 150.0, 0.0, 3.0) if k < gaps.size() else 3.0
-
-
-func _cop_route(slot: int, dt: float) -> void:
-	var car: LabVehicle = cars[slot]
-	var here: Vector2 = _flat(car.global_position)
-	_replan[slot] -= dt
-	if _replan[slot] <= 0.0 or _routes[slot].points.is_empty():
-		_replan[slot] = ROUTE_REPLAN
-		_routes[slot].setup(nav.route(here, _forward(car), intel.believed_position()))
-	_progress[slot] = _routes[slot].project(here)
-
-
-func _runner_route(dt: float) -> void:
-	var here: Vector2 = _flat(runner.global_position)
-	if here.distance_to(_runner_goal) < 40.0:
-		_pick_runner_goal()
-		_replan[0] = 0.0
-	_replan[0] -= dt
-	if _replan[0] <= 0.0:
-		_replan_runner()
-	_progress[0] = _routes[0].project(here)
-
-
-func _replan_runner() -> void:
-	_replan[0] = RUNNER_REPLAN
-	_routes[0].setup(nav.route(_flat(runner.global_position), _forward(runner), _runner_goal))
-	_progress[0] = _routes[0].project(_flat(runner.global_position))
-
-
-func _pick_runner_goal() -> void:
-	var here: Vector2 = _flat(runner.global_position)
-	_runner_goal = here
-	for attempt: int in 12:
-		var node: int = nav.random_node(rng)
-		if node >= 0:
-			_runner_goal = nav.graph.positions[node]
-			if _runner_goal.distance_to(here) > 300.0:
-				return
 
 
 func _reinforce(dt: float) -> void:
@@ -421,11 +389,8 @@ func _spawn_cop(slot: int, behind: bool) -> bool:
 		cop.health = COP_HEALTH
 		cop.tuning.maximum_speed_mps = cop_top_speed()
 		active[slot] = true
-		_bursts[slot].reset()
-		_bursts[slot].cooldown = CopBurst.cooldown_at(minute)
-		_senses[slot].reset()
-		_replan[slot] = 0.0
-		_routes[slot].points = PackedVector2Array()
+		agents[slot].reset()
+		agents[slot].burst.cooldown = CopBurst.cooldown_at(minute)
 		_last_gap[slot] = distance
 		_pending[slot] = 0.0
 		for k: int in COMP_DIM:
@@ -529,6 +494,7 @@ func _on_runner_bumped(other: LabVehicle, _strength: float) -> void:
 	if slot > 0 and _pending[0] > 0.0:
 		_accum[slot * COMP_DIM + 6] += _pending[0]
 		stats[15] += 1.0
+		stats[24] += 1.0 if agents[slot].burst.active() else 0.0
 	_pending[0] = 0.0
 
 
@@ -548,6 +514,7 @@ func _on_cop_bumped(other: LabVehicle, _strength: float, slot: int) -> void:
 		return
 	if other == runner:
 		_accum[3] += damage
+		stats[25] += 1.0 if runner.boost.phase == ChargeBoost.Phase.BOOSTING else 0.0
 		return
 	var by: int = cars.find(other)
 	if by > 0:

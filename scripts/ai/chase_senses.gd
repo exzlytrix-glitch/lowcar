@@ -4,23 +4,27 @@ extends RefCounted
 ## driving-school senses (CopSenses, 61 numbers) so a school-trained brain carries over, then add the
 ## chase. Training and the game build it here, so a brain sees the same thing in both.
 ##
-## Cop (110): school senses, with the road route toward where the team thinks the runner is, then
+## Cop (154): school senses, with the road route to the navigation target it chose, then
 ## 13  the runner as the team knows it: last seen position, velocity and heading, speed, distance,
 ##     whether this cop sees it, whether anyone does, how long ago it was seen, its health, boosting
 ## 32  up to 4 teammates, nearest first: position, velocity, heading, their distance to the runner, present
 ##  4  team size, own health, burst ready, bursting
+## 31  navigation options (scripts/ai/chase_nav.gd)
+## 13  the next junction on its own road: distance, then up to 4 exits left to right (turn sin/cos, present)
 ##
-## Runner (121): school senses, with a route to a random destination it is free to ignore, then
+## Runner (165): school senses, with the road route to the navigation target it chose, then
 ## 54  up to 6 cops within 160 m, nearest first: position, velocity, heading, distance, bursting, present
 ##  6  own health, boost charging, charge, boosting, cops nearby, spotted by the cops right now
+## 31  navigation options
+## 13  the next junction on its own road
 ##
-## Actions: [steer, throttle, handbrake, special], special = fire burst (cop) or start a boost charge
-## (runner, scripts/ai/runner_boost.gd).
+## Brain answers are handled by ChaseAgent (scripts/ai/chase_agent.gd).
 
-const COP_OBS: int = 110
-const RUNNER_OBS: int = 121
-const OBS_DIM: int = 121
-const ACT_DIM: int = 4
+const COP_OBS: int = 154
+const RUNNER_OBS: int = 165
+const OBS_DIM: int = 165
+const ACT_DIM: int = 5
+const JUNCTION_FEATURES: int = 13
 const TEAM_SLOTS: int = 4
 const COP_SLOTS: int = 6
 const RUNNER_SENSE: float = 160.0
@@ -44,7 +48,8 @@ func reset() -> void:
 
 
 func observe_cop(route: RouteTrack, progress: float, cars: Array, dt: float, intel: ChaseIntel, sees: bool,
-		runner: LabVehicle, team: Array, team_size: int, burst: CopBurst) -> PackedFloat32Array:
+		runner: LabVehicle, team: Array, team_size: int, burst: CopBurst, nav: RoadNav,
+		navigation: PackedFloat32Array) -> PackedFloat32Array:
 	var obs: PackedFloat32Array = _school(route, progress, cars, dt)
 	var i: int = CopSenses.OBS_DIM
 	var seen: Vector2 = _local(intel.last_position - _here)
@@ -76,11 +81,12 @@ func observe_cop(route: RouteTrack, progress: float, cars: Array, dt: float, int
 	obs[i + 1] = car.health / maxf(car.max_health, 1.0)
 	obs[i + 2] = burst.readiness()
 	obs[i + 3] = 1.0 if burst.active() else 0.0
+	_append_roads(obs, i + 4, nav, navigation)
 	return obs
 
 
 func observe_runner(route: RouteTrack, progress: float, cars: Array, dt: float, cops: Array, bursting: Array,
-		intel: ChaseIntel) -> PackedFloat32Array:
+		intel: ChaseIntel, nav: RoadNav, navigation: PackedFloat32Array) -> PackedFloat32Array:
 	var obs: PackedFloat32Array = _school(route, progress, cars, dt)
 	var i: int = CopSenses.OBS_DIM
 	var near: Array = _nearest(cops, COP_SLOTS, RUNNER_SENSE)
@@ -98,14 +104,26 @@ func observe_runner(route: RouteTrack, progress: float, cars: Array, dt: float, 
 	obs[i + 3] = 1.0 if car.boost.phase == ChargeBoost.Phase.BOOSTING else 0.0
 	obs[i + 4] = minf(near.size(), 5) / 5.0
 	obs[i + 5] = 1.0 if intel.known else 0.0
+	_append_roads(obs, i + 6, nav, navigation)
 	return obs
 
 
-## Applies one car's slice of an action array: [steer, throttle, handbrake, special]. The special is
-## handled by the caller (runner: RunnerBoost decides `hold_boost`; cop: its CopBurst).
-static func apply(target: ArcadeVehicle, actions: PackedFloat32Array, offset: int, hold_boost: bool) -> void:
-	target.set_driver_command(clampf(actions[offset + 1], -1.0, 1.0), clampf(actions[offset], -1.0, 1.0),
-		actions[offset + 2] > 0.0, hold_boost)
+## Navigation options, then the next junction on this car's road: its distance and up to 4 exits.
+func _append_roads(obs: PackedFloat32Array, i: int, nav: RoadNav, navigation: PackedFloat32Array) -> void:
+	for k: int in navigation.size():
+		obs[i + k] = navigation[k]
+	i += navigation.size()
+	var next: Dictionary = nav.next_junction(_here, _forward)
+	if next.is_empty():
+		obs[i] = 3.0
+		return
+	obs[i] = clampf(float(next["distance"]) / 100.0, 0.0, 3.0)
+	var ways: Array = nav.exits(next["node"], next["edge"])
+	for slot: int in mini(ways.size(), 4):
+		var turn: float = ways[slot]["turn"]
+		obs[i + 1 + slot * 3] = sin(turn)
+		obs[i + 2 + slot * 3] = cos(turn)
+		obs[i + 3 + slot * 3] = 1.0
 
 
 func _school(route: RouteTrack, progress: float, cars: Array, dt: float) -> PackedFloat32Array:
