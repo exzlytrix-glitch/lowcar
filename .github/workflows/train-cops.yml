@@ -1,0 +1,105 @@
+# Trains the learned cop driver on a GitHub-hosted Linux runner (4 cores, 16 GB, up to 6 h per job).
+# Start it from the Actions tab ("Train cops" → Run workflow) or: gh workflow run train-cops.yml
+# To continue a previous run, pass its run id as resume_run_id; training picks up where it stopped.
+# The result is the "cop-brain" artifact: cop_brain.json (copy to resources/ai/), checkpoint, report.
+name: Train cops
+
+on:
+  workflow_dispatch:
+    inputs:
+      stage:
+        description: Training stage
+        default: school
+        type: string
+      hours:
+        description: Hours to train (keep under 5.5)
+        default: "5.3"
+        type: string
+      procs:
+        description: Training worlds running at once
+        default: "3"
+        type: string
+      agents:
+        description: Cops per world
+        default: "16"
+        type: string
+      resume_run_id:
+        description: Continue from this earlier run's brain (run id, optional)
+        default: ""
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  train:
+    runs-on: ubuntu-latest
+    timeout-minutes: 355
+    env:
+      STAGE: ${{ inputs.stage }}
+      HOURS: ${{ inputs.hours }}
+      PROCS: ${{ inputs.procs }}
+      AGENTS: ${{ inputs.agents }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install training packages
+        run: |
+          pip install --quiet numpy
+          pip install --quiet torch --index-url https://download.pytorch.org/whl/cpu
+
+      - name: Install Godot 4.7
+        run: |
+          curl -fsSL -o godot.zip https://github.com/godotengine/godot/releases/download/4.7-stable/Godot_v4.7-stable_linux.x86_64.zip
+          unzip -q godot.zip
+          sudo mv Godot_v4.7-stable_linux.x86_64 /usr/local/bin/godot
+          rm godot.zip
+          godot --version
+
+      - name: Train on Jolt physics
+        run: printf '[physics]\n\n3d/physics_engine="Jolt Physics"\n' > override.cfg
+
+      - name: Import project
+        run: |
+          godot --headless --import --path . || godot --headless --editor --quit --path .
+          test -f .godot/global_script_class_cache.cfg
+
+      - name: Self-test training world
+        run: godot --headless --fixed-fps 60 --path . res://scenes/training/train_env.tscn -- --agents=16 --selftest=300
+
+      - name: Fetch previous brain
+        if: inputs.resume_run_id != ''
+        uses: actions/download-artifact@v4
+        with:
+          name: cop-brain
+          path: resume
+          run-id: ${{ inputs.resume_run_id }}
+          github-token: ${{ github.token }}
+
+      - name: Train
+        run: |
+          mkdir -p out
+          RESUME=""
+          if [ -f resume/checkpoint.pt ]; then
+            RESUME="--resume resume/checkpoint.pt"
+            cp resume/progress.csv out/ 2>/dev/null || true
+          fi
+          python training/train.py --godot godot --project . --out out --stage "$STAGE" \
+            --hours "$HOURS" --procs "$PROCS" --agents "$AGENTS" $RESUME
+
+      - name: Report
+        if: always()
+        run: cat out/summary.md >> "$GITHUB_STEP_SUMMARY" || echo "No report written." >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Save brain
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cop-brain
+          path: out/
+          retention-days: 30
