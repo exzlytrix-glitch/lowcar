@@ -3,7 +3,8 @@ extends Node
 ## Saves the player's real driving as training data for the cops. J in the lab starts a chase and
 ## records the car 30 times a second; J again (or getting wrecked) saves it to training/drives/
 ## together with the exact city settings, so training can rebuild that city and replay the drive
-## as the runner the cops practise chasing.
+## as the runner the cops practise chasing. Cops are recorded too (10 times a second), so you can
+## see afterwards exactly how they cut you off.
 
 const RATE: int = 30
 const FOLDER: String = "res://training/drives"
@@ -14,6 +15,8 @@ var settings_source: Callable
 var recording: bool = false
 var last_saved: String = ""
 var _frames: Array = []
+var _cop_frames: Array = []
+var _cop_ids: Dictionary = {}
 var _tick: int = 0
 var _started_seed: int = 0
 var _settings: Dictionary = {}
@@ -27,6 +30,8 @@ func start() -> void:
 	_settings = _settings_dict(settings)
 	_started_seed = settings.city_seed
 	_frames.clear()
+	_cop_frames.clear()
+	_cop_ids.clear()
 	_tick = 0
 	_wrecked = false
 	recording = true
@@ -62,6 +67,17 @@ func _physics_process(_delta: float) -> void:
 	_frames.append([snappedf(p.x, 0.01), snappedf(p.y, 0.01), snappedf(p.z, 0.01),
 		snappedf(rotation.x, 0.0001), snappedf(rotation.y, 0.0001), snappedf(rotation.z, 0.0001), snappedf(rotation.w, 0.0001),
 		snappedf(v.x, 0.01), snappedf(v.y, 0.01), snappedf(v.z, 0.01)])
+	if (_frames.size() - 1) % 3 == 0:
+		var cops: Array = []
+		for cop: LabVehicle in chase.cops:
+			if not is_instance_valid(cop):
+				continue
+			var key: int = cop.get_instance_id()
+			if not _cop_ids.has(key):
+				_cop_ids[key] = _cop_ids.size() + 1
+			cops.append([_cop_ids[key], snappedf(cop.global_position.x, 0.01), snappedf(cop.global_position.z, 0.01),
+				snappedf(cop.rotation.y, 0.001), snappedf(Vector2(cop.velocity.x, cop.velocity.z).length(), 0.1)])
+		_cop_frames.append([_frames.size() - 1, cops])
 
 
 func _save() -> String:
@@ -77,6 +93,8 @@ func _save() -> String:
 		"chase_minute_at_end": snappedf(chase.minute(), 0.01),
 		"city": _settings,
 		"frames": _frames,
+		"cop_layout": ["cop", "x", "z", "yaw", "speed"],
+		"cop_frames": _cop_frames,
 	}
 	var file := FileAccess.open(path, FileAccess.WRITE)
 	if file == null:
