@@ -77,6 +77,7 @@ var _pending := PackedFloat32Array()
 var _accum := PackedFloat32Array()
 var _sightings: Array[bool] = []
 var _runner_goal := Vector2.ZERO
+var _runner_boost := RunnerBoost.new()
 var _reinforce_clock: float = 0.0
 var _dt: float = 0.1
 
@@ -133,6 +134,7 @@ func restart() -> void:
 	var dir: Vector2 = spot.get("dir", Vector2(0.0, -1.0))
 	_place(runner, point, dir, 0.0 if rng.randf() < RUNNER_STANDING_START else rng.randf_range(15.0, 30.0))
 	runner.health = RUNNER_HEALTH
+	_runner_boost.reset()
 	active[0] = true
 	_senses[0].reset()
 	_pick_runner_goal()
@@ -218,7 +220,7 @@ func act(actions: PackedFloat32Array, base: int) -> void:
 			continue
 		var offset: int = base + slot * ChaseSenses.ACT_DIM
 		if slot == 0:
-			ChaseSenses.apply(runner, actions, offset, true)
+			ChaseSenses.apply(runner, actions, offset, _runner_boost.hold(_dt, actions[offset + 3], runner))
 			continue
 		var cop: LabVehicle = cars[slot]
 		_bursts[slot].tick(_dt, actions[offset + 3] > 0.0)
@@ -250,7 +252,7 @@ func autopilot(actions: PackedFloat32Array, base: int) -> void:
 		actions[offset + 2] = 1.0 if absf(angle) > 0.7 and car.forward_speed > 16.0 else -1.0
 		actions[offset + 3] = 1.0 if close and absf(angle) < 0.3 else -1.0
 		if slot == 0:
-			actions[offset + 3] = 1.0 if rng.randf() < 0.02 or car.boost.phase == ChargeBoost.Phase.CHARGING and rng.randf() < 0.9 else -1.0
+			actions[offset + 3] = rng.randf() if rng.randf() < 0.03 else -1.0
 
 
 func cop_top_speed() -> float:

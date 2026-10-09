@@ -14,7 +14,8 @@ extends RefCounted
 ## 54  up to 6 cops within 160 m, nearest first: position, velocity, heading, distance, bursting, present
 ##  6  own health, boost charging, charge, boosting, cops nearby, spotted by the cops right now
 ##
-## Actions: [steer, throttle, handbrake, special], special = fire burst (cop) or hold boost (runner).
+## Actions: [steer, throttle, handbrake, special], special = fire burst (cop) or start a boost charge
+## (runner, scripts/ai/runner_boost.gd).
 
 const COP_OBS: int = 110
 const RUNNER_OBS: int = 121
@@ -100,11 +101,11 @@ func observe_runner(route: RouteTrack, progress: float, cars: Array, dt: float, 
 	return obs
 
 
-## Applies one car's slice of an action array: [steer, throttle, handbrake, special]. For the runner
-## the special holds the charge boost; a cop's burst is handled by its CopBurst instead.
+## Applies one car's slice of an action array: [steer, throttle, handbrake, special]. The special is
+## handled by the caller (runner: RunnerBoost decides `hold_boost`; cop: its CopBurst).
 static func apply(target: ArcadeVehicle, actions: PackedFloat32Array, offset: int, hold_boost: bool) -> void:
 	target.set_driver_command(clampf(actions[offset + 1], -1.0, 1.0), clampf(actions[offset], -1.0, 1.0),
-		actions[offset + 2] > 0.0, hold_boost and actions[offset + 3] > 0.0)
+		actions[offset + 2] > 0.0, hold_boost)
 
 
 func _school(route: RouteTrack, progress: float, cars: Array, dt: float) -> PackedFloat32Array:

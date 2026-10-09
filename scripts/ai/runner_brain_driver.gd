@@ -19,6 +19,8 @@ var _replan: float = 0.0
 var _frame: int = 0
 var _rng := RandomNumberGenerator.new()
 var _actions := PackedFloat32Array([0.0, 0.0, -1.0, -1.0])
+var _boost := RunnerBoost.new()
+var _hold: bool = false
 
 
 func _ready() -> void:
@@ -33,7 +35,8 @@ func _physics_process(delta: float) -> void:
 	_frame += 1
 	if _frame % DECISION_FRAMES == 0:
 		_decide(DECISION_FRAMES * delta)
-	ChaseSenses.apply(car, _actions, 0, true)
+		_hold = _boost.hold(DECISION_FRAMES * delta, _actions[3], car)
+	ChaseSenses.apply(car, _actions, 0, _hold)
 
 
 func _decide(step: float) -> void:
