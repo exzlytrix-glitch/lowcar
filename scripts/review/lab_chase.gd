@@ -25,6 +25,11 @@ var player: LabVehicle
 var astar := AStar2D.new()
 var cops: Array[LabVehicle] = []
 var _drivers: Dictionary = {}
+const BRAIN_PATH: String = "res://resources/ai/cop_brain.json"
+## Learned cop brain from training (scripts/ai/policy_net.gd). B in the lab switches cops to it.
+var brain: PolicyNet
+var use_brain: bool = false
+var nav: RoadNav
 var _spawn_clock: float = 0.0
 var _rng := RandomNumberGenerator.new()
 
@@ -34,6 +39,7 @@ func setup(road_graph: RoadGraph, car: LabVehicle) -> void:
 	graph = road_graph
 	player = car
 	elapsed = 0.0
+	nav = RoadNav.new(graph)
 	astar.clear()
 	for node: int in graph.node_count():
 		if graph.degree(node) > 0:
@@ -109,7 +115,9 @@ func _physics_process(delta: float) -> void:
 		var behind: bool = heading.dot(at - here) < 0.0
 		var lag: float = clampf((distance - CATCH_UP_START) / (CATCH_UP_FULL - CATCH_UP_START), 0.0, 1.0) if behind else 0.0
 		cop.tuning.maximum_speed_mps = top_speed() * lerpf(1.0, catch_up_boost, lag)
-		(_drivers[cop] as LabCopDriver).lateness = lateness()
+		var scripted := _drivers[cop] as LabCopDriver
+		if scripted != null:
+			scripted.lateness = lateness()
 	if auto_spawn and cops.size() < cop_count() and _spawn_clock <= 0.0:
 		_spawn(false)
 		_spawn_clock = 1.2
@@ -202,12 +210,7 @@ func _add_cop(point: Vector2, dir: Vector2, start_speed: float) -> void:
 	handling.steer_response = 9.0
 	cop.handling = handling
 	cop.add_to_group("police")
-	var driver := LabCopDriver.new()
-	driver.name = "Driver"
-	driver.chase = self
-	driver.car = cop
-	driver.target = player
-	driver.lateness = lateness()
+	var driver: Node = _make_driver(cop)
 	cop.add_child(driver)
 	get_parent().add_child(cop)
 	cop.chamfer_collider()
@@ -219,6 +222,48 @@ func _add_cop(point: Vector2, dir: Vector2, start_speed: float) -> void:
 	cop.controls_enabled = true
 	cops.append(cop)
 	_drivers[cop] = driver
+
+
+func _make_driver(cop: LabVehicle) -> Node:
+	if use_brain and brain != null:
+		var learned := BrainCopDriver.new()
+		learned.name = "Driver"
+		learned.net = brain
+		learned.chase = self
+		learned.car = cop
+		learned.target = player
+		return learned
+	var driver := LabCopDriver.new()
+	driver.name = "Driver"
+	driver.chase = self
+	driver.car = cop
+	driver.target = player
+	driver.lateness = lateness()
+	return driver
+
+
+## Switches every cop (current and future) between the scripted driver and the learned brain.
+func set_brain(enabled: bool) -> void:
+	if enabled and brain == null:
+		brain = PolicyNet.load_file(BRAIN_PATH)
+	use_brain = enabled and brain != null
+	for cop: LabVehicle in cops:
+		var old: Node = _drivers[cop]
+		cop.remove_child(old)
+		old.queue_free()
+		var driver: Node = _make_driver(cop)
+		cop.add_child(driver)
+		_drivers[cop] = driver
+
+
+func driver_label() -> String:
+	if use_brain and brain != null:
+		return "learned brain (%s, %s decisions of training)" % [brain.meta.get("stage", "?"), _thousands(int(brain.meta.get("steps", 0)))]
+	return "scripted driver"
+
+
+func _thousands(value: int) -> String:
+	return "%.1fM" % (value / 1.0e6) if value >= 1000000 else "%dk" % (value / 1000)
 
 
 func _remove(cop: LabVehicle) -> void:

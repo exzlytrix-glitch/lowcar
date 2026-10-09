@@ -48,6 +48,8 @@ var generator: RoadGenerator
 var blocks: Array[CityBlocks.Block] = []
 var footprints: Array[PackedVector2Array] = []
 var footprint_styles := PackedInt32Array()
+## Training city: collision only (floor, curbs, building boxes). No meshes, paint or trees.
+var collision_only: bool = false
 var building_count: int = 0
 var tree_count: int = 0
 var _rng := RandomNumberGenerator.new()
@@ -88,7 +90,8 @@ func build(config: CityGenSettings, road_graph: RoadGraph, road_generator: RoadG
 	_build_land()
 	for block: CityBlocks.Block in blocks:
 		_build_block(block)
-	_build_markings()
+	if not collision_only:
+		_build_markings()
 	_commit_tiles()
 
 
@@ -110,12 +113,13 @@ func _build_land() -> void:
 		var far_b: Vector2 = b.normalized() * OUTSKIRTS
 		_triangle(land, _v3(a, 0.0), _v3(far_a, 0.0), _v3(far_b, 0.0), Vector3.UP, GRASS)
 		_triangle(land, _v3(a, 0.0), _v3(far_b, 0.0), _v3(b, 0.0), Vector3.UP, GRASS)
-	var visual := MeshInstance3D.new()
-	visual.name = "Land"
-	visual.mesh = land.commit()
-	visual.material_override = _material
-	visual.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	add_child(visual)
+	if not collision_only:
+		var visual := MeshInstance3D.new()
+		visual.name = "Land"
+		visual.mesh = land.commit()
+		visual.material_override = _material
+		visual.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		add_child(visual)
 	var floor_body := StaticBody3D.new()
 	floor_body.name = "Floor"
 	floor_body.collision_layer = 1
@@ -139,6 +143,13 @@ func _build_block(block: CityBlocks.Block) -> void:
 		for ground: PackedVector2Array in block.ground:
 			_add_flat(tile, ground, height + LOT_LIFT, lot_color)
 	var placed: Array[PackedVector2Array] = []
+	if collision_only:
+		if not block.park:
+			placed = _place_buildings(tile, block)
+		for footprint: PackedVector2Array in placed:
+			footprints.append(footprint)
+			footprint_styles.append(block.style)
+		return
 	if block.park:
 		_plant_park(tile, block)
 	else:
@@ -409,6 +420,20 @@ func _fits(footprint: PackedVector2Array, ground: PackedVector2Array, placed: Ar
 
 func _spawn(tile: Tile, entry: Dictionary, center: Vector2, theta: float) -> void:
 	var bounds: AABB = entry["bounds"]
+	if collision_only:
+		var body := StaticBody3D.new()
+		body.collision_layer = 1
+		body.collision_mask = 0
+		var shape := BoxShape3D.new()
+		shape.size = bounds.size
+		var holder := CollisionShape3D.new()
+		holder.shape = shape
+		body.add_child(holder)
+		body.position = _v3(center, settings.curb_height + bounds.size.y * 0.5)
+		body.rotation.y = theta
+		tile.root.add_child(body)
+		building_count += 1
+		return
 	var local_center := Vector2(bounds.get_center().x, bounds.get_center().z)
 	var origin: Vector2 = center - _rotate(local_center, theta)
 	var building: Node3D = CityBuildingKit.instantiate(entry)
@@ -591,7 +616,7 @@ func _tile_for(at: Vector2) -> Tile:
 func _commit_tiles() -> void:
 	for key: Vector2i in _tiles:
 		var tile: Tile = _tiles[key]
-		if tile.has_ground:
+		if tile.has_ground and not collision_only:
 			var ground := MeshInstance3D.new()
 			ground.name = "Ground"
 			ground.mesh = tile.ground.commit()
@@ -609,7 +634,7 @@ func _commit_tiles() -> void:
 			collision.shape = shape
 			body.add_child(collision)
 			tile.root.add_child(body)
-		if tile.has_paint:
+		if tile.has_paint and not collision_only:
 			var paint := MeshInstance3D.new()
 			paint.name = "Paint"
 			paint.mesh = tile.paint.commit()
@@ -617,7 +642,7 @@ func _commit_tiles() -> void:
 			paint.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 			paint.visibility_range_end = 320.0
 			tile.root.add_child(paint)
-		if not tile.trees.is_empty():
+		if not tile.trees.is_empty() and not collision_only:
 			_commit_trees(tile)
 
 

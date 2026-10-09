@@ -5,3 +5,5 @@
 exports/*
 !exports/.gitkeep
 
+__pycache__/
+override.cfg

@@ -7,7 +7,7 @@ extends Node
 const POLICE_MODEL: String = "res://assets/models/vehicles/police_cruiser/police_cruiser.glb"
 const PLAYER_MODEL: String = "res://scenes/vehicles/red_muscle_car.tscn"
 const RATE: float = 60.0
-const MODE_NAMES: PackedStringArray = ["route", "direct"]
+const MODE_NAMES: PackedStringArray = ["route", "direct", "brain"]
 
 
 class Track:
@@ -124,9 +124,10 @@ func _physics_process(_delta: float) -> void:
 			track.first_frame = frame
 			cop_tracks.append(track)
 			_by_cop[id] = track
-		var driver := cop.get_node_or_null("Driver") as LabCopDriver
+		var driver: Node = cop.get_node_or_null("Driver")
+		var mode: String = String(driver.get("mode")) if driver != null else ""
 		var cop_track: Track = _by_cop[id]
-		_record(cop_track, cop, 1 if driver != null and driver.mode == "direct" else 0)
+		_record(cop_track, cop, 2 if mode == "brain" else (1 if mode == "direct" else 0))
 		cop_track.closest = minf(cop_track.closest, cop.global_position.distance_to(player.global_position))
 	frame += 1
 
@@ -270,7 +271,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _build_panel() -> void:
 	_panel = PanelContainer.new()
-	_panel.position = Vector2(14, 200)
+	_panel.position = Vector2(14, 226)
 	_panel.custom_minimum_size = Vector2(300, 0)
 	layer.add_child(_panel)
 	var column := VBoxContainer.new()

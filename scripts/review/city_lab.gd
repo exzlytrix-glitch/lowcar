@@ -141,6 +141,7 @@ func _process(delta: float) -> void:
 		chase_line += "\n● REC %.1f s  ·  press 1 to stop and review the cops" % recorder.recorded_seconds()
 	elif not recorder.replaying:
 		chase_line += "\n1: record the chase  ·  2: watch the last recording"
+	chase_line += "\nCops: %s  ·  B to switch" % chase.driver_label()
 	_hud.text = "CITY LAB  ·  seed %d  ·  %s\n%d km/h  ·  %d fps  ·  %s%s\n%s\nWASD drive · Shift boost · Space jump · Ctrl + steer drift\nM map · T tune · R back on road · G regenerate · N new seed · P cop behind · C clear cops" % [
 		settings.city_seed, stats, int(speed), Engine.get_frames_per_second(), district, drift, chase_line]
 	_health_bar.value = player.health
@@ -178,6 +179,11 @@ func _unhandled_input(event: InputEvent) -> void:
 			chase.toggle()
 		KEY_P:
 			chase.add_cop_behind()
+		KEY_B:
+			chase.set_brain(not chase.use_brain)
+			if chase.use_brain == false and chase.brain == null:
+				_overlay.text = "No trained brain yet (resources/ai/cop_brain.json)"
+				_overlay.visible = true
 		KEY_C:
 			_clear_police()
 			chase.stop()
@@ -398,7 +404,7 @@ func _build_ui() -> void:
 	_hud.add_theme_constant_override("outline_size", 5)
 	layer.add_child(_hud)
 	_health_bar = ProgressBar.new()
-	_health_bar.position = Vector2(14, 168)
+	_health_bar.position = Vector2(14, 194)
 	_health_bar.size = Vector2(260, 18)
 	_health_bar.max_value = player.max_health
 	_health_bar.value = player.health
