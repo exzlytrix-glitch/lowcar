@@ -40,6 +40,10 @@ const CATCH_UP_BOOST: float = 1.3
 const RECYCLE_DISTANCE: float = 420.0
 const ROUTE_REPLAN: float = 0.5
 const RUNNER_REPLAN: float = 2.0
+## Share of chases where the runner starts from a standstill (like the start of a real run) instead of
+## already cruising, and share of cops that spawn parked and have to pull out.
+const RUNNER_STANDING_START: float = 0.35
+const COP_PARKED_START: float = 0.15
 ## Chance a match starts with 1, 2, 3, 4 or 5 cops.
 const SQUAD_ODDS: PackedFloat32Array = [0.25, 0.25, 0.2, 0.15, 0.15]
 
@@ -127,7 +131,7 @@ func restart() -> void:
 	var spot: Dictionary = nav.random_road_spot(rng)
 	var point: Vector2 = spot.get("point", Vector2.ZERO)
 	var dir: Vector2 = spot.get("dir", Vector2(0.0, -1.0))
-	_place(runner, point, dir, rng.randf_range(18.0, 30.0))
+	_place(runner, point, dir, 0.0 if rng.randf() < RUNNER_STANDING_START else rng.randf_range(15.0, 30.0))
 	runner.health = RUNNER_HEALTH
 	active[0] = true
 	_senses[0].reset()
@@ -411,7 +415,7 @@ func _spawn_cop(slot: int, behind: bool) -> bool:
 		cop.process_mode = Node.PROCESS_MODE_INHERIT
 		cop.collision_layer = layer
 		cop.collision_mask = 1 | layer
-		_place(cop, point, dir, start_speed)
+		_place(cop, point, dir, 0.0 if rng.randf() < COP_PARKED_START else start_speed)
 		cop.health = COP_HEALTH
 		cop.tuning.maximum_speed_mps = cop_top_speed()
 		active[slot] = true
