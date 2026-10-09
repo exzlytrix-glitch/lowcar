@@ -7,3 +7,4 @@ exports/*
 
 __pycache__/
 override.cfg
+training/drives/excluded/

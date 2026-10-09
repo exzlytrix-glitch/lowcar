@@ -69,6 +69,9 @@ var _panel: PanelContainer
 var _controls: Dictionary = {}
 var _seed_box: SpinBox
 var _ring_box: CheckBox
+## Jumping (Ground Punch) is off in the lab by default; the T panel can turn it back on.
+var jump_enabled: bool = false
+var _ground_punch: AttachmentDefinition
 var _busy: bool = false
 var _hud_clock: float = 0.0
 var _capture_dir: String = ""
@@ -100,6 +103,9 @@ func _ready() -> void:
 	player.takes_damage = true
 	player.chamfer_collider()
 	player.destroyed.connect(_on_wrecked)
+	var launcher := player.get_node("Attachments/GroundPunch") as LauncherAttachment
+	_ground_punch = launcher.definition
+	_set_jump(jump_enabled)
 	_build_ui()
 	recorder = LabRecorder.new()
 	recorder.name = "Recorder"
@@ -153,8 +159,9 @@ func _process(delta: float) -> void:
 		chase_line += "\n● TRAINING DRIVE %d:%02d  ·  drive like you normally would and escape  ·  J to save" % [int(drives.seconds()) / 60, int(drives.seconds()) % 60]
 	else:
 		chase_line += "\nJ: training drive (cops learn from your driving)  ·  saved so far: %d" % _saved_drive_count()
-	_hud.text = "CITY LAB  ·  seed %d  ·  %s\n%d km/h  ·  %d fps  ·  %s%s\n%s\nWASD drive · Shift boost · Space jump · Ctrl + steer drift\nM map · T tune · R back on road · G regenerate · N new seed · P cop behind · C clear cops" % [
-		settings.city_seed, stats, int(speed), Engine.get_frames_per_second(), district, drift, chase_line]
+	_hud.text = "CITY LAB  ·  seed %d  ·  %s\n%d km/h  ·  %d fps  ·  %s%s\n%s\nWASD drive · Shift boost · Ctrl + steer drift%s\nM map · T tune · R back on road · G regenerate · N new seed · P cop behind · C clear cops" % [
+		settings.city_seed, stats, int(speed), Engine.get_frames_per_second(), district, drift, chase_line,
+		" · Space jump" if jump_enabled else ""]
 	_health_bar.value = player.health
 	_health_fill.bg_color = Color("#7BC67E") if player.health > 60.0 else (Color("#F2C46B") if player.health > 30.0 else Color("#E2574C"))
 
@@ -417,6 +424,11 @@ func _reset_settings() -> void:
 	_refresh_controls()
 
 
+func _set_jump(enabled: bool) -> void:
+	jump_enabled = enabled
+	(player.get_node("Attachments/GroundPunch") as LauncherAttachment).definition = _ground_punch if enabled else null
+
+
 func _refresh_controls() -> void:
 	_seed_box.set_value_no_signal(settings.city_seed)
 	_ring_box.set_pressed_no_signal(settings.ring_road)
@@ -510,6 +522,11 @@ func _build_panel(layer: CanvasLayer) -> void:
 	_ring_box.button_pressed = settings.ring_road
 	_ring_box.toggled.connect(func(on: bool) -> void: settings.ring_road = on)
 	list.add_child(_ring_box)
+	var jump_box := CheckBox.new()
+	jump_box.text = "Jumping (Ground Punch) on"
+	jump_box.button_pressed = jump_enabled
+	jump_box.toggled.connect(func(on: bool) -> void: _set_jump(on))
+	list.add_child(jump_box)
 	var chase_title := Label.new()
 	chase_title.text = "Chase (Enter starts / stops)"
 	chase_title.add_theme_font_size_override("font_size", 16)
