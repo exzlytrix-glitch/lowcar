@@ -102,6 +102,7 @@ toggle_debug={
 
 [physics]
 
+3d/physics_engine="Jolt Physics"
 3d/default_gravity=25.0
 common/physics_interpolation=true
 

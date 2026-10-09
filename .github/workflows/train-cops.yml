@@ -61,9 +61,6 @@ jobs:
           rm godot.zip
           godot --version
 
-      - name: Train on Jolt physics
-        run: printf '[physics]\n\n3d/physics_engine="Jolt Physics"\n' > override.cfg
-
       - name: Import project
         run: |
           godot --headless --import --path . || godot --headless --editor --quit --path .
