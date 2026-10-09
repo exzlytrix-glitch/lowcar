@@ -92,6 +92,9 @@ var _watch: bool = false
 var _overhead_camera: Camera3D
 var _camera_before_overhead: Camera3D
 var _overhead_on_load: bool = false
+## --show: --watch with the lab text hidden and a TV-news style overlay instead (LabBroadcast).
+var _show: bool = false
+var _broadcast: LabBroadcast
 
 
 func _ready() -> void:
@@ -108,6 +111,10 @@ func _ready() -> void:
 			_watch = true
 		elif argument == "--overhead":
 			_overhead_on_load = true
+		elif argument == "--show":
+			_start_chase_on_load = true
+			_watch = true
+			_show = true
 		elif argument.begins_with("--seed="):
 			settings.city_seed = int(argument.trim_prefix("--seed="))
 	chase = LabChase.new()
@@ -147,6 +154,16 @@ func _ready() -> void:
 		_toggle_ai_runner()
 	if _overhead_on_load:
 		_toggle_overhead()
+	if _show:
+		_hud.visible = false
+		_health_bar.visible = false
+		_map.visible = false
+		_overlay.visible = false
+		_broadcast = LabBroadcast.new()
+		_broadcast.chase = chase
+		_broadcast.player = player
+		_broadcast.generator = generator
+		add_child(_broadcast)
 	if not _capture_dir.is_empty():
 		await _capture()
 		get_tree().quit()
@@ -463,6 +480,9 @@ func _on_wrecked() -> void:
 	if _watch and is_instance_valid(_ai_runner):
 		var lasted: int = int(chase.elapsed)
 		_overlay.text = "AI runner wrecked after %d:%02d — next chase in 3 s" % [lasted / 60, lasted % 60]
+		if _show:
+			_overlay.visible = false
+			_broadcast.wrecked(lasted)
 		await get_tree().create_timer(3.0).timeout
 		chase.stop()
 		_place_on_road(Vector2(player.global_position.x, player.global_position.z), Vector2.ZERO)
