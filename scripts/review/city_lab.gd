@@ -86,6 +86,12 @@ var _health_bar: ProgressBar
 var _health_fill := StyleBoxFlat.new()
 var _wrecked: bool = false
 var _start_chase_on_load: bool = false
+## --watch: learned cops chase the learned runner (driving your car), and a new chase starts after each wreck.
+var _watch: bool = false
+## V: a live camera high above your car that zooms out to keep nearby cops in view.
+var _overhead_camera: Camera3D
+var _camera_before_overhead: Camera3D
+var _overhead_on_load: bool = false
 
 
 func _ready() -> void:
@@ -97,6 +103,11 @@ func _ready() -> void:
 			_capture_dir = argument.trim_prefix("--capture=")
 		elif argument == "--chase":
 			_start_chase_on_load = true
+		elif argument == "--watch":
+			_start_chase_on_load = true
+			_watch = true
+		elif argument == "--overhead":
+			_overhead_on_load = true
 		elif argument.begins_with("--seed="):
 			settings.city_seed = int(argument.trim_prefix("--seed="))
 	chase = LabChase.new()
@@ -131,12 +142,18 @@ func _ready() -> void:
 	await regenerate()
 	if _start_chase_on_load:
 		chase.start()
+	if _watch:
+		chase.set_brain(true)
+		_toggle_ai_runner()
+	if _overhead_on_load:
+		_toggle_overhead()
 	if not _capture_dir.is_empty():
 		await _capture()
 		get_tree().quit()
 
 
 func _process(delta: float) -> void:
+	_follow_overhead(delta)
 	_hud_clock -= delta
 	if _hud_clock > 0.0 or _hud == null:
 		return
@@ -163,7 +180,7 @@ func _process(delta: float) -> void:
 		chase_line += "\n● TRAINING DRIVE %d:%02d  ·  drive like you normally would and escape  ·  J to save" % [int(drives.seconds()) / 60, int(drives.seconds()) % 60]
 	else:
 		chase_line += "\nJ: training drive (cops learn from your driving)  ·  saved so far: %d" % _saved_drive_count()
-	_hud.text = "CITY LAB  ·  seed %d  ·  %s\n%d km/h  ·  %d fps  ·  %s%s\n%s\nWASD drive · Shift boost · Ctrl + steer drift%s\nM map · T tune · R back on road · G regenerate · N new seed · P cop behind · C clear cops" % [
+	_hud.text = "CITY LAB  ·  seed %d  ·  %s\n%d km/h  ·  %d fps  ·  %s%s\n%s\nWASD drive · Shift boost · Ctrl + steer drift%s\nM map · V overhead · T tune · R back on road · G regenerate · N new seed · P cop behind · C clear cops" % [
 		settings.city_seed, stats, int(speed), Engine.get_frames_per_second(), district, drift, chase_line,
 		" · Space jump" if jump_enabled else ""]
 	_health_bar.value = player.health
@@ -213,6 +230,8 @@ func _unhandled_input(event: InputEvent) -> void:
 				_overlay.visible = true
 		KEY_K:
 			_toggle_ai_runner()
+		KEY_V:
+			_toggle_overhead()
 		KEY_C:
 			_clear_police()
 			chase.stop()
@@ -350,6 +369,48 @@ func _park_police_ahead() -> void:
 	_police.append(cop)
 
 
+func _toggle_overhead() -> void:
+	if is_instance_valid(_overhead_camera):
+		_overhead_camera.queue_free()
+		_overhead_camera = null
+		if is_instance_valid(_camera_before_overhead):
+			_camera_before_overhead.current = true
+		return
+	_camera_before_overhead = get_viewport().get_camera_3d()
+	_overhead_camera = Camera3D.new()
+	_overhead_camera.near = 1.0
+	_overhead_camera.far = 1500.0
+	add_child(_overhead_camera)
+	_overhead_camera.global_position = player.global_position + Vector3(0.0, 90.0, 0.0)
+	_overhead_camera.current = true
+
+
+## Keeps the overhead camera above your car, pulled toward and zoomed out to the cops within 160 m.
+func _follow_overhead(delta: float) -> void:
+	if not is_instance_valid(_overhead_camera) or not _overhead_camera.current:
+		return
+	var focus: Vector3 = player.global_position
+	var cop_sum := Vector3.ZERO
+	var count: int = 0
+	var farthest: float = 0.0
+	for cop: LabVehicle in chase.cops:
+		if not is_instance_valid(cop):
+			continue
+		var gap: float = cop.global_position.distance_to(focus)
+		if gap < 160.0:
+			cop_sum += cop.global_position
+			count += 1
+			farthest = maxf(farthest, gap)
+	var centre: Vector3 = focus
+	if count > 0:
+		centre = focus.lerp(cop_sum / count, 0.35)
+	var height: float = clampf(60.0 + farthest * 0.9, 60.0, 210.0)
+	var target: Vector3 = Vector3(centre.x, focus.y + height, centre.z)
+	_overhead_camera.global_position = _overhead_camera.global_position.lerp(target, 1.0 - exp(-4.0 * delta))
+	# Straight down, north at the top of the screen.
+	_overhead_camera.look_at(Vector3(_overhead_camera.global_position.x, focus.y, _overhead_camera.global_position.z), Vector3.FORWARD)
+
+
 func _toggle_ai_runner() -> void:
 	if is_instance_valid(_ai_runner):
 		_ai_runner.queue_free()
@@ -399,6 +460,13 @@ func _on_wrecked() -> void:
 	player.get_node("Presentation").play_explosion()
 	_overlay.text = "WRECKED — press R to get back on the road"
 	_overlay.visible = true
+	if _watch and is_instance_valid(_ai_runner):
+		var lasted: int = int(chase.elapsed)
+		_overlay.text = "AI runner wrecked after %d:%02d — next chase in 3 s" % [lasted / 60, lasted % 60]
+		await get_tree().create_timer(3.0).timeout
+		chase.stop()
+		_place_on_road(Vector2(player.global_position.x, player.global_position.z), Vector2.ZERO)
+		chase.start()
 
 
 func _clear_police() -> void:
