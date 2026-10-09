@@ -1,8 +1,13 @@
 class_name LabCopDriver
 extends Node
-## New police driver for the city lab, step 1: chase only, no attacks yet.
-## It presses the same controls a player does (throttle, steer, handbrake), so cops slide, drift,
-## overshoot corners and crash under exactly the same physics as the red car.
+## Scripted police driver for the city lab. It presses the same controls a player does (throttle,
+## steer, handbrake), so cops slide, drift, overshoot corners and crash under the same physics as
+## the red car.
+##
+## Attacks: a cop close to you asks the chase for an attack slot, shows a "!" while it winds up,
+## then commits to the move for a moment without dodging anything (that is where cops end up in
+## each other) and swings wide to recover. Moves: rear ram, side slam, PIT (clip the rear corner
+## to spin you), brake check (get ahead in your lane and stand on the brakes).
 
 const SIGHT_RANGE: float = 70.0
 const TAIL_GAP: float = 10.0
@@ -26,6 +31,38 @@ var _reverse_left: float = 0.0
 var _reverse_steer: float = 0.0
 var _last_steer: float = 0.0
 
+enum Phase { NONE, WINDUP, COMMIT, RECOVER }
+const ATTACK_RANGE: float = 32.0
+## True while ramming: the chase lets the cop exceed its normal top speed.
+var burst: bool = false
+var phase: Phase = Phase.NONE
+var attack: String = ""
+var _phase_left: float = 0.0
+var _cooldown: float = 0.0
+var _side: float = 1.0
+var _warning: Label3D
+
+
+func _ready() -> void:
+	_cooldown = randf_range(1.0, 3.0)
+	_warning = Label3D.new()
+	_warning.text = "!"
+	_warning.font_size = 160
+	_warning.pixel_size = 0.012
+	_warning.outline_size = 36
+	_warning.modulate = Color("#FFD400")
+	_warning.outline_modulate = Color("#24394B")
+	_warning.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	_warning.no_depth_test = true
+	_warning.position = Vector3(0.0, 3.4, 0.0)
+	_warning.visible = false
+	car.add_child.call_deferred(_warning)
+	car.bumped.connect(_on_bumped)
+
+
+func _exit_tree() -> void:
+	if chase != null:
+		chase.release_attack(self)
 
 func _physics_process(delta: float) -> void:
 	if car == null:
@@ -40,6 +77,7 @@ func _physics_process(delta: float) -> void:
 	if _sight_clock <= 0.0:
 		_sight_clock = 0.2 + randf() * 0.05
 		_sees_target = distance < SIGHT_RANGE and _clear_line()
+	_update_attack(delta, distance)
 	if _reverse_left > 0.0:
 		_reverse_left -= delta
 		car.set_driver_command(-1.0, _reverse_steer, false)
@@ -47,13 +85,18 @@ func _physics_process(delta: float) -> void:
 	var target_velocity: Vector2 = _flat(target.velocity)
 	var aim: Vector2
 	var desired: float
-	if _sees_target:
+	if phase == Phase.WINDUP or phase == Phase.COMMIT:
+		var plan: Array = _attack_plan(here, goal, target_velocity)
+		aim = plan[0]
+		desired = plan[1]
+	elif _sees_target:
 		mode = "direct"
 		if distance < TAIL_GAP * 2.0:
-			# No attacks in step 1: sit on the bumper instead of ramming.
+			# Close but no attack slot yet: hang off your rear quarter, ready to go.
 			var ahead: Vector2 = _flat(-target.global_basis.z).normalized()
-			aim = goal - ahead * TAIL_GAP
-			desired = target_velocity.length() + clampf((distance - TAIL_GAP) * 0.8, -6.0, 6.0)
+			var right: Vector2 = _flat(target.global_basis.x).normalized()
+			aim = goal - ahead * (TAIL_GAP + 4.0) + right * _side * 3.5
+			desired = target_velocity.length() + clampf((distance - TAIL_GAP - 4.0) * 0.8, -6.0, 6.0)
 		else:
 			var lead: float = clampf(distance / maxf(absf(car.forward_speed) + 5.0, 10.0), 0.15, 0.9)
 			aim = goal + target_velocity * lead
@@ -67,6 +110,104 @@ func _physics_process(delta: float) -> void:
 		aim = _route_aim(here)
 		desired = _route_speed(here)
 	_drive(here, aim, desired, delta)
+
+
+# --- attacks -----------------------------------------------------------------
+
+func _update_attack(delta: float, distance: float) -> void:
+	_cooldown -= delta
+	if phase != Phase.NONE:
+		_phase_left -= delta
+		if _phase_left <= 0.0:
+			_next_phase()
+		return
+	if not _sees_target or _cooldown > 0.0 or distance > ATTACK_RANGE:
+		return
+	var kind: String = _choose_attack()
+	if kind.is_empty() or not chase.claim_attack(self):
+		return
+	attack = kind
+	phase = Phase.WINDUP
+	_phase_left = chase.windup_time()
+	mode = "windup"
+	_warning.visible = true
+
+
+func _next_phase() -> void:
+	match phase:
+		Phase.WINDUP:
+			phase = Phase.COMMIT
+			_phase_left = chase.commit_time()
+			mode = attack
+			burst = attack == "ram"
+			_warning.visible = false
+		Phase.COMMIT:
+			_end_attack()
+		Phase.RECOVER:
+			phase = Phase.NONE
+			mode = "direct"
+
+
+func _end_attack() -> void:
+	phase = Phase.RECOVER
+	_phase_left = randf_range(0.8, 1.4)
+	mode = "recover"
+	burst = false
+	_warning.visible = false
+	_cooldown = chase.attack_cooldown()
+	chase.release_attack(self)
+
+
+func _on_bumped(other: LabVehicle, _strength: float) -> void:
+	if phase == Phase.COMMIT and other == target:
+		_end_attack()
+
+
+## Picks the move that fits where this cop is relative to you right now.
+func _choose_attack() -> String:
+	var t_forward: Vector2 = _flat(-target.global_basis.z).normalized()
+	var t_right: Vector2 = _flat(target.global_basis.x).normalized()
+	var offset: Vector2 = _flat(car.global_position) - _flat(target.global_position)
+	var along: float = offset.dot(t_forward)
+	var lateral: float = offset.dot(t_right)
+	var aligned: float = _flat(-car.global_basis.z).normalized().dot(t_forward)
+	_side = 1.0 if lateral >= 0.0 else -1.0
+	if aligned < 0.5:
+		return ""
+	if along < -4.0 and along > -28.0 and absf(lateral) < 3.0:
+		return "ram"
+	if along > -7.0 and along < 2.0 and absf(lateral) > 1.8 and absf(lateral) < 8.0:
+		return "pit" if along < -2.5 else "slam"
+	if along > 6.0 and along < 35.0 and absf(lateral) < 3.0 and aligned > 0.7:
+		return "brake"
+	return ""
+
+
+## [aim point, desired speed] for the current attack phase.
+func _attack_plan(here: Vector2, goal: Vector2, target_velocity: Vector2) -> Array:
+	var t_forward: Vector2 = _flat(-target.global_basis.z).normalized()
+	var t_right: Vector2 = _flat(target.global_basis.x).normalized()
+	var speed: float = target_velocity.length()
+	var winding: bool = phase == Phase.WINDUP
+	match attack:
+		"ram":
+			if winding:
+				return [goal - t_forward * 9.0, speed - 1.0]
+			return [goal + target_velocity * 0.15, speed + 15.0]
+		"slam":
+			if winding:
+				return [goal + t_right * _side * 5.5, speed]
+			return [goal - t_right * _side * 2.0 + t_forward * 1.0, speed + 4.0]
+		"pit":
+			if winding:
+				return [goal - t_forward * 3.5 + t_right * _side * 2.5, speed + 1.0]
+			return [goal - t_forward * 1.8 - t_right * _side * 2.5, speed + 6.0]
+		"brake":
+			var ahead: float = (here - goal).dot(t_forward)
+			if winding:
+				return [goal + t_forward * maxf(ahead, 8.0), speed + 2.0]
+			return [goal + t_forward * maxf(ahead, 8.0), 0.0]
+	return [goal, speed]
 
 
 func _drive(here: Vector2, aim: Vector2, desired: float, delta: float) -> void:

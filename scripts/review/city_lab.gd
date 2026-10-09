@@ -101,6 +101,7 @@ func _ready() -> void:
 	chase.name = "Chase"
 	add_child(chase)
 	player.takes_damage = true
+	player.mass = 1.6
 	player.chamfer_collider()
 	player.destroyed.connect(_on_wrecked)
 	var launcher := player.get_node("Attachments/GroundPunch") as LauncherAttachment

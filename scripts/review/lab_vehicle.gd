@@ -5,17 +5,36 @@ extends ArcadeVehicle
 ## drives ArcadeVehicle unchanged. The lab never ends a run, so walls never emit crashed.
 
 const WALL_DRAG: float = 4.0
-## Health lost per hit: walls scale with how hard you hit them; cop contact only chips a little.
+## Health lost per wall hit scales with how hard you hit it (car hits are in crash() below).
 const WALL_DAMAGE_PER_MPS: float = 1.1
 const WALL_DAMAGE_MAX: float = 40.0
-const COP_DAMAGE_MIN: float = 2.0
-const COP_DAMAGE_MAX: float = 6.0
+
+## Car-to-car crashes: speed changes are shared by weight (cartoon-exaggerated), off-centre hits spin
+## the car that was hit, and big hits leave it staggered (loose grip, weak steering) for a moment.
+const CRASH_PUSH: float = 1.5
+const SPIN_GAIN: float = 0.35
+const SPIN_DECAY: float = 2.5
+const BOOST_MASS: float = 3.0
+const CAR_DAMAGE_PER_HIT: float = 0.35
+const CAR_DAMAGE_MAX: float = 10.0
+## Nudges below this closing speed push but do no damage.
+const CAR_DAMAGE_THRESHOLD: float = 3.0
+## Two cars that just hit cannot hit again for this long (scraping does not stack hits).
+const PAIR_COOLDOWN_FRAMES: int = 15
 
 signal damaged(amount: float, source: String)
 signal destroyed
+## Another car hit this one; strength is the speed change it caused (m/s).
+signal bumped(other: LabVehicle, strength: float)
+
+static var _pair_frames: Dictionary = {}
 
 @export var handling: CarHandling
 @export var max_health: float = 100.0
+## Cartoon weight for crashes: the red car is 1.6, a patrol car 1.0.
+@export var mass: float = 1.0
+var spin: float = 0.0
+var stagger: float = 0.0
 var health: float = 100.0
 var takes_damage: bool = false
 var drifting: bool = false
@@ -24,6 +43,10 @@ var slip_angle: float = 0.0
 var _steer: float = 0.0
 var _grip_return: float = 1.0
 var _wall_contact: bool = false
+
+
+func _ready() -> void:
+	add_to_group("lab_cars")
 
 
 func _physics_process(delta: float) -> void:
@@ -65,9 +88,17 @@ func _physics_process(delta: float) -> void:
 			yaw *= handling.drift_steer_boost
 		if not is_on_floor():
 			yaw *= handling.air_steer
+		if stagger > 0.0:
+			yaw *= 0.4
 		rotation.y -= _steer * yaw * signf(forward_speed) * delta
+	if absf(spin) > 0.01:
+		rotation.y += spin * delta
+		spin *= exp(-SPIN_DECAY * delta)
+	stagger = maxf(0.0, stagger - delta)
 	var desired: Vector3 = -global_basis.z * forward_speed
 	var grip: float = _current_grip(delta)
+	if stagger > 0.0:
+		grip = minf(grip, handling.drift_grip * 1.2)
 	velocity.x = lerpf(velocity.x, desired.x, minf(grip * delta, 1.0))
 	velocity.z = lerpf(velocity.z, desired.z, minf(grip * delta, 1.0))
 	_limit_slip(desired)
@@ -172,7 +203,7 @@ func _limit_slip(desired: Vector3) -> void:
 		slip_angle = 0.0
 		return
 	slip_angle = heading.angle_to(travel)
-	var cap: float = deg_to_rad(handling.drift_max_angle if drifting else 25.0)
+	var cap: float = deg_to_rad(80.0 if stagger > 0.0 else (handling.drift_max_angle if drifting else 25.0))
 	if absf(slip_angle) > cap:
 		travel = travel.rotated(-(slip_angle - signf(slip_angle) * cap))
 		velocity.x = travel.x
@@ -187,11 +218,14 @@ func _resolve_walls(before_move: Vector3) -> void:
 	var worst: float = -1.0
 	var worst_normal := Vector3.ZERO
 	var worst_impact: float = 0.0
-	var hit_police: bool = false
 	for index: int in range(get_slide_collision_count()):
 		var collision: KinematicCollision3D = get_slide_collision(index)
 		var normal: Vector3 = collision.get_normal()
 		if absf(normal.y) >= 0.5:
+			continue
+		var other_car := collision.get_collider() as LabVehicle
+		if other_car != null:
+			LabVehicle.crash(self, other_car, normal, before_move, collision.get_position())
 			continue
 		var impact: float = maxf(-before_move.dot(normal), 0.0)
 		var ratio: float = clampf(impact / maxf(flat_speed, 1.0), 0.0, 1.0)
@@ -199,13 +233,11 @@ func _resolve_walls(before_move: Vector3) -> void:
 			worst = ratio
 			worst_normal = normal
 			worst_impact = impact
-			var collider: Object = collision.get_collider()
-			hit_police = collider is Node and (collider as Node).is_in_group("police")
 	if worst < 0.0:
 		# The engine can stop the car on a wall without reporting the contact that frame;
 		# catch that from the speed the move actually lost.
 		var lost := Vector3(before_move.x - velocity.x, 0.0, before_move.z - velocity.z)
-		if lost.length() < 4.0 or flat_speed < 1.0:
+		if lost.length() < 4.0 or flat_speed < 1.0 or _car_nearby():
 			_wall_contact = false
 			return
 		worst_normal = -lost.normalized()
@@ -213,9 +245,7 @@ func _resolve_walls(before_move: Vector3) -> void:
 		worst = clampf(worst_impact / flat_speed, 0.0, 1.0)
 	if not _wall_contact or worst > 0.6:
 		forward_speed *= lerpf(handling.wall_glance_keep, handling.wall_head_on_keep, pow(worst, 1.5))
-		if hit_police:
-			apply_damage(clampf(worst_impact * 0.25, COP_DAMAGE_MIN, COP_DAMAGE_MAX), "cop")
-		elif worst_impact > 5.0:
+		if worst_impact > 5.0:
 			apply_damage(minf((worst_impact - 5.0) * WALL_DAMAGE_PER_MPS, WALL_DAMAGE_MAX), "crash")
 	else:
 		forward_speed = move_toward(forward_speed, 0.0, WALL_DRAG * get_physics_process_delta_time())
@@ -228,3 +258,60 @@ func _resolve_walls(before_move: Vector3) -> void:
 		if forward_speed < 0.0:
 			along_yaw += PI
 		rotation.y = lerp_angle(rotation.y, along_yaw, handling.wall_align)
+
+
+## Resolves one car-to-car contact (once per pair per physics frame, whichever car found it).
+## normal points from b toward a.
+static func crash(a: LabVehicle, b: LabVehicle, normal: Vector3, a_velocity: Vector3, point: Vector3) -> void:
+	var key: String = "%d:%d" % [mini(a.get_instance_id(), b.get_instance_id()), maxi(a.get_instance_id(), b.get_instance_id())]
+	var frame: int = Engine.get_physics_frames()
+	if frame - int(_pair_frames.get(key, -1000)) < PAIR_COOLDOWN_FRAMES:
+		return
+	if _pair_frames.size() > 512:
+		_pair_frames.clear()
+	var n := Vector3(normal.x, 0.0, normal.z).normalized()
+	var relative := Vector3(a_velocity.x - b.velocity.x, 0.0, a_velocity.z - b.velocity.z)
+	var closing: float = -relative.dot(n)
+	if closing < 1.0:
+		return
+	_pair_frames[key] = frame
+	var mass_a: float = a.effective_mass(-n)
+	var mass_b: float = b.effective_mass(n)
+	var push: float = closing * CRASH_PUSH
+	var hard: float = maxf(closing - CAR_DAMAGE_THRESHOLD, 0.0)
+	a.take_hit(n * push * mass_b / (mass_a + mass_b), point, b, hard * mass_b)
+	b.take_hit(-n * push * mass_a / (mass_a + mass_b), point, a, hard * mass_a)
+
+
+## Weight this car hits with toward a direction: boosting nose-first hits three times as hard.
+func effective_mass(toward: Vector3) -> float:
+	var weight: float = mass
+	var forward := Vector3(-global_basis.z.x, 0.0, -global_basis.z.z).normalized()
+	if boost.phase == ChargeBoost.Phase.BOOSTING and forward.dot(toward) > 0.5:
+		weight *= BOOST_MASS
+	if stagger > 0.0:
+		weight *= 0.7
+	return weight
+
+
+func take_hit(change: Vector3, point: Vector3, other: LabVehicle, force: float) -> void:
+	velocity.x += change.x
+	velocity.z += change.z
+	forward_speed += change.dot(Vector3(-global_basis.z.x, 0.0, -global_basis.z.z).normalized())
+	var strength: float = change.length()
+	if strength > 4.0:
+		stagger = maxf(stagger, clampf(strength / 20.0, 0.25, 0.9))
+	if strength > 8.0:
+		velocity.y += minf(strength * 0.12, 4.0)
+	var lever := Vector3(point.x - global_position.x, 0.0, point.z - global_position.z)
+	spin = clampf(spin + lever.cross(change).y * SPIN_GAIN, -6.0, 6.0)
+	if force > 0.0:
+		apply_damage(minf(force * CAR_DAMAGE_PER_HIT, CAR_DAMAGE_MAX), "cop" if other.is_in_group("police") else "car")
+	bumped.emit(other, strength)
+
+
+func _car_nearby() -> bool:
+	for node: Node in get_tree().get_nodes_in_group("lab_cars"):
+		if node != self and (node as Node3D).global_position.distance_to(global_position) < 6.5:
+			return true
+	return false

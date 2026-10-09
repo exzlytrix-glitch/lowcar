@@ -30,6 +30,7 @@ const BRAIN_PATH: String = "res://resources/ai/cop_brain.json"
 var brain: PolicyNet
 var use_brain: bool = false
 var nav: RoadNav
+var _attackers: Dictionary = {}
 var _spawn_clock: float = 0.0
 var _rng := RandomNumberGenerator.new()
 
@@ -94,6 +95,37 @@ func lateness() -> float:
 	return minf(0.9 + 0.08 * minute(), 1.8)
 
 
+## How many cops may attack at once, and how fast they do it, by chase minute.
+func attack_slots() -> int:
+	return mini(1 + int(minute() / 3.0), 4)
+
+
+func windup_time() -> float:
+	return lerpf(0.6, 0.35, clampf(minute() / 12.0, 0.0, 1.0))
+
+
+func commit_time() -> float:
+	return lerpf(0.7, 1.0, clampf(minute() / 12.0, 0.0, 1.0))
+
+
+func attack_cooldown() -> float:
+	return lerpf(4.5, 2.0, clampf(minute() / 12.0, 0.0, 1.0)) * randf_range(0.8, 1.2)
+
+
+func claim_attack(driver: Node) -> bool:
+	for key: Variant in _attackers.keys():
+		if not is_instance_valid(key):
+			_attackers.erase(key)
+	if _attackers.size() >= attack_slots():
+		return false
+	_attackers[driver] = true
+	return true
+
+
+func release_attack(driver: Node) -> void:
+	_attackers.erase(driver)
+
+
 func top_speed() -> float:
 	return base_top_speed * speed_scale()
 
@@ -114,7 +146,8 @@ func _physics_process(delta: float) -> void:
 			continue
 		var behind: bool = heading.dot(at - here) < 0.0
 		var lag: float = clampf((distance - CATCH_UP_START) / (CATCH_UP_FULL - CATCH_UP_START), 0.0, 1.0) if behind else 0.0
-		cop.tuning.maximum_speed_mps = top_speed() * lerpf(1.0, catch_up_boost, lag)
+		var ramming: bool = _drivers[cop] is LabCopDriver and (_drivers[cop] as LabCopDriver).burst
+		cop.tuning.maximum_speed_mps = top_speed() * lerpf(1.0, catch_up_boost, lag) * (1.3 if ramming else 1.0)
 		var scripted := _drivers[cop] as LabCopDriver
 		if scripted != null:
 			scripted.lateness = lateness()

@@ -7,7 +7,7 @@ extends Node
 const POLICE_MODEL: String = "res://assets/models/vehicles/police_cruiser/police_cruiser.glb"
 const PLAYER_MODEL: String = "res://scenes/vehicles/red_muscle_car.tscn"
 const RATE: float = 60.0
-const MODE_NAMES: PackedStringArray = ["route", "direct", "brain"]
+const MODE_NAMES: PackedStringArray = ["route", "direct", "brain", "windup", "ram", "slam", "pit", "brake", "recover"]
 
 
 class Track:
@@ -127,7 +127,7 @@ func _physics_process(_delta: float) -> void:
 		var driver: Node = cop.get_node_or_null("Driver")
 		var mode: String = String(driver.get("mode")) if driver != null else ""
 		var cop_track: Track = _by_cop[id]
-		_record(cop_track, cop, 2 if mode == "brain" else (1 if mode == "direct" else 0))
+		_record(cop_track, cop, maxi(0, MODE_NAMES.find(mode)))
 		cop_track.closest = minf(cop_track.closest, cop.global_position.distance_to(player.global_position))
 	frame += 1
 
