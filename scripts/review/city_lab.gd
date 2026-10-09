@@ -75,6 +75,7 @@ var _capture_dir: String = ""
 var _police: Array[LabVehicle] = []
 var chase: LabChase
 var recorder: LabRecorder
+var drives: LabDriveRecorder
 var _layer: CanvasLayer
 var _health_bar: ProgressBar
 var _health_fill := StyleBoxFlat.new()
@@ -107,6 +108,12 @@ func _ready() -> void:
 	recorder.map = _map
 	recorder.layer = _layer
 	add_child(recorder)
+	drives = LabDriveRecorder.new()
+	drives.name = "DriveRecorder"
+	drives.player = player
+	drives.chase = chase
+	drives.settings_source = func() -> CityGenSettings: return settings
+	add_child(drives)
 	# The reused police light bar only flashes while a run is "driving".
 	RunSession.phase = RunSession.Phase.DRIVING
 	player.controls_enabled = false
@@ -142,6 +149,10 @@ func _process(delta: float) -> void:
 	elif not recorder.replaying:
 		chase_line += "\n1: record the chase  ·  2: watch the last recording"
 	chase_line += "\nCops: %s  ·  B to switch" % chase.driver_label()
+	if drives.recording:
+		chase_line += "\n● TRAINING DRIVE %d:%02d  ·  drive like you normally would and escape  ·  J to save" % [int(drives.seconds()) / 60, int(drives.seconds()) % 60]
+	else:
+		chase_line += "\nJ: training drive (cops learn from your driving)  ·  saved so far: %d" % _saved_drive_count()
 	_hud.text = "CITY LAB  ·  seed %d  ·  %s\n%d km/h  ·  %d fps  ·  %s%s\n%s\nWASD drive · Shift boost · Space jump · Ctrl + steer drift\nM map · T tune · R back on road · G regenerate · N new seed · P cop behind · C clear cops" % [
 		settings.city_seed, stats, int(speed), Engine.get_frames_per_second(), district, drift, chase_line]
 	_health_bar.value = player.health
@@ -155,6 +166,11 @@ func _unhandled_input(event: InputEvent) -> void:
 	if recorder.replaying and key.physical_keycode != KEY_M:
 		return
 	match key.physical_keycode:
+		KEY_J:
+			if drives.recording:
+				_finish_drive(false)
+			else:
+				drives.start()
 		KEY_1:
 			recorder.toggle_recording()
 		KEY_2:
@@ -201,6 +217,8 @@ func regenerate() -> void:
 	_overlay.visible = true
 	await get_tree().process_frame
 	await get_tree().process_frame
+	if drives != null and drives.recording:
+		drives.stop(false)
 	_clear_police()
 	if city != null:
 		remove_child(city)
@@ -319,7 +337,30 @@ func _park_police_ahead() -> void:
 	_police.append(cop)
 
 
+func _finish_drive(wrecked: bool) -> void:
+	var path: String = drives.stop(wrecked)
+	_overlay.text = ("Training drive saved: %s" % path.get_file()) if not path.is_empty() else "Training drive too short to keep (under 5 s)"
+	_overlay.visible = true
+	if not wrecked:
+		await get_tree().create_timer(2.5).timeout
+		if not _wrecked and not _busy:
+			_overlay.visible = false
+
+
+func _saved_drive_count() -> int:
+	var folder := DirAccess.open(LabDriveRecorder.FOLDER)
+	if folder == null:
+		return 0
+	var count: int = 0
+	for file: String in folder.get_files():
+		if file.ends_with(".json"):
+			count += 1
+	return count
+
+
 func _on_wrecked() -> void:
+	if drives.recording:
+		drives.stop(true)
 	_wrecked = true
 	player.get_node("Presentation").play_explosion()
 	_overlay.text = "WRECKED — press R to get back on the road"
@@ -404,7 +445,7 @@ func _build_ui() -> void:
 	_hud.add_theme_constant_override("outline_size", 5)
 	layer.add_child(_hud)
 	_health_bar = ProgressBar.new()
-	_health_bar.position = Vector2(14, 194)
+	_health_bar.position = Vector2(14, 218)
 	_health_bar.size = Vector2(260, 18)
 	_health_bar.max_value = player.max_health
 	_health_bar.value = player.health

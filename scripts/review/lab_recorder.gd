@@ -271,7 +271,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _build_panel() -> void:
 	_panel = PanelContainer.new()
-	_panel.position = Vector2(14, 226)
+	_panel.position = Vector2(14, 250)
 	_panel.custom_minimum_size = Vector2(300, 0)
 	layer.add_child(_panel)
 	var column := VBoxContainer.new()
