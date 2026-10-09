@@ -1,0 +1,67 @@
+[gd_scene load_steps=10 format=3]
+
+[ext_resource type="PackedScene" path="res://assets/models/buildings/batch_25/small_motor_garage.glb" id="1"]
+
+[sub_resource type="BoxShape3D" id="Body0"]
+size = Vector3(11.6, 4.1, 0.38)
+
+[sub_resource type="BoxShape3D" id="Body1"]
+size = Vector3(0.38, 4.1, 8.8)
+
+[sub_resource type="BoxShape3D" id="Body2"]
+size = Vector3(6.0, 4.1, 8.8)
+
+[sub_resource type="BoxShape3D" id="Body3"]
+size = Vector3(0.55, 4.1, 0.38)
+
+[sub_resource type="BoxShape3D" id="Body4"]
+size = Vector3(0.85, 4.1, 0.38)
+
+[sub_resource type="BoxShape3D" id="Body5"]
+size = Vector3(11.6, 0.68, 0.38)
+
+[sub_resource type="BoxShape3D" id="Body6"]
+size = Vector3(11.6, 0.15, 8.8)
+
+[sub_resource type="BoxShape3D" id="Body7"]
+size = Vector3(11.6, 0.18, 8.8)
+
+[node name="SmallMotorGarage" type="Node3D"]
+
+[node name="Visual" parent="." instance=ExtResource("1")]
+
+[node name="BuildingBody" type="StaticBody3D" parent="."]
+collision_layer = 1
+collision_mask = 0
+
+[node name="Collision" type="CollisionShape3D" parent="BuildingBody"]
+position = Vector3(0, 2.05, -4.21)
+shape = SubResource("Body0")
+
+[node name="Collision1" type="CollisionShape3D" parent="BuildingBody"]
+position = Vector3(-5.61, 2.05, 0)
+shape = SubResource("Body1")
+
+[node name="Collision2" type="CollisionShape3D" parent="BuildingBody"]
+position = Vector3(2.8, 2.05, 0)
+shape = SubResource("Body2")
+
+[node name="Collision3" type="CollisionShape3D" parent="BuildingBody"]
+position = Vector3(-5.525, 2.05, 4.21)
+shape = SubResource("Body3")
+
+[node name="Collision4" type="CollisionShape3D" parent="BuildingBody"]
+position = Vector3(-0.625, 2.05, 4.21)
+shape = SubResource("Body4")
+
+[node name="Collision5" type="CollisionShape3D" parent="BuildingBody"]
+position = Vector3(0, 3.76, 4.21)
+shape = SubResource("Body5")
+
+[node name="Collision6" type="CollisionShape3D" parent="BuildingBody"]
+position = Vector3(0, 0.075, 0)
+shape = SubResource("Body6")
+
+[node name="Collision7" type="CollisionShape3D" parent="BuildingBody"]
+position = Vector3(0, 4.1, 0)
+shape = SubResource("Body7")

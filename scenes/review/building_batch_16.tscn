@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/review/building_gallery.gd" id="1"]
+
+[node name="BuildingBatch16" type="Node3D"]
+script = ExtResource("1")
+asset_dir = "res://assets/models/buildings/batch_16/"
+ids = Array[String](["blue_roof_apartments", "setback_apartments", "courtyard_apartments", "long_balcony_apartments"])
+titles = Array[String](["BLUE-ROOF APARTMENTS", "SETBACK APARTMENTS", "COURTYARD APARTMENTS", "LONG BALCONY APARTMENTS"])
+notes = Array[String](["Coral / four stories / blue pitched roof / cream dormers and entrance portico", "Mint / three-story base / smaller fourth floor / terrace / corner balconies", "Cream / broad U-shaped block / terracotta trim / open courtyard and side passage", "Powder blue / three stories / two full-width ornamental galleries / blue roof edge"])
+scene_folder = "res://scenes/buildings/batch_16/"
+lineup_spacing = 21.0
+lineup_size = 53.0
+lineup_heading = "BATCH 16 / PASTEL FRENCH QUARTER"

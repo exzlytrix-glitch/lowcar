@@ -1,0 +1,314 @@
+{
+  "batch": 11,
+  "units": "meters",
+  "godot_front": "+Z",
+  "origin": "ground center",
+  "style": "Pastel French Quarter / New Orleans Creole",
+  "palette_srgb": {
+    "cream": "F5E7CD",
+    "stone": "D7C8AC",
+    "coral": "E9967C",
+    "coral_dark": "CC715D",
+    "mint": "83B9A8",
+    "mint_dark": "62978F",
+    "yellow": "EBC567",
+    "yellow_dark": "C99B46",
+    "roof": "52738C",
+    "teal": "328D89",
+    "ink": "24394B",
+    "glass": "34576B",
+    "reflection": "739BAC",
+    "green": "7BAA67",
+    "green_dark": "527B53",
+    "pot": "BE7659",
+    "metal": "8A9B9E",
+    "blue": "96BFD4",
+    "blue_dark": "648FA9",
+    "lilac": "B7A8CF"
+  },
+  "models": [
+    {
+      "id": "taco_corner",
+      "name": "TacoCorner",
+      "description": "Terracotta one-story L-shaped taco restaurant; open mint-walled terrace; broad recessed windows; taller rear kitchen.",
+      "glb": "taco_corner.glb",
+      "source": "source/taco_corner.blend",
+      "triangles": 4082,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 187,
+      "materials": [
+        "Coral_Dark \u2014 CC715D",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Mint \u2014 83B9A8",
+        "Mint_Dark \u2014 62978F",
+        "Reflection \u2014 739BAC",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -6.035,
+          -5.445,
+          0.0
+        ],
+        "max": [
+          6.035,
+          4.935,
+          4.655
+        ]
+      },
+      "sha256": "ce04653c4da7011aa81512a1c16d976f7c163e6840ea849794e034094b8d8873",
+      "roster_id": 34,
+      "footprint_m": [
+        11.6,
+        9.4
+      ],
+      "body_height_m": 3.15,
+      "scene": "res://scenes/buildings/batch_11/taco_corner.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            -3.25,
+            1.575,
+            0
+          ],
+          "size": [
+            5.1,
+            3.15,
+            9.4
+          ]
+        },
+        {
+          "center": [
+            2.55,
+            1.575,
+            -2.6
+          ],
+          "size": [
+            6.5,
+            3.15,
+            4.2
+          ]
+        },
+        {
+          "center": [
+            2.55,
+            0.035,
+            2.1
+          ],
+          "size": [
+            6.5,
+            0.07,
+            5.2
+          ]
+        },
+        {
+          "center": [
+            0.75,
+            0.42,
+            4.7
+          ],
+          "size": [
+            2.9,
+            0.84,
+            0.18
+          ]
+        },
+        {
+          "center": [
+            5.0,
+            0.42,
+            4.7
+          ],
+          "size": [
+            1.6,
+            0.84,
+            0.18
+          ]
+        },
+        {
+          "center": [
+            5.8,
+            0.42,
+            2.1
+          ],
+          "size": [
+            0.18,
+            0.84,
+            5.2
+          ]
+        }
+      ]
+    },
+    {
+      "id": "neighborhood_restaurant",
+      "name": "NeighborhoodRestaurant",
+      "description": "Coral three-story neighborhood restaurant; paired cream galleries; shuttered upper windows; setback roof dining terrace.",
+      "glb": "neighborhood_restaurant.glb",
+      "source": "source/neighborhood_restaurant.blend",
+      "triangles": 8986,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 516,
+      "materials": [
+        "Blue_Dark \u2014 648FA9",
+        "Coral \u2014 E9967C",
+        "Coral_Dark \u2014 CC715D",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Green \u2014 7BAA67",
+        "Ink \u2014 24394B",
+        "Pot \u2014 BE7659",
+        "Reflection \u2014 739BAC",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -5.36,
+          -5.755,
+          0.0
+        ],
+        "max": [
+          5.36,
+          4.96,
+          11.3032
+        ]
+      },
+      "sha256": "3629b1bf0645c15b4723a8c0b446626e907b1d3e7f332cc4f7a4059c441dc971",
+      "roster_id": 35,
+      "footprint_m": [
+        10.2,
+        9.4
+      ],
+      "body_height_m": 9.9,
+      "scene": "res://scenes/buildings/batch_11/neighborhood_restaurant.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            0,
+            4.95,
+            0
+          ],
+          "size": [
+            10.2,
+            9.9,
+            9.4
+          ]
+        }
+      ]
+    },
+    {
+      "id": "city_food_hall",
+      "name": "CityFoodHall",
+      "description": "Broad butter-yellow two-story food hall; tall grouped windows; central double-height entry; shallow rear sawtooth roof.",
+      "glb": "city_food_hall.glb",
+      "source": "source/city_food_hall.blend",
+      "triangles": 3822,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 236,
+      "materials": [
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89",
+        "Yellow \u2014 EBC567",
+        "Yellow_Dark \u2014 C99B46"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -8.26,
+          -6.505,
+          0.0
+        ],
+        "max": [
+          8.26,
+          5.76,
+          8.04
+        ]
+      },
+      "sha256": "51457819df826792da103da93db9b7c4340ba163507463840822a6ec7f021927",
+      "roster_id": 36,
+      "footprint_m": [
+        16.0,
+        11.0
+      ],
+      "body_height_m": 7.0,
+      "scene": "res://scenes/buildings/batch_11/city_food_hall.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            0,
+            3.5,
+            0
+          ],
+          "size": [
+            16.0,
+            7.0,
+            11.0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "paired_semi_detached",
+      "name": "PairedSemiDetached",
+      "description": "Attached coral and mint two-story homes; mirrored doors; projecting coral bay; shared broad blue gable.",
+      "glb": "paired_semi_detached.glb",
+      "source": "source/paired_semi_detached.blend",
+      "triangles": 5336,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 339,
+      "materials": [
+        "Blue_Dark \u2014 648FA9",
+        "Coral \u2014 E9967C",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Mint \u2014 83B9A8",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -6.26,
+          -5.635,
+          0.0
+        ],
+        "max": [
+          6.26,
+          4.985,
+          7.9731
+        ]
+      },
+      "sha256": "8836fce38f52cb3c05c6dbb8206770711fb096d3209cda1b9c9f39778371a5cf",
+      "roster_id": 41,
+      "footprint_m": [
+        12.0,
+        9.4
+      ],
+      "body_height_m": 6.2,
+      "scene": "res://scenes/buildings/batch_11/paired_semi_detached.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            0,
+            3.1,
+            0
+          ],
+          "size": [
+            12.0,
+            6.2,
+            9.4
+          ]
+        }
+      ]
+    }
+  ]
+}

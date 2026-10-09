@@ -1,0 +1,25 @@
+{
+  "name": "Belle Rive police cruiser",
+  "city": "Belle Rive",
+  "unit": "021",
+  "triangles": 6927,
+  "runtime_mesh_objects": 7,
+  "editable_source_mesh_objects": 201,
+  "glb_sha256": "0e955331a5b8cb183e35923fc82b9afded6b1ca1239afcd225629c5dcbf04ec4",
+  "forward": "-Z in Godot",
+  "units": "meters",
+  "wheel_radius_m": 0.43,
+  "wheel_paths": [
+    "Wheels/FrontLeft",
+    "Wheels/FrontRight",
+    "Wheels/RearLeft",
+    "Wheels/RearRight"
+  ],
+  "wheel_spin_child": "{Wheel}Steer/{Wheel}Spin",
+  "light_paths": [
+    "Chassis/RedLight/RedLightMesh",
+    "Chassis/BlueLight/BlueLightMesh"
+  ],
+  "glb": "police_cruiser.glb",
+  "source": "source/police_cruiser.blend"
+}

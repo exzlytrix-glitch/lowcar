@@ -1,0 +1,44 @@
+{
+  "id": "pastel_pedestrian",
+  "name": "Pastel cube pedestrian",
+  "units": "meters",
+  "front": "Godot +Z",
+  "origin": "ground center",
+  "height_m": 1.68,
+  "palette_srgb": {
+    "PastelLavender": "B7A5DB"
+  },
+  "materials": 1,
+  "textures": 0,
+  "triangles": 528,
+  "editable_parts": 12,
+  "runtime_meshes": 1,
+  "bones": [
+    "Hips",
+    "Torso",
+    "Head",
+    "Arm_L",
+    "Hand_L",
+    "Leg_L",
+    "Foot_L",
+    "Arm_R",
+    "Hand_R",
+    "Leg_R",
+    "Foot_R"
+  ],
+  "glb": "pastel_pedestrian.glb",
+  "source": "source/pastel_pedestrian.blend",
+  "blender_bounds_m": {
+    "min": [
+      -0.476,
+      -0.225,
+      0.0
+    ],
+    "max": [
+      0.476,
+      0.187,
+      1.68
+    ]
+  },
+  "sha256": "6cd7ebf02efa53f57d4b0d966228e1573d057c8a67a9a3254b7cc3eb2b79b761"
+}

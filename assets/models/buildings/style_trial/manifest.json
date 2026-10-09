@@ -1,0 +1,135 @@
+{
+  "units": "meters",
+  "godot_front": "+Z",
+  "origin": "ground center",
+  "palette_srgb": {
+    "cream": "F5E7CD",
+    "stone": "D7C8AC",
+    "coral": "E9967C",
+    "coral_dark": "CC715D",
+    "mint": "83B9A8",
+    "mint_dark": "62978F",
+    "yellow": "EBC567",
+    "yellow_dark": "C99B46",
+    "roof": "52738C",
+    "teal": "328D89",
+    "ink": "24394B",
+    "glass": "34576B",
+    "reflection": "739BAC",
+    "green": "7BAA67",
+    "green_dark": "527B53",
+    "pot": "BE7659",
+    "metal": "8A9B9E"
+  },
+  "models": [
+    {
+      "id": "corner_market",
+      "name": "CornerMarket",
+      "description": "Coral three-story corner market with a chamfered entrance, striped awnings, real recessed windows, and a roof garden.",
+      "glb": "corner_market.glb",
+      "source": "source/corner_market.blend",
+      "triangles": 8916,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 510,
+      "materials": [
+        "Coral \u2014 E9967C",
+        "Coral_Dark \u2014 CC715D",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Green \u2014 7BAA67",
+        "Ink \u2014 24394B",
+        "Metal \u2014 8A9B9E",
+        "Pot \u2014 BE7659",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -6.475,
+          -6.153,
+          0.0
+        ],
+        "max": [
+          5.635,
+          4.985,
+          10.845
+        ]
+      },
+      "sha256": "4d4a10a866deecaef3718494def9b0e041315c7fe37f9416bcb318a5fed1b2fb"
+    },
+    {
+      "id": "terrace_apartments",
+      "name": "TerraceApartments",
+      "description": "Mint four-story apartments with alternating deep balconies, a coral stair tower, a setback roof room, and a pergola terrace.",
+      "glb": "terrace_apartments.glb",
+      "source": "source/terrace_apartments.blend",
+      "triangles": 9118,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 546,
+      "materials": [
+        "Coral_Dark \u2014 CC715D",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Green \u2014 7BAA67",
+        "Ink \u2014 24394B",
+        "Metal \u2014 8A9B9E",
+        "Mint \u2014 83B9A8",
+        "Mint_Dark \u2014 62978F",
+        "Pot \u2014 BE7659",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -5.695,
+          -5.735,
+          0.0
+        ],
+        "max": [
+          4.835,
+          4.735,
+          14.95
+        ]
+      },
+      "sha256": "7adb13387ddd1bed560a687e24cf4b3f1e4124c4834182f7601713c316c754cc"
+    },
+    {
+      "id": "redline_garage",
+      "name": "RedlineGarage",
+      "description": "Butter-yellow three-bay auto garage with a triple sawtooth roof, clerestory glass, two open service bays, and one closed shutter.",
+      "glb": "redline_garage.glb",
+      "source": "source/redline_garage.blend",
+      "triangles": 4962,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 188,
+      "materials": [
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89",
+        "Yellow \u2014 EBC567",
+        "Yellow_Dark \u2014 C99B46"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -7.625,
+          -5.733,
+          0.0
+        ],
+        "max": [
+          7.0053,
+          4.735,
+          6.6759
+        ]
+      },
+      "sha256": "13ee2d82b9411db7ed7056b2e08136cbfb7e75551c0ad76e8250c3e8b3c987bf"
+    }
+  ]
+}

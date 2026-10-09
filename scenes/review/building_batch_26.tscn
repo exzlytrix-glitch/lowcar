@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/review/building_gallery.gd" id="1"]
+
+[node name="BuildingBatch26" type="Node3D"]
+script = ExtResource("1")
+asset_dir = "res://assets/models/buildings/batch_26/"
+ids = Array[String](["raised_roof_storehouse", "textile_factory", "print_workshop", "carpenters_workshop"])
+titles = Array[String](["RAISED-ROOF STOREHOUSE", "TEXTILE FACTORY", "PRINT WORKSHOP", "CARPENTER’S WORKSHOP"])
+notes = Array[String](["Butter yellow / raised central roof / clerestory windows / two shutters", "Terracotta / three stories / tall repeated windows / low loading wing", "Powder blue / two stories / studio glass / stepped navy parapet", "Cream and teal / low L-shaped shed / covered workfront / blue gable"])
+scene_folder = "res://scenes/buildings/batch_26/"
+lineup_spacing = 23.0
+lineup_size = 61.0
+lineup_heading = "BATCH 26 / PASTEL FRENCH QUARTER"

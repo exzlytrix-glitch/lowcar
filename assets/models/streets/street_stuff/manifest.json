@@ -1,0 +1,183 @@
+{
+  "units": "meters",
+  "front": "Godot +Z",
+  "origin": "ground center",
+  "sidewalk_height_m": 0.18,
+  "palette_srgb": {
+    "Cream": "F0E8D8",
+    "Stone": "DED8CB",
+    "Seam": "C8C2B7",
+    "Sage": "527A73",
+    "Teal": "65978C",
+    "DarkTeal": "365C57",
+    "Wood": "C59270",
+    "WoodLight": "D5A17B",
+    "Coral": "DC8469",
+    "Ink": "293D43",
+    "Glass": "FFF0C5",
+    "Brass": "CEAE71"
+  },
+  "models": [
+    {
+      "id": "sidewalk_straight",
+      "name": "Straight sidewalk",
+      "glb": "sidewalk_straight.glb",
+      "source": "source/sidewalk_straight.blend",
+      "placement_scene": "scenes/streets/street_stuff/sidewalk_straight.tscn",
+      "triangles": 144,
+      "editable_parts": 6,
+      "runtime_meshes": 1,
+      "blender_bounds_m": {
+        "min": [
+          -2.0,
+          -1.0,
+          0.0
+        ],
+        "max": [
+          2.0,
+          1.0,
+          0.18
+        ]
+      },
+      "sha256": "204167e2233c46273efdf4f285fa95ebae181b530cdb139f8570188717c48292"
+    },
+    {
+      "id": "sidewalk_corner",
+      "name": "Faceted sidewalk corner",
+      "glb": "sidewalk_corner.glb",
+      "source": "source/sidewalk_corner.blend",
+      "placement_scene": "scenes/streets/street_stuff/sidewalk_corner.tscn",
+      "triangles": 124,
+      "editable_parts": 9,
+      "runtime_meshes": 1,
+      "blender_bounds_m": {
+        "min": [
+          -2.0,
+          -2.0,
+          0.0
+        ],
+        "max": [
+          2.0,
+          2.0,
+          0.18175
+        ]
+      },
+      "sha256": "70927d05c160b6880ce51bbbd707f241c725eea744393cc055b3a62d03636161"
+    },
+    {
+      "id": "sidewalk_ramp",
+      "name": "Curb ramp",
+      "glb": "sidewalk_ramp.glb",
+      "source": "source/sidewalk_ramp.blend",
+      "placement_scene": "scenes/streets/street_stuff/sidewalk_ramp.tscn",
+      "triangles": 404,
+      "editable_parts": 17,
+      "runtime_meshes": 1,
+      "blender_bounds_m": {
+        "min": [
+          -1.5,
+          -1.0,
+          0.0
+        ],
+        "max": [
+          1.5,
+          1.0,
+          0.18
+        ]
+      },
+      "sha256": "694648b911402987bad797e840b1a0162b8501082ec4c9137082745815b6c543"
+    },
+    {
+      "id": "streetlamp",
+      "name": "Cream and sage lantern pole",
+      "glb": "streetlamp.glb",
+      "source": "source/streetlamp.blend",
+      "placement_scene": "scenes/streets/street_stuff/streetlamp.tscn",
+      "triangles": 604,
+      "editable_parts": 17,
+      "runtime_meshes": 1,
+      "blender_bounds_m": {
+        "min": [
+          -0.28,
+          -0.28,
+          0.0
+        ],
+        "max": [
+          0.28,
+          0.28,
+          4.5
+        ]
+      },
+      "sha256": "739e265b22561f7fbbd6b92bd2b25015e03a874c604a07abd7032352b0e3e528"
+    },
+    {
+      "id": "trashcan",
+      "name": "Open teal trash can",
+      "glb": "trashcan.glb",
+      "source": "source/trashcan.blend",
+      "placement_scene": "scenes/streets/street_stuff/trashcan.tscn",
+      "triangles": 792,
+      "editable_parts": 20,
+      "runtime_meshes": 1,
+      "blender_bounds_m": {
+        "min": [
+          -0.386,
+          -0.338,
+          0.0
+        ],
+        "max": [
+          0.386,
+          0.338,
+          0.97
+        ]
+      },
+      "sha256": "b0b10723f409612d49787b1912363cc505761652e7d9e4e686f02e7a512c8c9a"
+    },
+    {
+      "id": "bench",
+      "name": "Peach slat bench",
+      "glb": "bench.glb",
+      "source": "source/bench.blend",
+      "placement_scene": "scenes/streets/street_stuff/bench.tscn",
+      "triangles": 988,
+      "editable_parts": 29,
+      "runtime_meshes": 1,
+      "blender_bounds_m": {
+        "min": [
+          -1.03,
+          -0.34,
+          0.0
+        ],
+        "max": [
+          1.03,
+          0.38071,
+          1.02483
+        ]
+      },
+      "sha256": "fe18131ba7e4679d3c9b86edf5b76f83d26288b7f53e95626ef594b3f140dfc8"
+    },
+    {
+      "id": "hydrant",
+      "name": "Coral fire hydrant",
+      "glb": "hydrant.glb",
+      "source": "source/hydrant.blend",
+      "placement_scene": "scenes/streets/street_stuff/hydrant.tscn",
+      "triangles": 388,
+      "editable_parts": 13,
+      "runtime_meshes": 1,
+      "blender_bounds_m": {
+        "min": [
+          -0.385,
+          -0.282,
+          0.0
+        ],
+        "max": [
+          0.385,
+          0.245,
+          0.8825
+        ]
+      },
+      "sha256": "0d6c29baaf7e9d9c6a2d466f29b8a8ea2c71a1350a9fd33ad0386b1053372c15"
+    }
+  ]
+}

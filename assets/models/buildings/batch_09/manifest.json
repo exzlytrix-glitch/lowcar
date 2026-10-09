@@ -1,0 +1,200 @@
+{
+  "batch": 9,
+  "units": "meters",
+  "godot_front": "+Z",
+  "origin": "ground center",
+  "style": "Pastel French Quarter / New Orleans Creole",
+  "palette_srgb": {
+    "cream": "F5E7CD",
+    "stone": "D7C8AC",
+    "coral": "E9967C",
+    "coral_dark": "CC715D",
+    "mint": "83B9A8",
+    "mint_dark": "62978F",
+    "yellow": "EBC567",
+    "yellow_dark": "C99B46",
+    "roof": "52738C",
+    "teal": "328D89",
+    "ink": "24394B",
+    "glass": "34576B",
+    "reflection": "739BAC",
+    "green": "7BAA67",
+    "green_dark": "527B53",
+    "pot": "BE7659",
+    "metal": "8A9B9E",
+    "blue": "96BFD4",
+    "blue_dark": "648FA9",
+    "lilac": "B7A8CF"
+  },
+  "models": [
+    {
+      "id": "noodle_kitchen",
+      "name": "NoodleKitchen",
+      "description": "Cream three-story noodle kitchen; solid teal awning; staggered shuttered window pairs; rear chimney.",
+      "glb": "noodle_kitchen.glb",
+      "source": "source/noodle_kitchen.blend",
+      "triangles": 6674,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 390,
+      "materials": [
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Metal \u2014 8A9B9E",
+        "Mint_Dark \u2014 62978F",
+        "Reflection \u2014 739BAC",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -4.16,
+          -5.53,
+          0.0
+        ],
+        "max": [
+          4.16,
+          4.76,
+          10.505
+        ]
+      },
+      "sha256": "b986a33fd7c2e765b4bd50a2878adccc7b7effd47038b5dce0c5f2f8c88d8f5c",
+      "roster_id": 26,
+      "footprint_m": [
+        7.8,
+        9.0
+      ],
+      "body_height_m": 9.3,
+      "scene": "res://scenes/buildings/batch_09/noodle_kitchen.tscn"
+    },
+    {
+      "id": "ice_cream_shop",
+      "name": "IceCreamShop",
+      "description": "Powder-blue one-story pavilion; faceted rounded corner; broad serving window; generous flat canopy.",
+      "glb": "ice_cream_shop.glb",
+      "source": "source/ice_cream_shop.blend",
+      "triangles": 2154,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 87,
+      "materials": [
+        "Blue \u2014 96BFD4",
+        "Blue_Dark \u2014 648FA9",
+        "Coral \u2014 E9967C",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -4.294,
+          -4.268,
+          0.0
+        ],
+        "max": [
+          4.294,
+          4.181,
+          3.87
+        ]
+      },
+      "sha256": "e40c228db001c73f317129ad69d23407b20a9bdc0ad0ec892d94a6f444c83ed0",
+      "roster_id": 27,
+      "footprint_m": [
+        7.6,
+        7.4
+      ],
+      "body_height_m": 3.0,
+      "scene": "res://scenes/buildings/batch_09/ice_cream_shop.tscn"
+    },
+    {
+      "id": "fresh_produce_shop",
+      "name": "FreshProduceShop",
+      "description": "Wide mint produce shop; three front bays; long striped awning; yellow trim; shallow hipped roof.",
+      "glb": "fresh_produce_shop.glb",
+      "source": "source/fresh_produce_shop.blend",
+      "triangles": 3248,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 162,
+      "materials": [
+        "Coral \u2014 E9967C",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Green \u2014 7BAA67",
+        "Ink \u2014 24394B",
+        "Metal \u2014 8A9B9E",
+        "Mint \u2014 83B9A8",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89",
+        "Yellow \u2014 EBC567",
+        "Yellow_Dark \u2014 C99B46"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -6.16,
+          -5.435,
+          0.0
+        ],
+        "max": [
+          6.16,
+          4.56,
+          4.505
+        ]
+      },
+      "sha256": "dd754790ce6a45b1ad8969cf45ebb8a12025a7e4ac1dba07f1d91113d9ed0469",
+      "roster_id": 28,
+      "footprint_m": [
+        11.8,
+        8.6
+      ],
+      "body_height_m": 3.25,
+      "scene": "res://scenes/buildings/batch_09/fresh_produce_shop.tscn"
+    },
+    {
+      "id": "butcher_shop",
+      "name": "ButcherShop",
+      "description": "Terracotta two-story butcher; thick cream shop frame; small upper windows; side delivery door.",
+      "glb": "butcher_shop.glb",
+      "source": "source/butcher_shop.blend",
+      "triangles": 4602,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 250,
+      "materials": [
+        "Blue_Dark \u2014 648FA9",
+        "Coral_Dark \u2014 CC715D",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Metal \u2014 8A9B9E",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -3.91,
+          -4.985,
+          0.0
+        ],
+        "max": [
+          4.315,
+          4.66,
+          7.22
+        ]
+      },
+      "sha256": "508a825fd743d6fa44094b6642c6274efcc97662e74c1d80321598b9f5be1705",
+      "roster_id": 29,
+      "footprint_m": [
+        7.3,
+        8.8
+      ],
+      "body_height_m": 6.3,
+      "scene": "res://scenes/buildings/batch_09/butcher_shop.tscn"
+    }
+  ]
+}

@@ -1,0 +1,8446 @@
+{
+  "pose_fps": 12,
+  "clips": {
+    "RESET": {
+      "frames": 1,
+      "loop": false,
+      "description": "Neutral bind pose.",
+      "keys": [
+        {
+          "frame": 0,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 1,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        }
+      ]
+    },
+    "idle": {
+      "frames": 12,
+      "loop": true,
+      "description": "Very small engine rumble.",
+      "keys": [
+        {
+          "frame": 0,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 3,
+          "body_scale": [
+            1,
+            0.997,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 6,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 9,
+          "body_scale": [
+            1,
+            1.003,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 12,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        }
+      ]
+    },
+    "drive": {
+      "frames": 12,
+      "loop": true,
+      "description": "Restrained road rhythm beneath smooth travel.",
+      "keys": [
+        {
+          "frame": 0,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 3,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0.25,
+            0,
+            0.18
+          ],
+          "body_offset": [
+            0,
+            0.007,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 6,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 9,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            -0.2,
+            0,
+            -0.18
+          ],
+          "body_offset": [
+            0,
+            0.004,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 12,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        }
+      ]
+    },
+    "accelerate": {
+      "frames": 7,
+      "loop": false,
+      "description": "Rear-loaded anticipation, nose lift, and settle.",
+      "keys": [
+        {
+          "frame": 0,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 1,
+          "body_scale": [
+            1.02,
+            0.95,
+            1.01
+          ],
+          "body_rotation": [
+            2.5,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 2,
+          "body_scale": [
+            0.98,
+            1.05,
+            0.99
+          ],
+          "body_rotation": [
+            6.0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            0.97,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 3,
+          "body_scale": [
+            0.993,
+            1.025,
+            1
+          ],
+          "body_rotation": [
+            4.2,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 5,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            2.0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 7,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            1.2,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        }
+      ]
+    },
+    "brake": {
+      "frames": 7,
+      "loop": false,
+      "description": "Nose dip, one short rebound, and a loaded stance while braking is held.",
+      "keys": [
+        {
+          "frame": 0,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 1,
+          "body_scale": [
+            1.055,
+            0.89,
+            1.015
+          ],
+          "body_rotation": [
+            -6.0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.03,
+            0.92,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 2,
+          "body_scale": [
+            1.045,
+            0.91,
+            1.01
+          ],
+          "body_rotation": [
+            -4.8,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -2,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.02,
+            0.94,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 3,
+          "body_scale": [
+            0.992,
+            1.025,
+            1
+          ],
+          "body_rotation": [
+            1.0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -1,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 5,
+          "body_scale": [
+            1.02,
+            0.97,
+            1
+          ],
+          "body_rotation": [
+            -2.5,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 7,
+          "body_scale": [
+            1.015,
+            0.98,
+            1
+          ],
+          "body_rotation": [
+            -2.0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        }
+      ]
+    },
+    "recover": {
+      "frames": 5,
+      "loop": false,
+      "description": "Small overshoot when the driver releases a maneuver.",
+      "keys": [
+        {
+          "frame": 0,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 1,
+          "body_scale": [
+            0.997,
+            1.025,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 3,
+          "body_scale": [
+            1.006,
+            0.987,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 5,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        }
+      ]
+    },
+    "turn_left_a": {
+      "frames": 8,
+      "loop": false,
+      "description": "Left turn with a bounded A anticipation and overshoot.",
+      "keys": [
+        {
+          "frame": 0,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 1,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0,
+            1.2
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 2,
+          "body_scale": [
+            1.018,
+            0.98,
+            1
+          ],
+          "body_rotation": [
+            -0.8,
+            1.5,
+            -11.0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 4,
+          "body_scale": [
+            1.008,
+            0.995,
+            1
+          ],
+          "body_rotation": [
+            0.4,
+            0.8,
+            -8.4
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -0.7,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 6,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0.6,
+            -9.0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 8,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0.6,
+            -9.0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        }
+      ]
+    },
+    "turn_left_b": {
+      "frames": 8,
+      "loop": false,
+      "description": "Left turn with a bounded B anticipation and overshoot.",
+      "keys": [
+        {
+          "frame": 0,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 1,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0.8
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 2,
+          "body_scale": [
+            1.018,
+            0.98,
+            1
+          ],
+          "body_rotation": [
+            -0.8,
+            1.5,
+            -11.5
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 4,
+          "body_scale": [
+            1.008,
+            0.995,
+            1
+          ],
+          "body_rotation": [
+            0.4,
+            0.8,
+            -8.9
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -0.7,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 6,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0.6,
+            -9.5
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 8,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0.6,
+            -9.5
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        }
+      ]
+    },
+    "turn_left_c": {
+      "frames": 8,
+      "loop": false,
+      "description": "Left turn with a bounded C anticipation and overshoot.",
+      "keys": [
+        {
+          "frame": 0,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 1,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0,
+            1.5
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 2,
+          "body_scale": [
+            1.018,
+            0.98,
+            1
+          ],
+          "body_rotation": [
+            -0.8,
+            1.5,
+            -10.7
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 4,
+          "body_scale": [
+            1.008,
+            0.995,
+            1
+          ],
+          "body_rotation": [
+            0.4,
+            0.8,
+            -8.1
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -0.7,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 6,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0.6,
+            -8.7
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 8,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0.6,
+            -8.7
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        }
+      ]
+    },
+    "turn_left_hold": {
+      "frames": 12,
+      "loop": true,
+      "description": "Small loaded-body drift through a held turn.",
+      "keys": [
+        {
+          "frame": 0,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0.6,
+            -9
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 4,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0.3,
+            0.7,
+            -9.25
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -0.5,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 8,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            -0.2,
+            0.5,
+            -8.85
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 12,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0.6,
+            -9
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        }
+      ]
+    },
+    "handbrake_left": {
+      "frames": 8,
+      "loop": false,
+      "description": "Rear steps out while the chassis loads the outside tires.",
+      "keys": [
+        {
+          "frame": 0,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 1,
+          "body_scale": [
+            1.04,
+            0.92,
+            1
+          ],
+          "body_rotation": [
+            -1.8,
+            4,
+            -8
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 3,
+          "body_scale": [
+            1.045,
+            0.94,
+            1.01
+          ],
+          "body_rotation": [
+            -1,
+            8,
+            -11
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -2,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 5,
+          "body_scale": [
+            1.01,
+            0.99,
+            1
+          ],
+          "body_rotation": [
+            0.5,
+            6,
+            -9
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 8,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            6,
+            -9
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -1,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        }
+      ]
+    },
+    "turn_right_a": {
+      "frames": 8,
+      "loop": false,
+      "description": "Right turn with a bounded A anticipation and overshoot.",
+      "keys": [
+        {
+          "frame": 0,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 1,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0,
+            -1.2
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 2,
+          "body_scale": [
+            1.018,
+            0.98,
+            1
+          ],
+          "body_rotation": [
+            -0.8,
+            -1.5,
+            11.0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 4,
+          "body_scale": [
+            1.008,
+            0.995,
+            1
+          ],
+          "body_rotation": [
+            0.4,
+            -0.8,
+            8.4
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -0.7,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 6,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            -0.6,
+            9.0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 8,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            -0.6,
+            9.0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        }
+      ]
+    },
+    "turn_right_b": {
+      "frames": 8,
+      "loop": false,
+      "description": "Right turn with a bounded B anticipation and overshoot.",
+      "keys": [
+        {
+          "frame": 0,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 1,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0,
+            -0.8
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 2,
+          "body_scale": [
+            1.018,
+            0.98,
+            1
+          ],
+          "body_rotation": [
+            -0.8,
+            -1.5,
+            11.5
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 4,
+          "body_scale": [
+            1.008,
+            0.995,
+            1
+          ],
+          "body_rotation": [
+            0.4,
+            -0.8,
+            8.9
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -0.7,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 6,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            -0.6,
+            9.5
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 8,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            -0.6,
+            9.5
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        }
+      ]
+    },
+    "turn_right_c": {
+      "frames": 8,
+      "loop": false,
+      "description": "Right turn with a bounded C anticipation and overshoot.",
+      "keys": [
+        {
+          "frame": 0,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 1,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0,
+            -1.5
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 2,
+          "body_scale": [
+            1.018,
+            0.98,
+            1
+          ],
+          "body_rotation": [
+            -0.8,
+            -1.5,
+            10.7
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 4,
+          "body_scale": [
+            1.008,
+            0.995,
+            1
+          ],
+          "body_rotation": [
+            0.4,
+            -0.8,
+            8.1
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -0.7,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 6,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            -0.6,
+            8.7
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 8,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            -0.6,
+            8.7
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        }
+      ]
+    },
+    "turn_right_hold": {
+      "frames": 12,
+      "loop": true,
+      "description": "Small loaded-body drift through a held turn.",
+      "keys": [
+        {
+          "frame": 0,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            -0.6,
+            9
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 4,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0.3,
+            -0.7,
+            9.25
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -0.5,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 8,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            -0.2,
+            -0.5,
+            8.85
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 12,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            -0.6,
+            9
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        }
+      ]
+    },
+    "handbrake_right": {
+      "frames": 8,
+      "loop": false,
+      "description": "Rear steps out while the chassis loads the outside tires.",
+      "keys": [
+        {
+          "frame": 0,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 1,
+          "body_scale": [
+            1.04,
+            0.92,
+            1
+          ],
+          "body_rotation": [
+            -1.8,
+            -4,
+            8
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 3,
+          "body_scale": [
+            1.045,
+            0.94,
+            1.01
+          ],
+          "body_rotation": [
+            -1,
+            -8,
+            11
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -2,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 5,
+          "body_scale": [
+            1.01,
+            0.99,
+            1
+          ],
+          "body_rotation": [
+            0.5,
+            -6,
+            9
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 8,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            -6,
+            9
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -1,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        }
+      ]
+    },
+    "launch": {
+      "frames": 6,
+      "loop": false,
+      "description": "One-frame compression, a tall release silhouette, and trailing wheels.",
+      "keys": [
+        {
+          "frame": 0,
+          "body_scale": [
+            1.11,
+            0.74,
+            1.035
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.06,
+            0.78,
+            1.02
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            -0.22,
+            0.2
+          ]
+        },
+        {
+          "frame": 1,
+          "body_scale": [
+            0.92,
+            1.25,
+            0.965
+          ],
+          "body_rotation": [
+            5,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            -0.035,
+            0
+          ],
+          "foot_offset": [
+            0,
+            -0.1,
+            0.2
+          ]
+        },
+        {
+          "frame": 2,
+          "body_scale": [
+            0.96,
+            1.15,
+            0.98
+          ],
+          "body_rotation": [
+            6,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            -0.07,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 4,
+          "body_scale": [
+            0.98,
+            1.07,
+            0.99
+          ],
+          "body_rotation": [
+            4,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            -0.06,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 6,
+          "body_scale": [
+            0.98,
+            1.05,
+            0.99
+          ],
+          "body_rotation": [
+            3,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            -0.045,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        }
+      ]
+    },
+    "air_rise": {
+      "frames": 8,
+      "loop": true,
+      "description": "Light stretched rise with wheels trailing underneath.",
+      "keys": [
+        {
+          "frame": 0,
+          "body_scale": [
+            0.98,
+            1.05,
+            0.99
+          ],
+          "body_rotation": [
+            3,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            -0.045,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 4,
+          "body_scale": [
+            0.98,
+            1.07,
+            0.99
+          ],
+          "body_rotation": [
+            4,
+            0,
+            0.3
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -1,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            -0.06,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 8,
+          "body_scale": [
+            0.98,
+            1.05,
+            0.99
+          ],
+          "body_rotation": [
+            3,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            -0.045,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        }
+      ]
+    },
+    "air_hang": {
+      "frames": 6,
+      "loop": true,
+      "description": "A broad apex silhouette before the body tips into the fall.",
+      "keys": [
+        {
+          "frame": 0,
+          "body_scale": [
+            1.025,
+            0.98,
+            1.015
+          ],
+          "body_rotation": [
+            0.8,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -5,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            -0.035,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 3,
+          "body_scale": [
+            1.04,
+            0.96,
+            1.025
+          ],
+          "body_rotation": [
+            -0.7,
+            0,
+            0.4
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -8,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            -0.05,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 6,
+          "body_scale": [
+            1.025,
+            0.98,
+            1.015
+          ],
+          "body_rotation": [
+            0.8,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -5,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            -0.035,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        }
+      ]
+    },
+    "air_drop": {
+      "frames": 8,
+      "loop": true,
+      "description": "Trunk lifts during descent; its small flutter is held in drawn poses.",
+      "keys": [
+        {
+          "frame": 0,
+          "body_scale": [
+            0.98,
+            1.07,
+            0.985
+          ],
+          "body_rotation": [
+            -3,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -14,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            -0.065,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 2,
+          "body_scale": [
+            0.97,
+            1.09,
+            0.98
+          ],
+          "body_rotation": [
+            -4.4,
+            0,
+            0.4
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -18,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            -0.08,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 4,
+          "body_scale": [
+            0.975,
+            1.08,
+            0.982
+          ],
+          "body_rotation": [
+            -4,
+            0,
+            -0.3
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -16,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            -0.07,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 6,
+          "body_scale": [
+            0.98,
+            1.07,
+            0.985
+          ],
+          "body_rotation": [
+            -3.4,
+            0,
+            0.2
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -17,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            -0.065,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 8,
+          "body_scale": [
+            0.98,
+            1.07,
+            0.985
+          ],
+          "body_rotation": [
+            -3,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -14,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            -0.065,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        }
+      ]
+    },
+    "land_soft_a": {
+      "frames": 7,
+      "loop": false,
+      "description": "Soft impact A: contact, two held compression poses, rebound, and trunk latch.",
+      "keys": [
+        {
+          "frame": 0,
+          "body_scale": [
+            1.0305000000000002,
+            0.896,
+            0.96
+          ],
+          "body_rotation": [
+            0,
+            0,
+            -0.35
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.0155,
+            0.896,
+            0.96
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 1,
+          "body_scale": [
+            1.0555,
+            0.851,
+            0.945
+          ],
+          "body_rotation": [
+            0,
+            0,
+            -0.35
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.0205000000000002,
+            0.851,
+            0.945
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 2,
+          "body_scale": [
+            1.0555,
+            0.851,
+            0.945
+          ],
+          "body_rotation": [
+            0,
+            0,
+            -0.27999999999999997
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -1.2,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.0205000000000002,
+            0.851,
+            0.945
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 3,
+          "body_scale": [
+            1.035,
+            0.93,
+            1.0
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -2.5,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.025,
+            0.94,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 4,
+          "body_scale": [
+            0.965,
+            1.045,
+            1.015
+          ],
+          "body_rotation": [
+            0.7,
+            0,
+            0.175
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -3.5,
+            0,
+            0
+          ],
+          "tire_scale": [
+            0.99,
+            1.015,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 5,
+          "body_scale": [
+            0.988,
+            1.045,
+            1.005
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -0.8,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 6,
+          "body_scale": [
+            1.012,
+            0.975,
+            0.997
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 7,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        }
+      ]
+    },
+    "land_soft_b": {
+      "frames": 7,
+      "loop": false,
+      "description": "Soft impact B: contact, two held compression poses, rebound, and trunk latch.",
+      "keys": [
+        {
+          "frame": 0,
+          "body_scale": [
+            1.0395,
+            0.914,
+            0.96
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0.35
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.0245,
+            0.914,
+            0.96
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 1,
+          "body_scale": [
+            1.0645,
+            0.869,
+            0.945
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0.35
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.0295,
+            0.869,
+            0.945
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 2,
+          "body_scale": [
+            1.0645,
+            0.869,
+            0.945
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0.27999999999999997
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -1.2,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.0295,
+            0.869,
+            0.945
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 3,
+          "body_scale": [
+            1.035,
+            0.93,
+            1.0
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -2.5,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.025,
+            0.94,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 4,
+          "body_scale": [
+            0.965,
+            1.045,
+            1.015
+          ],
+          "body_rotation": [
+            0.7,
+            0,
+            -0.175
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -3.5,
+            0,
+            0
+          ],
+          "tire_scale": [
+            0.99,
+            1.015,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 5,
+          "body_scale": [
+            0.988,
+            1.045,
+            1.005
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -0.8,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 6,
+          "body_scale": [
+            1.012,
+            0.975,
+            0.997
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 7,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        }
+      ]
+    },
+    "land_medium_a": {
+      "frames": 9,
+      "loop": false,
+      "description": "Medium impact A: contact, two held compression poses, rebound, and trunk latch.",
+      "keys": [
+        {
+          "frame": 0,
+          "body_scale": [
+            1.096,
+            0.717,
+            0.96
+          ],
+          "body_rotation": [
+            0,
+            0,
+            -0.7
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.081,
+            0.717,
+            0.96
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 1,
+          "body_scale": [
+            1.121,
+            0.6719999999999999,
+            0.945
+          ],
+          "body_rotation": [
+            0,
+            0,
+            -0.7
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.086,
+            0.6719999999999999,
+            0.945
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 2,
+          "body_scale": [
+            1.121,
+            0.6719999999999999,
+            0.945
+          ],
+          "body_rotation": [
+            0,
+            0,
+            -0.5599999999999999
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -1.2,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.086,
+            0.6719999999999999,
+            0.945
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 3,
+          "body_scale": [
+            1.035,
+            0.93,
+            1.0
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -2.5,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.025,
+            0.94,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 4,
+          "body_scale": [
+            0.965,
+            1.09,
+            1.015
+          ],
+          "body_rotation": [
+            0.7,
+            0,
+            0.35
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -3.5,
+            0,
+            0
+          ],
+          "tire_scale": [
+            0.99,
+            1.015,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 5,
+          "body_scale": [
+            0.988,
+            1.045,
+            1.005
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -0.8,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 6,
+          "body_scale": [
+            1.012,
+            0.975,
+            0.997
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 9,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        }
+      ]
+    },
+    "land_medium_b": {
+      "frames": 9,
+      "loop": false,
+      "description": "Medium impact B: contact, two held compression poses, rebound, and trunk latch.",
+      "keys": [
+        {
+          "frame": 0,
+          "body_scale": [
+            1.105,
+            0.735,
+            0.96
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0.0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.0899999999999999,
+            0.735,
+            0.96
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 1,
+          "body_scale": [
+            1.13,
+            0.69,
+            0.945
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0.0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.095,
+            0.69,
+            0.945
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 2,
+          "body_scale": [
+            1.13,
+            0.69,
+            0.945
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0.0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -1.2,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.095,
+            0.69,
+            0.945
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 3,
+          "body_scale": [
+            1.035,
+            0.93,
+            1.0
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -2.5,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.025,
+            0.94,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 4,
+          "body_scale": [
+            0.965,
+            1.09,
+            1.015
+          ],
+          "body_rotation": [
+            0.7,
+            0,
+            -0.0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -3.5,
+            0,
+            0
+          ],
+          "tire_scale": [
+            0.99,
+            1.015,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 5,
+          "body_scale": [
+            0.988,
+            1.045,
+            1.005
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -0.8,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 6,
+          "body_scale": [
+            1.012,
+            0.975,
+            0.997
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 9,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        }
+      ]
+    },
+    "land_medium_c": {
+      "frames": 9,
+      "loop": false,
+      "description": "Medium impact C: contact, two held compression poses, rebound, and trunk latch.",
+      "keys": [
+        {
+          "frame": 0,
+          "body_scale": [
+            1.1139999999999999,
+            0.753,
+            0.96
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0.7
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.0989999999999998,
+            0.753,
+            0.96
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 1,
+          "body_scale": [
+            1.1389999999999998,
+            0.708,
+            0.945
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0.7
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.1039999999999999,
+            0.708,
+            0.945
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 2,
+          "body_scale": [
+            1.1389999999999998,
+            0.708,
+            0.945
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0.5599999999999999
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -1.2,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.1039999999999999,
+            0.708,
+            0.945
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 3,
+          "body_scale": [
+            1.035,
+            0.93,
+            1.0
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -2.5,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.025,
+            0.94,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 4,
+          "body_scale": [
+            0.965,
+            1.09,
+            1.015
+          ],
+          "body_rotation": [
+            0.7,
+            0,
+            -0.35
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -3.5,
+            0,
+            0
+          ],
+          "tire_scale": [
+            0.99,
+            1.015,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 5,
+          "body_scale": [
+            0.988,
+            1.045,
+            1.005
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -0.8,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 6,
+          "body_scale": [
+            1.012,
+            0.975,
+            0.997
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 9,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        }
+      ]
+    },
+    "land_hard_a": {
+      "frames": 11,
+      "loop": false,
+      "description": "Hard impact A: contact, two held compression poses, rebound, and trunk latch.",
+      "keys": [
+        {
+          "frame": 0,
+          "body_scale": [
+            1.1960000000000002,
+            0.517,
+            0.96
+          ],
+          "body_rotation": [
+            0,
+            0,
+            -0.7
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.181,
+            0.517,
+            0.96
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 1,
+          "body_scale": [
+            1.221,
+            0.472,
+            0.945
+          ],
+          "body_rotation": [
+            0,
+            0,
+            -0.7
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.1860000000000002,
+            0.472,
+            0.945
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 2,
+          "body_scale": [
+            1.221,
+            0.472,
+            0.945
+          ],
+          "body_rotation": [
+            0,
+            0,
+            -0.5599999999999999
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -1.2,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.1860000000000002,
+            0.472,
+            0.945
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 3,
+          "body_scale": [
+            1.035,
+            0.93,
+            1.0
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -2.5,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.025,
+            0.94,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 4,
+          "body_scale": [
+            0.965,
+            1.15,
+            1.015
+          ],
+          "body_rotation": [
+            0.7,
+            0,
+            0.35
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -3.5,
+            0,
+            0
+          ],
+          "tire_scale": [
+            0.99,
+            1.015,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 5,
+          "body_scale": [
+            0.988,
+            1.045,
+            1.005
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -0.8,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 6,
+          "body_scale": [
+            1.012,
+            0.975,
+            0.997
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 11,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        }
+      ]
+    },
+    "land_hard_b": {
+      "frames": 11,
+      "loop": false,
+      "description": "Hard impact B: contact, two held compression poses, rebound, and trunk latch.",
+      "keys": [
+        {
+          "frame": 0,
+          "body_scale": [
+            1.205,
+            0.535,
+            0.96
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0.0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.19,
+            0.535,
+            0.96
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 1,
+          "body_scale": [
+            1.23,
+            0.49,
+            0.945
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0.0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.195,
+            0.49,
+            0.945
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 2,
+          "body_scale": [
+            1.23,
+            0.49,
+            0.945
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0.0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -1.2,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.195,
+            0.49,
+            0.945
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 3,
+          "body_scale": [
+            1.035,
+            0.93,
+            1.0
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -2.5,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.025,
+            0.94,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 4,
+          "body_scale": [
+            0.965,
+            1.15,
+            1.015
+          ],
+          "body_rotation": [
+            0.7,
+            0,
+            -0.0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -3.5,
+            0,
+            0
+          ],
+          "tire_scale": [
+            0.99,
+            1.015,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 5,
+          "body_scale": [
+            0.988,
+            1.045,
+            1.005
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -0.8,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 6,
+          "body_scale": [
+            1.012,
+            0.975,
+            0.997
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 11,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        }
+      ]
+    },
+    "land_hard_c": {
+      "frames": 11,
+      "loop": false,
+      "description": "Hard impact C: contact, two held compression poses, rebound, and trunk latch.",
+      "keys": [
+        {
+          "frame": 0,
+          "body_scale": [
+            1.214,
+            0.553,
+            0.96
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0.7
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.1989999999999998,
+            0.553,
+            0.96
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 1,
+          "body_scale": [
+            1.2389999999999999,
+            0.508,
+            0.945
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0.7
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.204,
+            0.508,
+            0.945
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 2,
+          "body_scale": [
+            1.2389999999999999,
+            0.508,
+            0.945
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0.5599999999999999
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -1.2,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.204,
+            0.508,
+            0.945
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 3,
+          "body_scale": [
+            1.035,
+            0.93,
+            1.0
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -2.5,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.025,
+            0.94,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 4,
+          "body_scale": [
+            0.965,
+            1.15,
+            1.015
+          ],
+          "body_rotation": [
+            0.7,
+            0,
+            -0.35
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -3.5,
+            0,
+            0
+          ],
+          "tire_scale": [
+            0.99,
+            1.015,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 5,
+          "body_scale": [
+            0.988,
+            1.045,
+            1.005
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -0.8,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 6,
+          "body_scale": [
+            1.012,
+            0.975,
+            0.997
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 11,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        }
+      ]
+    },
+    "crash_a": {
+      "frames": 12,
+      "loop": false,
+      "description": "Short accordion impact with a sprung trunk and a stable settled car.",
+      "keys": [
+        {
+          "frame": 0,
+          "body_scale": [
+            1.16,
+            0.72,
+            0.84
+          ],
+          "body_rotation": [
+            -4,
+            0,
+            1.7
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -3,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.08,
+            0.8,
+            0.91
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 1,
+          "body_scale": [
+            1.19,
+            0.65,
+            0.82
+          ],
+          "body_rotation": [
+            -5,
+            0,
+            2.38
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -16,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.09,
+            0.73,
+            0.91
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 3,
+          "body_scale": [
+            1.07,
+            1.02,
+            0.94
+          ],
+          "body_rotation": [
+            2,
+            0,
+            -1.7
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -8,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 5,
+          "body_scale": [
+            1.04,
+            0.92,
+            0.96
+          ],
+          "body_rotation": [
+            -1,
+            0,
+            0.85
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -3,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 8,
+          "body_scale": [
+            1.01,
+            0.98,
+            0.995
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -0.5,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 12,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        }
+      ]
+    },
+    "crash_b": {
+      "frames": 12,
+      "loop": false,
+      "description": "Short accordion impact with a sprung trunk and a stable settled car.",
+      "keys": [
+        {
+          "frame": 0,
+          "body_scale": [
+            1.16,
+            0.72,
+            0.84
+          ],
+          "body_rotation": [
+            -4,
+            0,
+            -1.7
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -3,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.08,
+            0.8,
+            0.91
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 1,
+          "body_scale": [
+            1.19,
+            0.65,
+            0.82
+          ],
+          "body_rotation": [
+            -5,
+            0,
+            -2.38
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -16,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.09,
+            0.73,
+            0.91
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 3,
+          "body_scale": [
+            1.07,
+            1.02,
+            0.94
+          ],
+          "body_rotation": [
+            2,
+            0,
+            1.7
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -8,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 5,
+          "body_scale": [
+            1.04,
+            0.92,
+            0.96
+          ],
+          "body_rotation": [
+            -1,
+            0,
+            -0.85
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -3,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 8,
+          "body_scale": [
+            1.01,
+            0.98,
+            0.995
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -0.5,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        },
+        {
+          "frame": 12,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ]
+        }
+      ]
+    },
+    "crash_front": {
+      "frames": 20,
+      "loop": false,
+      "description": "Front wall: broad held squash, sprung trunk, one sharp rebound, then a shortened red wreck.",
+      "keys": [
+        {
+          "frame": 0,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ],
+          "damage": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame": 1,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            -2,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ],
+          "damage": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame": 2,
+          "body_scale": [
+            1.16,
+            0.63,
+            0.84
+          ],
+          "body_rotation": [
+            -4,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0.01,
+            -0.54
+          ],
+          "trunk_rotation": [
+            -18,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.1,
+            0.69,
+            0.92
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ],
+          "damage": [
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "frame": 3,
+          "body_scale": [
+            1.16,
+            0.63,
+            0.84
+          ],
+          "body_rotation": [
+            -4,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0.01,
+            -0.54
+          ],
+          "trunk_rotation": [
+            -23,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.1,
+            0.69,
+            0.92
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ],
+          "damage": [
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "frame": 4,
+          "body_scale": [
+            0.99,
+            1.1,
+            0.94
+          ],
+          "body_rotation": [
+            4,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0.08,
+            -0.28
+          ],
+          "trunk_rotation": [
+            -15,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0.025,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ],
+          "damage": [
+            0,
+            0,
+            0.7
+          ]
+        },
+        {
+          "frame": 6,
+          "body_scale": [
+            1.07,
+            0.83,
+            0.91
+          ],
+          "body_rotation": [
+            -1.5,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            -0.38
+          ],
+          "trunk_rotation": [
+            -5,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.03,
+            0.91,
+            0.97
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ],
+          "damage": [
+            0,
+            0,
+            0.82
+          ]
+        },
+        {
+          "frame": 8,
+          "body_scale": [
+            1.03,
+            0.91,
+            0.92
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            -0.39
+          ],
+          "trunk_rotation": [
+            -2,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.02,
+            0.94,
+            0.98
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ],
+          "damage": [
+            0,
+            0,
+            0.8
+          ]
+        },
+        {
+          "frame": 20,
+          "body_scale": [
+            1.03,
+            0.91,
+            0.92
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            -0.39
+          ],
+          "trunk_rotation": [
+            -2,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.02,
+            0.94,
+            0.98
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ],
+          "damage": [
+            0,
+            0,
+            0.8
+          ]
+        }
+      ]
+    },
+    "crash_left": {
+      "frames": 20,
+      "loop": false,
+      "description": "Left wall: held sideways squash, outside suspension kicks, body snaps back and settles.",
+      "keys": [
+        {
+          "frame": 0,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ],
+          "damage": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame": 1,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0,
+            3
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ],
+          "damage": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame": 2,
+          "body_scale": [
+            0.88,
+            0.68,
+            1.08
+          ],
+          "body_rotation": [
+            0,
+            -3,
+            11
+          ],
+          "body_offset": [
+            -0.22,
+            0.025,
+            0
+          ],
+          "trunk_rotation": [
+            -17,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.05,
+            0.76,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ],
+          "damage": [
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "frame": 3,
+          "body_scale": [
+            0.88,
+            0.68,
+            1.08
+          ],
+          "body_rotation": [
+            0,
+            -3,
+            11
+          ],
+          "body_offset": [
+            -0.22,
+            0.025,
+            0
+          ],
+          "trunk_rotation": [
+            -21,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.05,
+            0.76,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ],
+          "damage": [
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "frame": 4,
+          "body_scale": [
+            1.025,
+            1.07,
+            0.99
+          ],
+          "body_rotation": [
+            0,
+            1.5,
+            -5
+          ],
+          "body_offset": [
+            0.15,
+            0.06,
+            0.06
+          ],
+          "trunk_rotation": [
+            -12,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0.02,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ],
+          "damage": [
+            0.68,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "frame": 6,
+          "body_scale": [
+            0.96,
+            0.88,
+            1.03
+          ],
+          "body_rotation": [
+            0,
+            0,
+            3
+          ],
+          "body_offset": [
+            -0.08,
+            0,
+            0.03
+          ],
+          "trunk_rotation": [
+            -4,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            0.93,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ],
+          "damage": [
+            0.78,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "frame": 9,
+          "body_scale": [
+            0.97,
+            0.93,
+            1.02
+          ],
+          "body_rotation": [
+            0,
+            0,
+            1.5
+          ],
+          "body_offset": [
+            -0.1,
+            0,
+            0.03
+          ],
+          "trunk_rotation": [
+            -2,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            0.96,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ],
+          "damage": [
+            0.76,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "frame": 20,
+          "body_scale": [
+            0.97,
+            0.93,
+            1.02
+          ],
+          "body_rotation": [
+            0,
+            0,
+            1.5
+          ],
+          "body_offset": [
+            -0.1,
+            0,
+            0.03
+          ],
+          "trunk_rotation": [
+            -2,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            0.96,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ],
+          "damage": [
+            0.76,
+            0.0,
+            0.0
+          ]
+        }
+      ]
+    },
+    "crash_right": {
+      "frames": 20,
+      "loop": false,
+      "description": "Right wall: held sideways squash, outside suspension kicks, body snaps back and settles.",
+      "keys": [
+        {
+          "frame": 0,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ],
+          "damage": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame": 1,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0,
+            -3
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ],
+          "damage": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame": 2,
+          "body_scale": [
+            0.88,
+            0.68,
+            1.08
+          ],
+          "body_rotation": [
+            0,
+            3,
+            -11
+          ],
+          "body_offset": [
+            0.22,
+            0.025,
+            0
+          ],
+          "trunk_rotation": [
+            -17,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.05,
+            0.76,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ],
+          "damage": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "frame": 3,
+          "body_scale": [
+            0.88,
+            0.68,
+            1.08
+          ],
+          "body_rotation": [
+            0,
+            3,
+            -11
+          ],
+          "body_offset": [
+            0.22,
+            0.025,
+            0
+          ],
+          "trunk_rotation": [
+            -21,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.05,
+            0.76,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ],
+          "damage": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "frame": 4,
+          "body_scale": [
+            1.025,
+            1.07,
+            0.99
+          ],
+          "body_rotation": [
+            0,
+            -1.5,
+            5
+          ],
+          "body_offset": [
+            -0.15,
+            0.06,
+            0.06
+          ],
+          "trunk_rotation": [
+            -12,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0.02,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ],
+          "damage": [
+            0.0,
+            0.68,
+            0.0
+          ]
+        },
+        {
+          "frame": 6,
+          "body_scale": [
+            0.96,
+            0.88,
+            1.03
+          ],
+          "body_rotation": [
+            0,
+            0,
+            -3
+          ],
+          "body_offset": [
+            0.08,
+            0,
+            0.03
+          ],
+          "trunk_rotation": [
+            -4,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            0.93,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ],
+          "damage": [
+            0.0,
+            0.78,
+            0.0
+          ]
+        },
+        {
+          "frame": 9,
+          "body_scale": [
+            0.97,
+            0.93,
+            1.02
+          ],
+          "body_rotation": [
+            0,
+            0,
+            -1.5
+          ],
+          "body_offset": [
+            0.1,
+            0,
+            0.03
+          ],
+          "trunk_rotation": [
+            -2,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            0.96,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ],
+          "damage": [
+            0.0,
+            0.76,
+            0.0
+          ]
+        },
+        {
+          "frame": 20,
+          "body_scale": [
+            0.97,
+            0.93,
+            1.02
+          ],
+          "body_rotation": [
+            0,
+            0,
+            -1.5
+          ],
+          "body_offset": [
+            0.1,
+            0,
+            0.03
+          ],
+          "trunk_rotation": [
+            -2,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            0.96,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ],
+          "damage": [
+            0.0,
+            0.76,
+            0.0
+          ]
+        }
+      ]
+    },
+    "explode": {
+      "frames": 36,
+      "loop": false,
+      "description": "Standalone explosion: pressure squeeze, booster-style flame burst, wheels pop loose, red body slaps down into a flat wreck.",
+      "keys": [
+        {
+          "frame": 0,
+          "body_scale": [
+            1,
+            1,
+            1
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ],
+          "damage": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame": 2,
+          "body_scale": [
+            1.06,
+            0.87,
+            1.035
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -3,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.025,
+            0.91,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ],
+          "damage": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame": 3,
+          "body_scale": [
+            1.09,
+            0.77,
+            1.05
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -5,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.045,
+            0.84,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ],
+          "damage": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame": 4,
+          "body_scale": [
+            1.09,
+            0.77,
+            1.05
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -5,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.045,
+            0.84,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ],
+          "damage": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame": 5,
+          "body_scale": [
+            1.14,
+            0.68,
+            1.06
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -8,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1.06,
+            0.74,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ],
+          "damage": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame": 6,
+          "body_scale": [
+            0.92,
+            1.25,
+            0.96
+          ],
+          "body_rotation": [
+            3,
+            0,
+            -3
+          ],
+          "body_offset": [
+            0,
+            0.55,
+            0
+          ],
+          "trunk_rotation": [
+            -24,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ],
+          "damage": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame": 7,
+          "body_scale": [
+            0.97,
+            1.14,
+            1.02
+          ],
+          "body_rotation": [
+            5,
+            0,
+            -4
+          ],
+          "body_offset": [
+            0,
+            0.72,
+            0
+          ],
+          "trunk_rotation": [
+            -24,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ],
+          "damage": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame": 9,
+          "body_scale": [
+            1.04,
+            0.97,
+            1.03
+          ],
+          "body_rotation": [
+            -3,
+            0,
+            2
+          ],
+          "body_offset": [
+            0,
+            0.39,
+            0
+          ],
+          "trunk_rotation": [
+            -17,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ],
+          "damage": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame": 11,
+          "body_scale": [
+            1.2,
+            0.48,
+            1.06
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ],
+          "damage": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame": 12,
+          "body_scale": [
+            1.2,
+            0.48,
+            1.06
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            0,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ],
+          "damage": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame": 14,
+          "body_scale": [
+            1.09,
+            0.69,
+            1.02
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0.04,
+            0
+          ],
+          "trunk_rotation": [
+            -5,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ],
+          "damage": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame": 17,
+          "body_scale": [
+            1.13,
+            0.59,
+            1.04
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -2,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ],
+          "damage": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame": 36,
+          "body_scale": [
+            1.13,
+            0.59,
+            1.04
+          ],
+          "body_rotation": [
+            0,
+            0,
+            0
+          ],
+          "body_offset": [
+            0,
+            0,
+            0
+          ],
+          "trunk_rotation": [
+            -2,
+            0,
+            0
+          ],
+          "tire_scale": [
+            1,
+            1,
+            1
+          ],
+          "tire_offset": [
+            0,
+            0,
+            0
+          ],
+          "foot_offset": [
+            0,
+            0.12,
+            0.2
+          ],
+          "damage": [
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,311 @@
+{
+  "batch": 8,
+  "units": "meters",
+  "godot_front": "+Z",
+  "origin": "ground center",
+  "style": "Pastel French Quarter / New Orleans Creole",
+  "palette_srgb": {
+    "cream": "F5E7CD",
+    "stone": "D7C8AC",
+    "coral": "E9967C",
+    "coral_dark": "CC715D",
+    "mint": "83B9A8",
+    "mint_dark": "62978F",
+    "yellow": "EBC567",
+    "yellow_dark": "C99B46",
+    "roof": "52738C",
+    "teal": "328D89",
+    "ink": "24394B",
+    "glass": "34576B",
+    "reflection": "739BAC",
+    "green": "7BAA67",
+    "green_dark": "527B53",
+    "pot": "BE7659",
+    "metal": "8A9B9E",
+    "blue": "96BFD4",
+    "blue_dark": "648FA9",
+    "lilac": "B7A8CF"
+  },
+  "models": [
+    {
+      "id": "radio_shop",
+      "name": "RadioShop",
+      "description": "Broad cream three-story radio shop; stacked window groups; projecting sign slab; offset blue roof housing.",
+      "glb": "radio_shop.glb",
+      "source": "source/radio_shop.blend",
+      "triangles": 6580,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 356,
+      "materials": [
+        "Blue_Dark \u2014 648FA9",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Metal \u2014 8A9B9E",
+        "Reflection \u2014 739BAC",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -5.415,
+          -5.06,
+          0.0
+        ],
+        "max": [
+          5.16,
+          4.56,
+          10.56
+        ]
+      },
+      "sha256": "d24b29c3c13f35d1ee7b159fe136d023353611ef5cdb1d2e859448c4f76dacf9",
+      "roster_id": 13,
+      "footprint_m": [
+        9.8,
+        8.6
+      ],
+      "body_height_m": 9.3,
+      "scene": "res://scenes/buildings/batch_08/radio_shop.tscn",
+      "collision_boxes_m": [
+        [
+          [
+            0,
+            4.65,
+            0
+          ],
+          [
+            9.8,
+            9.3,
+            8.6
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "ceramic_shop",
+      "name": "CeramicShop",
+      "description": "Terracotta two-story ceramic shop; faceted white arch; scrollwork balcony; open side courtyard.",
+      "glb": "ceramic_shop.glb",
+      "source": "source/ceramic_shop.blend",
+      "triangles": 5309,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 318,
+      "materials": [
+        "Blue_Dark \u2014 648FA9",
+        "Coral_Dark \u2014 CC715D",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Green \u2014 7BAA67",
+        "Ink \u2014 24394B",
+        "Metal \u2014 8A9B9E",
+        "Pot \u2014 BE7659",
+        "Reflection \u2014 739BAC",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -6.11,
+          -5.125,
+          -0.0
+        ],
+        "max": [
+          5.99,
+          4.46,
+          7.3
+        ]
+      },
+      "sha256": "39459ca8a2bc0baa6c06f2ff6a8e88e15dc0e89c6dfd1071ec541959912b112b",
+      "roster_id": 19,
+      "footprint_m": [
+        11.7,
+        8.4
+      ],
+      "body_height_m": 6.4,
+      "scene": "res://scenes/buildings/batch_08/ceramic_shop.tscn",
+      "collision_boxes_m": [
+        [
+          [
+            -2.15,
+            3.2,
+            0
+          ],
+          [
+            7.4,
+            6.4,
+            8.4
+          ]
+        ],
+        [
+          [
+            3.7,
+            0.04,
+            0
+          ],
+          [
+            4.3,
+            0.08,
+            8.4
+          ]
+        ],
+        [
+          [
+            1.825,
+            0.42,
+            4.2
+          ],
+          [
+            0.55,
+            0.84,
+            0.18
+          ]
+        ],
+        [
+          [
+            5.075,
+            0.42,
+            4.2
+          ],
+          [
+            1.55,
+            0.84,
+            0.18
+          ]
+        ],
+        [
+          [
+            5.85,
+            0.42,
+            0
+          ],
+          [
+            0.18,
+            0.84,
+            8.4
+          ]
+        ],
+        [
+          [
+            3.7,
+            0.42,
+            -4.2
+          ],
+          [
+            4.3,
+            0.84,
+            0.18
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "avenue_diner",
+      "name": "AvenueDiner",
+      "description": "Long cream and coral diner; broad windows; deep blue roof overhang; low rear kitchen block.",
+      "glb": "avenue_diner.glb",
+      "source": "source/avenue_diner.blend",
+      "triangles": 2494,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 126,
+      "materials": [
+        "Coral \u2014 E9967C",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Metal \u2014 8A9B9E",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -7.0,
+          -4.142,
+          0.0
+        ],
+        "max": [
+          7.0,
+          3.78,
+          4.98
+        ]
+      },
+      "sha256": "d503c3810925fa4b3cadc578824f49a6536d5febd738f696df2b0631a85a14f3",
+      "roster_id": 22,
+      "footprint_m": [
+        13.0,
+        7.0
+      ],
+      "body_height_m": 3.1,
+      "scene": "res://scenes/buildings/batch_08/avenue_diner.tscn",
+      "collision_boxes_m": [
+        [
+          [
+            0,
+            1.55,
+            0
+          ],
+          [
+            13.0,
+            3.1,
+            7.0
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "pizza_shop",
+      "name": "PizzaShop",
+      "description": "Squat coral corner pizza shop; broad entrance canopy; two deep display panes; raised sign parapet.",
+      "glb": "pizza_shop.glb",
+      "source": "source/pizza_shop.blend",
+      "triangles": 2134,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 108,
+      "materials": [
+        "Coral \u2014 E9967C",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Metal \u2014 8A9B9E",
+        "Reflection \u2014 739BAC",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -4.56,
+          -5.37,
+          0.0
+        ],
+        "max": [
+          4.965,
+          4.66,
+          4.3
+        ]
+      },
+      "sha256": "6f03c213faba80737a80b1191638291982f075ebf12dbd8ce47455d4e81a9dcf",
+      "roster_id": 25,
+      "footprint_m": [
+        8.6,
+        8.8
+      ],
+      "body_height_m": 3.2,
+      "scene": "res://scenes/buildings/batch_08/pizza_shop.tscn",
+      "collision_boxes_m": [
+        [
+          [
+            0,
+            1.6,
+            0
+          ],
+          [
+            8.6,
+            3.2,
+            8.8
+          ]
+        ]
+      ]
+    }
+  ]
+}

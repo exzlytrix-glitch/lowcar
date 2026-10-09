@@ -1,0 +1,195 @@
+{
+  "batch": 3,
+  "units": "meters",
+  "godot_front": "+Z",
+  "origin": "ground center",
+  "style": "Pastel French Quarter / New Orleans Creole",
+  "palette_srgb": {
+    "cream": "F5E7CD",
+    "stone": "D7C8AC",
+    "coral": "E9967C",
+    "coral_dark": "CC715D",
+    "mint": "83B9A8",
+    "mint_dark": "62978F",
+    "yellow": "EBC567",
+    "yellow_dark": "C99B46",
+    "roof": "52738C",
+    "teal": "328D89",
+    "ink": "24394B",
+    "glass": "34576B",
+    "reflection": "739BAC",
+    "green": "7BAA67",
+    "green_dark": "527B53",
+    "pot": "BE7659",
+    "metal": "8A9B9E",
+    "blue": "96BFD4",
+    "blue_dark": "648FA9",
+    "lilac": "B7A8CF"
+  },
+  "models": [
+    {
+      "id": "paperback_bookshop",
+      "name": "PaperbackBookshop",
+      "description": "Powder-blue three-story bookshop; recessed central door; upper faceted bay; stepped parapet.",
+      "glb": "paperback_bookshop.glb",
+      "source": "source/paperback_bookshop.blend",
+      "triangles": 6432,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 377,
+      "materials": [
+        "Blue \u2014 96BFD4",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Metal \u2014 8A9B9E",
+        "Mint_Dark \u2014 62978F",
+        "Reflection \u2014 739BAC",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -3.21,
+          -5.345,
+          0.0
+        ],
+        "max": [
+          3.21,
+          4.76,
+          10.4
+        ]
+      },
+      "sha256": "57fae453ad22843d2ac39cd2836c4599a2a7e51fd3b483f0abc5d8b19939728c",
+      "roster_id": 6,
+      "footprint_m": [
+        5.9,
+        9.0
+      ],
+      "body_height_m": 9.36,
+      "scene": "res://scenes/buildings/batch_03/paperback_bookshop.tscn"
+    },
+    {
+      "id": "neighborhood_pharmacy",
+      "name": "NeighborhoodPharmacy",
+      "description": "Broad mint and cream pharmacy; square entry corner; heavy sign band; paired upper windows.",
+      "glb": "neighborhood_pharmacy.glb",
+      "source": "source/neighborhood_pharmacy.blend",
+      "triangles": 4736,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 266,
+      "materials": [
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Metal \u2014 8A9B9E",
+        "Mint \u2014 83B9A8",
+        "Mint_Dark \u2014 62978F",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -5.641,
+          -4.94,
+          0.0
+        ],
+        "max": [
+          5.26,
+          4.26,
+          7.49
+        ]
+      },
+      "sha256": "e325af60f007afef207bee8ff97176769602ca801a659d7d7d941d857995b636",
+      "roster_id": 5,
+      "footprint_m": [
+        10.0,
+        8.0
+      ],
+      "body_height_m": 6.4,
+      "scene": "res://scenes/buildings/batch_03/neighborhood_pharmacy.tscn"
+    },
+    {
+      "id": "six_unit_apartments",
+      "name": "SixUnitApartments",
+      "description": "Three-story cream and mint apartments; three paired front bays; central scrollwork balcony stack.",
+      "glb": "six_unit_apartments.glb",
+      "source": "source/six_unit_apartments.blend",
+      "triangles": 8008,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 535,
+      "materials": [
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Metal \u2014 8A9B9E",
+        "Mint \u2014 83B9A8",
+        "Mint_Dark \u2014 62978F",
+        "Reflection \u2014 739BAC",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -5.36,
+          -5.635,
+          0.0
+        ],
+        "max": [
+          5.36,
+          4.86,
+          10.665
+        ]
+      },
+      "sha256": "80afbbb9b4445c808e00069120fb17b37873b630a4d0fdfb9987cbb5f3ced1f4",
+      "roster_id": 57,
+      "footprint_m": [
+        10.2,
+        9.2
+      ],
+      "body_height_m": 9.3,
+      "scene": "res://scenes/buildings/batch_03/six_unit_apartments.tscn"
+    },
+    {
+      "id": "slim_cream_tower",
+      "name": "CreamCityOffice",
+      "description": "Broad three-story cream office; paired upper windows; central lobby canopy; low blue roof cap.",
+      "glb": "slim_cream_tower.glb",
+      "source": "source/slim_cream_tower.blend",
+      "triangles": 6656,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 441,
+      "materials": [
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Metal \u2014 8A9B9E",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -6.16,
+          -5.39,
+          0.0
+        ],
+        "max": [
+          6.16,
+          4.66,
+          10.63
+        ]
+      },
+      "sha256": "31a77faaa652670cb15689d6b39ab560487eddb9d1c1c32a1a29c3260da2eaad",
+      "roster_id": 69,
+      "footprint_m": [
+        11.8,
+        8.8
+      ],
+      "body_height_m": 9.45,
+      "scene": "res://scenes/buildings/batch_03/slim_cream_tower.tscn"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="ChaseTuning" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/chase/chase_tuning.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+seconds_per_tier = 30.0
+initial_police_budget = 2
+additional_police_per_tier = 1
+

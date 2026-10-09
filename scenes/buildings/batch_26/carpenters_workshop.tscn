@@ -1,0 +1,60 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="PackedScene" path="res://assets/models/buildings/batch_26/carpenters_workshop.glb" id="1"]
+
+[sub_resource type="BoxShape3D" id="Body0"]
+size = Vector3(12.0, 3.6, 6.8)
+
+[sub_resource type="BoxShape3D" id="Body1"]
+size = Vector3(5.6, 3.05, 6.2)
+
+[sub_resource type="BoxShape3D" id="Body2"]
+size = Vector3(0.44, 3.6, 0.44)
+
+[sub_resource type="BoxShape3D" id="Body3"]
+size = Vector3(0.44, 3.6, 0.44)
+
+[sub_resource type="BoxShape3D" id="Body4"]
+size = Vector3(0.44, 3.6, 0.44)
+
+[sub_resource type="BoxShape3D" id="Body5"]
+size = Vector3(12.0, 0.15, 2.4)
+
+[sub_resource type="BoxShape3D" id="Body6"]
+size = Vector3(12.0, 0.18, 2.4)
+
+[node name="CarpentersWorkshop" type="Node3D"]
+
+[node name="Visual" parent="." instance=ExtResource("1")]
+
+[node name="BuildingBody" type="StaticBody3D" parent="."]
+collision_layer = 1
+collision_mask = 0
+
+[node name="Collision" type="CollisionShape3D" parent="BuildingBody"]
+position = Vector3(-2.8, 1.8, 0.2)
+shape = SubResource("Body0")
+
+[node name="Collision1" type="CollisionShape3D" parent="BuildingBody"]
+position = Vector3(6.0, 1.525, -2.9)
+shape = SubResource("Body1")
+
+[node name="Collision2" type="CollisionShape3D" parent="BuildingBody"]
+position = Vector3(-8.5, 1.88, 5.78)
+shape = SubResource("Body2")
+
+[node name="Collision3" type="CollisionShape3D" parent="BuildingBody"]
+position = Vector3(-2.8, 1.88, 5.78)
+shape = SubResource("Body3")
+
+[node name="Collision4" type="CollisionShape3D" parent="BuildingBody"]
+position = Vector3(2.9, 1.88, 5.78)
+shape = SubResource("Body4")
+
+[node name="Collision5" type="CollisionShape3D" parent="BuildingBody"]
+position = Vector3(-2.8, 0.075, 4.8)
+shape = SubResource("Body5")
+
+[node name="Collision6" type="CollisionShape3D" parent="BuildingBody"]
+position = Vector3(-2.8, 3.6, 4.8)
+shape = SubResource("Body6")

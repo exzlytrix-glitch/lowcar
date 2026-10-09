@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/review/building_gallery.gd" id="1"]
+
+[node name="BuildingBatch22" type="Node3D"]
+script = ExtResource("1")
+asset_dir = "res://assets/models/buildings/batch_22/"
+ids = Array[String](["three_wing_office", "department_store", "supermarket", "garden_office"])
+titles = Array[String](["THREE-WING OFFICE", "DEPARTMENT STORE", "SUPERMARKET", "GARDEN OFFICE"])
+notes = Array[String](["Mint and cream / three connected wings / recessed entry / staggered roofs", "Cream and coral / broad four-story corner store / large ground glazing", "Mint / wide one-story shop / long canopy / raised rear stockroom", "Powder blue / three stories / broad windows / front planters"])
+scene_folder = "res://scenes/buildings/batch_22/"
+lineup_spacing = 23.0
+lineup_size = 61.0
+lineup_heading = "BATCH 22 / PASTEL FRENCH QUARTER"

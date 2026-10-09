@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/review/building_gallery.gd" id="1"]
+
+[node name="BuildingBatch09" type="Node3D"]
+script = ExtResource("1")
+asset_dir = "res://assets/models/buildings/batch_09/"
+ids = Array[String](["noodle_kitchen", "ice_cream_shop", "fresh_produce_shop", "butcher_shop"])
+titles = Array[String](["NOODLE KITCHEN", "ICE CREAM SHOP", "FRESH PRODUCE", "BUTCHER SHOP"])
+notes = Array[String](["Cream / three stories / solid teal awning / staggered window pairs", "Powder blue / one story / faceted corner / wide serving counter", "Mint and yellow / long striped canopy / shallow roof / three front bays", "Terracotta / two stories / thick cream frame / side delivery door"])
+scene_folder = "res://scenes/buildings/batch_09/"
+lineup_spacing = 16.0
+lineup_size = 41.0
+lineup_heading = "BATCH 09 / PASTEL FRENCH QUARTER"

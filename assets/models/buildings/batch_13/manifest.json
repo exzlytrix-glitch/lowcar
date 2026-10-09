@@ -1,0 +1,274 @@
+{
+  "batch": 13,
+  "units": "meters",
+  "godot_front": "+Z",
+  "origin": "ground center",
+  "style": "Pastel French Quarter / New Orleans Creole",
+  "palette_srgb": {
+    "cream": "F5E7CD",
+    "stone": "D7C8AC",
+    "coral": "E9967C",
+    "coral_dark": "CC715D",
+    "mint": "83B9A8",
+    "mint_dark": "62978F",
+    "yellow": "EBC567",
+    "yellow_dark": "C99B46",
+    "roof": "52738C",
+    "teal": "328D89",
+    "ink": "24394B",
+    "glass": "34576B",
+    "reflection": "739BAC",
+    "green": "7BAA67",
+    "green_dark": "527B53",
+    "pot": "BE7659",
+    "metal": "8A9B9E",
+    "blue": "96BFD4",
+    "blue_dark": "648FA9",
+    "lilac": "B7A8CF"
+  },
+  "models": [
+    {
+      "id": "peach_flat_roof_home",
+      "name": "PeachFlatRoofHome",
+      "description": "Coral two-story square home; long cream scrollwork balcony; broad ground window; full-width flat parapet.",
+      "glb": "peach_flat_roof_home.glb",
+      "source": "source/peach_flat_roof_home.blend",
+      "triangles": 5412,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 363,
+      "materials": [
+        "Blue_Dark \u2014 648FA9",
+        "Coral \u2014 E9967C",
+        "Coral_Dark \u2014 CC715D",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Reflection \u2014 739BAC",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -4.86,
+          -5.575,
+          0.0
+        ],
+        "max": [
+          4.86,
+          4.76,
+          6.91
+        ]
+      },
+      "sha256": "898a0d4fd471b6fe2f734fee247c5b6448db694d21999fd5da55cc85c2e9f490",
+      "roster_id": 47,
+      "footprint_m": [
+        9.2,
+        9.0
+      ],
+      "body_height_m": 6.2,
+      "scene": "res://scenes/buildings/batch_13/peach_flat_roof_home.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            0,
+            3.1,
+            0
+          ],
+          "size": [
+            9.2,
+            6.2,
+            9.0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "split_level_home",
+      "name": "SplitLevelHome",
+      "description": "Powder-blue home with a two-story main block and a lower one-story entrance wing; offset flat roofs.",
+      "glb": "split_level_home.glb",
+      "source": "source/split_level_home.blend",
+      "triangles": 5574,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 339,
+      "materials": [
+        "Blue \u2014 96BFD4",
+        "Blue_Dark \u2014 648FA9",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Metal \u2014 8A9B9E",
+        "Reflection \u2014 739BAC",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -6.16,
+          -5.25,
+          0.0
+        ],
+        "max": [
+          6.16,
+          4.86,
+          6.955
+        ]
+      },
+      "sha256": "cdf6277464628f83707ecbfa59348eba06c5c9de0385e647e342c0da1d3a70cc",
+      "roster_id": 49,
+      "footprint_m": [
+        11.8,
+        9.2
+      ],
+      "body_height_m": 6.2,
+      "scene": "res://scenes/buildings/batch_13/split_level_home.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            -2.35,
+            3.1,
+            0
+          ],
+          "size": [
+            7.1,
+            6.2,
+            9.2
+          ]
+        },
+        {
+          "center": [
+            3.55,
+            1.55,
+            0.75
+          ],
+          "size": [
+            4.7,
+            3.1,
+            7.7
+          ]
+        }
+      ]
+    },
+    {
+      "id": "roof_garden_house",
+      "name": "RoofGardenHouse",
+      "description": "Cream three-story home with a partial upper setback; chunky mint planter walls; paired narrow front windows.",
+      "glb": "roof_garden_house.glb",
+      "source": "source/roof_garden_house.blend",
+      "triangles": 6634,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 416,
+      "materials": [
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Green \u2014 7BAA67",
+        "Ink \u2014 24394B",
+        "Mint_Dark \u2014 62978F",
+        "Reflection \u2014 739BAC",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -4.66,
+          -5.325,
+          0.0
+        ],
+        "max": [
+          4.66,
+          4.91,
+          10.58
+        ]
+      },
+      "sha256": "6edc1709499a0ebae23dd93cd2a94f22ba74790d192fabee39f1a4364e616a30",
+      "roster_id": 50,
+      "footprint_m": [
+        8.8,
+        9.3
+      ],
+      "body_height_m": 9.3,
+      "scene": "res://scenes/buildings/batch_13/roof_garden_house.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            0,
+            3.1,
+            0
+          ],
+          "size": [
+            8.8,
+            6.2,
+            9.3
+          ]
+        },
+        {
+          "center": [
+            -0.05,
+            7.75,
+            -1.0
+          ],
+          "size": [
+            7.2,
+            3.1,
+            6.5
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wrap_balcony_house",
+      "name": "WrapBalconyHouse",
+      "description": "Butter-yellow two-story corner home; L-shaped white galleries; recessed corner door; broad blue pitched roof.",
+      "glb": "wrap_balcony_house.glb",
+      "source": "source/wrap_balcony_house.blend",
+      "triangles": 6912,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 492,
+      "materials": [
+        "Blue_Dark \u2014 648FA9",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89",
+        "Yellow \u2014 EBC567"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -4.76,
+          -5.69,
+          0.0
+        ],
+        "max": [
+          5.69,
+          4.845,
+          7.9618
+        ]
+      },
+      "sha256": "37ff5bc935c9312b4c3e95faf96313ca88950310f0a2f0272645306ad5fe0ddb",
+      "roster_id": 51,
+      "footprint_m": [
+        9.0,
+        9.0
+      ],
+      "body_height_m": 6.2,
+      "scene": "res://scenes/buildings/batch_13/wrap_balcony_house.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            0,
+            3.1,
+            0
+          ],
+          "size": [
+            9.0,
+            6.2,
+            9.0
+          ]
+        }
+      ]
+    }
+  ]
+}

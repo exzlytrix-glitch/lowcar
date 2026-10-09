@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/review/building_gallery.gd" id="1"]
+
+[node name="BuildingBatch17" type="Node3D"]
+script = ExtResource("1")
+asset_dir = "res://assets/models/buildings/batch_17/"
+ids = Array[String](["twin_stair_apartments", "shopfront_apartments", "vertical_pier_apartments", "stepped_city_office"])
+titles = Array[String](["TWIN-STAIR APARTMENTS", "SHOPFRONT APARTMENTS", "VERTICAL-PIER APARTMENTS", "STEPPED CITY OFFICE"])
+notes = Array[String](["Butter yellow / broad four stories / coral stair spines / cream window grid", "Mint / two ground-floor shops / shared canopy / shallow Juliet rails", "Terracotta / thick white piers / four stories / small corner terrace", "Powder blue / broad four-story office / upper setback / grouped glazing"])
+scene_folder = "res://scenes/buildings/batch_17/"
+lineup_spacing = 20.0
+lineup_size = 52.0
+lineup_heading = "BATCH 17 / PASTEL FRENCH QUARTER"

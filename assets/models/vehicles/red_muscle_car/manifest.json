@@ -1,0 +1,19 @@
+{
+  "name": "Lowcar red muscle car",
+  "triangles": 4504,
+  "runtime_mesh_objects": 6,
+  "editable_source_mesh_objects": 138,
+  "glb_sha256": "12ed8c12fb04e3962d2b7a57bc8e9fbb31ec394860ba1099e7f2ef50a49f94e7",
+  "forward": "-Z in Godot",
+  "units": "meters",
+  "front_wheel_radius_m": 0.445,
+  "rear_wheel_radius_m": 0.48,
+  "wheel_paths": [
+    "Wheels/FrontLeft",
+    "Wheels/FrontRight",
+    "Wheels/RearLeft",
+    "Wheels/RearRight"
+  ],
+  "wheel_spin_child": "{Wheel}Steer/{Wheel}Spin",
+  "trunk_hinge": "Chassis/TrunkHinge"
+}

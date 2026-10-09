@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/review/building_gallery.gd" id="1"]
+
+[node name="BuildingBatch13" type="Node3D"]
+script = ExtResource("1")
+asset_dir = "res://assets/models/buildings/batch_13/"
+ids = Array[String](["peach_flat_roof_home", "split_level_home", "roof_garden_house", "wrap_balcony_house"])
+titles = Array[String](["PEACH FLAT-ROOF HOME", "SPLIT-LEVEL HOME", "ROOF-GARDEN HOUSE", "WRAP-BALCONY HOUSE"])
+notes = Array[String](["Coral / two stories / long white balcony / broad window / flat parapet", "Powder blue / two-story main block / low entrance wing / offset roofs", "Cream / three stories / upper setback / chunky mint roof planters", "Butter yellow / two stories / L-shaped galleries / corner door / blue gable"])
+scene_folder = "res://scenes/buildings/batch_13/"
+lineup_spacing = 16.0
+lineup_size = 42.0
+lineup_heading = "BATCH 13 / PASTEL FRENCH QUARTER"

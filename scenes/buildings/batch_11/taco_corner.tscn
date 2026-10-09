@@ -1,0 +1,53 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="PackedScene" path="res://assets/models/buildings/batch_11/taco_corner.glb" id="1"]
+
+[sub_resource type="BoxShape3D" id="Body0"]
+size = Vector3(5.1, 3.15, 9.4)
+
+[sub_resource type="BoxShape3D" id="Body1"]
+size = Vector3(6.5, 3.15, 4.2)
+
+[sub_resource type="BoxShape3D" id="Body2"]
+size = Vector3(6.5, 0.07, 5.2)
+
+[sub_resource type="BoxShape3D" id="Body3"]
+size = Vector3(2.9, 0.84, 0.18)
+
+[sub_resource type="BoxShape3D" id="Body4"]
+size = Vector3(1.6, 0.84, 0.18)
+
+[sub_resource type="BoxShape3D" id="Body5"]
+size = Vector3(0.18, 0.84, 5.2)
+
+[node name="TacoCorner" type="Node3D"]
+
+[node name="Visual" parent="." instance=ExtResource("1")]
+
+[node name="BuildingBody" type="StaticBody3D" parent="."]
+collision_layer = 1
+collision_mask = 0
+
+[node name="Collision" type="CollisionShape3D" parent="BuildingBody"]
+position = Vector3(-3.25, 1.575, 0)
+shape = SubResource("Body0")
+
+[node name="Collision1" type="CollisionShape3D" parent="BuildingBody"]
+position = Vector3(2.55, 1.575, -2.6)
+shape = SubResource("Body1")
+
+[node name="Collision2" type="CollisionShape3D" parent="BuildingBody"]
+position = Vector3(2.55, 0.035, 2.1)
+shape = SubResource("Body2")
+
+[node name="Collision3" type="CollisionShape3D" parent="BuildingBody"]
+position = Vector3(0.75, 0.42, 4.7)
+shape = SubResource("Body3")
+
+[node name="Collision4" type="CollisionShape3D" parent="BuildingBody"]
+position = Vector3(5.0, 0.42, 4.7)
+shape = SubResource("Body4")
+
+[node name="Collision5" type="CollisionShape3D" parent="BuildingBody"]
+position = Vector3(5.8, 0.42, 2.1)
+shape = SubResource("Body5")

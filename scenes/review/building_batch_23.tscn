@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/review/building_gallery.gd" id="1"]
+
+[node name="BuildingBatch23" type="Node3D"]
+script = ExtResource("1")
+asset_dir = "res://assets/models/buildings/batch_23/"
+ids = Array[String](["courtyard_shopping_centre", "neighborhood_bank", "corner_clinic", "hardware_superstore"])
+titles = Array[String](["COURTYARD SHOPPING CENTRE", "NEIGHBORHOOD BANK", "CORNER CLINIC", "HARDWARE SUPERSTORE"])
+notes = Array[String](["Butter yellow / two-story shops / open front court / teal-edged canopies", "Cream / two stories / three entrance piers / inset doors / raised lobby cap", "Mint / four stories / chamfered glass entry / narrow window groups", "Butter yellow / low shed / deep canopy / two-story side office"])
+scene_folder = "res://scenes/buildings/batch_23/"
+lineup_spacing = 23.0
+lineup_size = 61.0
+lineup_heading = "BATCH 23 / PASTEL FRENCH QUARTER"

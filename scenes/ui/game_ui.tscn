@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/game_ui.gd" id="1"]
+
+[node name="GameUI" type="CanvasLayer"]
+process_mode = 3
+script = ExtResource("1")
+vehicle_path = NodePath("../Vehicles/PlayerCar")
+world_path = NodePath("../World")
+

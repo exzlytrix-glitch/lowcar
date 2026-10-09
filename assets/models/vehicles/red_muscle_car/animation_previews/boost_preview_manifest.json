@@ -1,0 +1,9 @@
+{
+  "renderer": "Godot 4.7 Compatibility / actual native chase-camera viewport",
+  "frames": 216,
+  "pose_fps": 12,
+  "max_charge_seconds": 10.0,
+  "maximum_speed_mps": 64.0,
+  "maximum_flame_length_m": 2.85,
+  "all_frames_driving": true
+}

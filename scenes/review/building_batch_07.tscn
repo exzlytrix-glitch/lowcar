@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/review/building_gallery.gd" id="1"]
+
+[node name="BuildingBatch07" type="Node3D"]
+script = ExtResource("1")
+asset_dir = "res://assets/models/buildings/batch_07/"
+ids = Array[String](["furniture_shop", "pet_supply_shop", "vintage_clothing", "camera_shop"])
+titles = Array[String](["FURNITURE SHOP", "PET SUPPLY SHOP", "VINTAGE CLOTHING", "CAMERA SHOP"])
+notes = Array[String](["Butter yellow / two stories / long window band / side loading shutter", "Powder blue / one story / raised entry roof / two display windows", "Mint / three stories / recessed shop / coral shutters / small balcony", "Cream / two stories / projecting display bay / stepped blue roof edge"])
+scene_folder = "res://scenes/buildings/batch_07/"
+lineup_spacing = 15.0
+lineup_size = 39.0
+lineup_heading = "BATCH 07 / PASTEL FRENCH QUARTER"

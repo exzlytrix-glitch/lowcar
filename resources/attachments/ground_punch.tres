@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="AttachmentDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/attachments/attachment_definition.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Ground Punch"
+cooldown_seconds = 1.8
+upward_speed_mps = 24.0
+requires_ground = true
+

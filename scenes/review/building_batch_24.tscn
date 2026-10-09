@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/review/building_gallery.gd" id="1"]
+
+[node name="BuildingBatch24" type="Node3D"]
+script = ExtResource("1")
+asset_dir = "res://assets/models/buildings/batch_24/"
+ids = Array[String](["postal_sorting_building", "design_studio", "publishing_office", "car_showroom"])
+titles = Array[String](["POSTAL SORTING BUILDING", "DESIGN STUDIO", "PUBLISHING OFFICE", "CAR SHOWROOM"])
+notes = Array[String](["Terracotta / broad two-story postal block / rear loading bays / high windows", "Cream and lilac / three stories / oversized studio glass / offset entry", "Powder blue / broad four-story block / double-height lobby / paired windows", "Cream and blue / wide one-story showroom / deep roof slab / lower rear wing"])
+scene_folder = "res://scenes/buildings/batch_24/"
+lineup_spacing = 23.0
+lineup_size = 61.0
+lineup_heading = "BATCH 24 / PASTEL FRENCH QUARTER"

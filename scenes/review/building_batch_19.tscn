@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/review/building_gallery.gd" id="1"]
+
+[node name="BuildingBatch19" type="Node3D"]
+script = ExtResource("1")
+asset_dir = "res://assets/models/buildings/batch_19/"
+ids = Array[String](["terrace_office_block", "narrow_window_office", "faceted_corner_office", "broad_finance_office"])
+titles = Array[String](["TERRACE OFFICE BLOCK", "NARROW-WINDOW OFFICE", "FACETED CORNER OFFICE", "BROAD FINANCE OFFICE"])
+notes = Array[String](["Cream and mint / four stories / broad terrace / long window groups", "Butter yellow / broad three-story body / grouped slender navy windows", "Powder blue / broad angled corner / wrapping windows / four stories", "Cream and teal / wide three-story slab / deep blue window recesses / central lobby"])
+scene_folder = "res://scenes/buildings/batch_19/"
+lineup_spacing = 21.0
+lineup_size = 54.0
+lineup_heading = "BATCH 19 / PASTEL FRENCH QUARTER"

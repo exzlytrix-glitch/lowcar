@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/review/building_gallery.gd" id="1"]
+
+[node name="BuildingBatch08" type="Node3D"]
+script = ExtResource("1")
+asset_dir = "res://assets/models/buildings/batch_08/"
+ids = Array[String](["radio_shop", "ceramic_shop", "avenue_diner", "pizza_shop"])
+titles = Array[String](["RADIO SHOP", "CERAMIC SHOP", "AVENUE DINER", "PIZZA SHOP"])
+notes = Array[String](["Cream / three stories / broad windows / projecting sign / blue roof room", "Terracotta / two stories / faceted arch / white balcony / side courtyard", "Cream and coral / low long frontage / blue overhang / rear kitchen", "Coral / single story / square canopy / two display panes / raised sign"])
+scene_folder = "res://scenes/buildings/batch_08/"
+lineup_spacing = 16.0
+lineup_size = 41.0
+lineup_heading = "BATCH 08 / PASTEL FRENCH QUARTER"

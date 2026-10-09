@@ -1,0 +1,31 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/world/city_streamer.gd" id="1"]
+
+[sub_resource type="Environment" id="Environment_daylight"]
+background_mode = 1
+background_color = Color(0.72549, 0.862745, 0.909804, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.890196, 0.941176, 1, 1)
+ambient_light_energy = 0.4
+ambient_light_sky_contribution = 0.0
+reflected_light_source = 2
+fog_enabled = true
+fog_light_color = Color(0.65, 0.79, 0.87, 1)
+fog_light_energy = 0.7
+fog_density = 0.0025
+
+[node name="CityWorld" type="Node3D"]
+process_mode = 1
+script = ExtResource("1")
+focus_path = NodePath("../Vehicles/PlayerCar")
+
+[node name="Environment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_daylight")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-47, -38, 0)
+light_color = Color(1, 0.945098, 0.858824, 1)
+light_energy = 0.55
+shadow_enabled = true
+directional_shadow_max_distance = 120.0

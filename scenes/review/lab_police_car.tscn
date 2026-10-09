@@ -1,0 +1,25 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/review/lab_vehicle.gd" id="1"]
+[ext_resource type="Resource" path="res://resources/vehicles/patrol_car.tres" id="2"]
+[ext_resource type="Script" path="res://scripts/chase/police_presentation.gd" id="3"]
+[ext_resource type="PackedScene" path="res://assets/models/vehicles/police_cruiser/police_cruiser.glb" id="4"]
+
+[sub_resource type="BoxShape3D" id="Collision"]
+size = Vector3(2.25, 1.6, 4.7)
+
+[node name="LabPoliceCar" type="CharacterBody3D"]
+collision_layer = 4
+collision_mask = 15
+floor_snap_length = 0.5
+script = ExtResource("1")
+tuning = ExtResource("2")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+position = Vector3(0, 0.8, 0)
+shape = SubResource("Collision")
+
+[node name="Presentation" type="Node3D" parent="."]
+script = ExtResource("3")
+
+[node name="Model" parent="Presentation" instance=ExtResource("4")]

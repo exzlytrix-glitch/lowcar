@@ -1,0 +1,355 @@
+{
+  "batch": 25,
+  "units": "meters",
+  "godot_front": "+Z",
+  "origin": "ground center",
+  "style": "Pastel French Quarter / New Orleans Creole",
+  "palette_srgb": {
+    "cream": "F5E7CD",
+    "stone": "D7C8AC",
+    "coral": "E9967C",
+    "coral_dark": "CC715D",
+    "mint": "83B9A8",
+    "mint_dark": "62978F",
+    "yellow": "EBC567",
+    "yellow_dark": "C99B46",
+    "roof": "52738C",
+    "teal": "328D89",
+    "ink": "24394B",
+    "glass": "34576B",
+    "reflection": "739BAC",
+    "green": "7BAA67",
+    "green_dark": "527B53",
+    "pot": "BE7659",
+    "metal": "8A9B9E",
+    "blue": "96BFD4",
+    "blue_dark": "648FA9",
+    "lilac": "B7A8CF"
+  },
+  "models": [
+    {
+      "id": "produce_wholesaler",
+      "name": "ProduceWholesaler",
+      "description": "Long butter-yellow two-story produce warehouse with large loading shutters, small upper windows, teal canopy and shallow roof ridge.",
+      "glb": "produce_wholesaler.glb",
+      "source": "source/produce_wholesaler.blend",
+      "triangles": 5102,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 308,
+      "materials": [
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89",
+        "Yellow \u2014 EBC567"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -9.76,
+          -7.13,
+          0.0
+        ],
+        "max": [
+          9.76,
+          6.26,
+          7.225
+        ]
+      },
+      "sha256": "417775ac0e1fb4196398666879733ed8dd1eb6610b0dd62e4f7ce5342849a982",
+      "roster_id": 100,
+      "footprint_m": [
+        19.0,
+        12.0
+      ],
+      "body_height_m": 6.1,
+      "scene": "res://scenes/buildings/batch_25/produce_wholesaler.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            0,
+            3.05,
+            0
+          ],
+          "size": [
+            19.0,
+            6.1,
+            12.0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "body_repair_workshop",
+      "name": "BodyRepairWorkshop",
+      "description": "Coral low body-repair workshop with broad service shutter, blue pitched roof and attached two-story office.",
+      "glb": "body_repair_workshop.glb",
+      "source": "source/body_repair_workshop.blend",
+      "triangles": 4172,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 262,
+      "materials": [
+        "Coral \u2014 E9967C",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -8.56,
+          -5.26,
+          0.0
+        ],
+        "max": [
+          8.56,
+          5.26,
+          6.4
+        ]
+      },
+      "sha256": "1a5c6c09a0a923dbbf24a7dc6ff9e7799c4fa0405a59de1bfb5efee27ed35109",
+      "roster_id": 101,
+      "footprint_m": [
+        16.6,
+        10.0
+      ],
+      "body_height_m": 6.04,
+      "scene": "res://scenes/buildings/batch_25/body_repair_workshop.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            -2.4,
+            2.0,
+            0
+          ],
+          "size": [
+            11.8,
+            4.0,
+            10.0
+          ]
+        },
+        {
+          "center": [
+            5.9,
+            3.02,
+            0
+          ],
+          "size": [
+            4.8,
+            6.04,
+            10.0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "small_motor_garage",
+      "name": "SmallMotorGarage",
+      "description": "Compact mint one-story garage with one real open service bay, one closed shutter, low parapet and offset office entrance.",
+      "glb": "small_motor_garage.glb",
+      "source": "source/small_motor_garage.blend",
+      "triangles": 2266,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 100,
+      "materials": [
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Mint \u2014 83B9A8",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -6.06,
+          -4.698,
+          0.0
+        ],
+        "max": [
+          6.06,
+          4.66,
+          4.72
+        ]
+      },
+      "sha256": "206a6b8ee1133ec1f11d88acc2ef05e6c95758133b8da30a1166470596689178",
+      "roster_id": 102,
+      "footprint_m": [
+        11.6,
+        8.8
+      ],
+      "body_height_m": 4.1,
+      "scene": "res://scenes/buildings/batch_25/small_motor_garage.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            0,
+            2.05,
+            -4.21
+          ],
+          "size": [
+            11.6,
+            4.1,
+            0.38
+          ]
+        },
+        {
+          "center": [
+            -5.61,
+            2.05,
+            0
+          ],
+          "size": [
+            0.38,
+            4.1,
+            8.8
+          ]
+        },
+        {
+          "center": [
+            2.8,
+            2.05,
+            0
+          ],
+          "size": [
+            6.0,
+            4.1,
+            8.8
+          ]
+        },
+        {
+          "center": [
+            -5.525,
+            2.05,
+            4.21
+          ],
+          "size": [
+            0.55,
+            4.1,
+            0.38
+          ]
+        },
+        {
+          "center": [
+            -0.625,
+            2.05,
+            4.21
+          ],
+          "size": [
+            0.85,
+            4.1,
+            0.38
+          ]
+        },
+        {
+          "center": [
+            0,
+            3.76,
+            4.21
+          ],
+          "size": [
+            11.6,
+            0.68,
+            0.38
+          ]
+        },
+        {
+          "center": [
+            0,
+            0.075,
+            0
+          ],
+          "size": [
+            11.6,
+            0.15,
+            8.8
+          ]
+        },
+        {
+          "center": [
+            0,
+            4.1,
+            0
+          ],
+          "size": [
+            11.6,
+            0.18,
+            8.8
+          ]
+        }
+      ]
+    },
+    {
+      "id": "long_loading_warehouse",
+      "name": "LongLoadingWarehouse",
+      "description": "Long low cream warehouse with five side loading shutters, broad blue pitched roof and short powder-blue front office.",
+      "glb": "long_loading_warehouse.glb",
+      "source": "source/long_loading_warehouse.blend",
+      "triangles": 4224,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 236,
+      "materials": [
+        "Blue \u2014 96BFD4",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -6.46,
+          -10.76,
+          0.0
+        ],
+        "max": [
+          6.46,
+          9.26,
+          5.5836
+        ]
+      },
+      "sha256": "eb82db720c057ce35660774275d509144b331385de7755eef3f9b72e66f1af9b",
+      "roster_id": 103,
+      "footprint_m": [
+        12.4,
+        19.5
+      ],
+      "body_height_m": 4.0,
+      "scene": "res://scenes/buildings/batch_25/long_loading_warehouse.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            0,
+            2.0,
+            0
+          ],
+          "size": [
+            12.4,
+            4.0,
+            18.0
+          ]
+        },
+        {
+          "center": [
+            0,
+            1.525,
+            9.15
+          ],
+          "size": [
+            7.4,
+            3.05,
+            2.7
+          ]
+        }
+      ]
+    }
+  ]
+}

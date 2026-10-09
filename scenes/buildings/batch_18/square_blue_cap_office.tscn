@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://assets/models/buildings/batch_18/square_blue_cap_office.glb" id="1"]
+
+[sub_resource type="BoxShape3D" id="Body0"]
+size = Vector3(11.4, 12.2, 11.4)
+
+[node name="SquareBlueCapOffice" type="Node3D"]
+
+[node name="Visual" parent="." instance=ExtResource("1")]
+
+[node name="BuildingBody" type="StaticBody3D" parent="."]
+collision_layer = 1
+collision_mask = 0
+
+[node name="Collision" type="CollisionShape3D" parent="BuildingBody"]
+position = Vector3(0, 6.1, 0)
+shape = SubResource("Body0")

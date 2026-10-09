@@ -1,0 +1,323 @@
+{
+  "batch": 14,
+  "units": "meters",
+  "godot_front": "+Z",
+  "origin": "ground center",
+  "style": "Pastel French Quarter / New Orleans Creole",
+  "palette_srgb": {
+    "cream": "F5E7CD",
+    "stone": "D7C8AC",
+    "coral": "E9967C",
+    "coral_dark": "CC715D",
+    "mint": "83B9A8",
+    "mint_dark": "62978F",
+    "yellow": "EBC567",
+    "yellow_dark": "C99B46",
+    "roof": "52738C",
+    "teal": "328D89",
+    "ink": "24394B",
+    "glass": "34576B",
+    "reflection": "739BAC",
+    "green": "7BAA67",
+    "green_dark": "527B53",
+    "pot": "BE7659",
+    "metal": "8A9B9E",
+    "blue": "96BFD4",
+    "blue_dark": "648FA9",
+    "lilac": "B7A8CF"
+  },
+  "models": [
+    {
+      "id": "small_courtyard_house",
+      "name": "SmallCourtyardHouse",
+      "description": "Terracotta U-shaped courtyard home; two-story left and rear wings; low right wing; open cream gate wall.",
+      "glb": "small_courtyard_house.glb",
+      "source": "source/small_courtyard_house.blend",
+      "triangles": 8102,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 469,
+      "materials": [
+        "Blue_Dark \u2014 648FA9",
+        "Coral_Dark \u2014 CC715D",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Green \u2014 7BAA67",
+        "Ink \u2014 24394B",
+        "Pot \u2014 BE7659",
+        "Reflection \u2014 739BAC",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -6.335,
+          -5.235,
+          0.0
+        ],
+        "max": [
+          6.335,
+          5.235,
+          6.92
+        ]
+      },
+      "sha256": "e7c5a9b5e31d1cc83f40782396f84e16838bd3cfade217fc877c78d10bd324a0",
+      "roster_id": 52,
+      "footprint_m": [
+        12.2,
+        10.0
+      ],
+      "body_height_m": 6.2,
+      "scene": "res://scenes/buildings/batch_14/small_courtyard_house.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            -4.25,
+            3.1,
+            0
+          ],
+          "size": [
+            3.7,
+            6.2,
+            10.0
+          ]
+        },
+        {
+          "center": [
+            1.85,
+            3.1,
+            -2.9
+          ],
+          "size": [
+            8.5,
+            6.2,
+            4.2
+          ]
+        },
+        {
+          "center": [
+            4.25,
+            1.55,
+            2.1
+          ],
+          "size": [
+            3.7,
+            3.1,
+            5.8
+          ]
+        },
+        {
+          "center": [
+            0,
+            0.035,
+            2.1
+          ],
+          "size": [
+            4.8,
+            0.07,
+            5.8
+          ]
+        },
+        {
+          "center": [
+            -1.75,
+            0.425,
+            5.0
+          ],
+          "size": [
+            1.3,
+            0.85,
+            0.18
+          ]
+        },
+        {
+          "center": [
+            1.75,
+            0.425,
+            5.0
+          ],
+          "size": [
+            1.3,
+            0.85,
+            0.18
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tile_roof_bungalow",
+      "name": "TileRoofBungalow",
+      "description": "Cream one-story bungalow; broad terracotta roof planes; two thick porch columns; offset entrance.",
+      "glb": "tile_roof_bungalow.glb",
+      "source": "source/tile_roof_bungalow.blend",
+      "triangles": 2068,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 117,
+      "materials": [
+        "Coral_Dark \u2014 CC715D",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Mint_Dark \u2014 62978F",
+        "Reflection \u2014 739BAC",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -5.635,
+          -5.915,
+          0.0
+        ],
+        "max": [
+          5.635,
+          4.735,
+          4.625
+        ]
+      },
+      "sha256": "b58e1a654da6c57f2f5cfdfb87f9a82be334f204713b9a8659bce2d323b5f2f6",
+      "roster_id": 53,
+      "footprint_m": [
+        10.8,
+        9.0
+      ],
+      "body_height_m": 3.0,
+      "scene": "res://scenes/buildings/batch_14/tile_roof_bungalow.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            0,
+            1.5,
+            0
+          ],
+          "size": [
+            10.8,
+            3.0,
+            9.0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "artists_townhouse",
+      "name": "ArtistsTownhouse",
+      "description": "Compact lilac three-story artist home; tall top-floor studio window; small blue roof setback; cream entry.",
+      "glb": "artists_townhouse.glb",
+      "source": "source/artists_townhouse.blend",
+      "triangles": 5384,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 346,
+      "materials": [
+        "Blue_Dark \u2014 648FA9",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Lilac \u2014 B7A8CF",
+        "Reflection \u2014 739BAC",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -3.91,
+          -5.115,
+          0.0
+        ],
+        "max": [
+          3.91,
+          4.76,
+          10.675
+        ]
+      },
+      "sha256": "a4266f77c3ce29f3900b5b8bf9e8e1dbe09d0be03813d29339fa5b5973aac00d",
+      "roster_id": 54,
+      "footprint_m": [
+        7.3,
+        9.0
+      ],
+      "body_height_m": 9.3,
+      "scene": "res://scenes/buildings/batch_14/artists_townhouse.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            0,
+            4.65,
+            0
+          ],
+          "size": [
+            7.3,
+            9.3,
+            9.0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "annex_townhouse",
+      "name": "AnnexTownhouse",
+      "description": "Mint two-story front home with a lower rear annex; stepped side silhouette; side service door; blue annex roof.",
+      "glb": "annex_townhouse.glb",
+      "source": "source/annex_townhouse.blend",
+      "triangles": 4706,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 295,
+      "materials": [
+        "Blue_Dark \u2014 648FA9",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Mint \u2014 83B9A8",
+        "Mint_Dark \u2014 62978F",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -4.48,
+          -6.46,
+          0.0
+        ],
+        "max": [
+          4.16,
+          6.06,
+          6.76
+        ]
+      },
+      "sha256": "14fc5562a45066c8c1c55648d2a3e69493d40c69895c23fcff45649dbe420ef7",
+      "roster_id": 55,
+      "footprint_m": [
+        7.8,
+        11.6
+      ],
+      "body_height_m": 6.2,
+      "scene": "res://scenes/buildings/batch_14/annex_townhouse.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            0,
+            3.1,
+            2.15
+          ],
+          "size": [
+            7.8,
+            6.2,
+            7.3
+          ]
+        },
+        {
+          "center": [
+            0,
+            1.55,
+            -3.65
+          ],
+          "size": [
+            7.8,
+            3.1,
+            4.3
+          ]
+        }
+      ]
+    }
+  ]
+}

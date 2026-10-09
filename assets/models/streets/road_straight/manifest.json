@@ -1,0 +1,24 @@
+{
+  "id": "road_straight",
+  "units": "meters",
+  "long_axis": "Godot Z",
+  "road_width_m": 8,
+  "tile_length_m": 20,
+  "total_width_m": 12,
+  "road_top_m": 0,
+  "sidewalk_top_m": 0.18,
+  "runtime_meshes": 1,
+  "triangles": 1436,
+  "editable_parts": 49,
+  "palette_srgb": {
+    "Asphalt": "30373E",
+    "Gutter": "414950",
+    "Curb": "F0E8D8",
+    "Sidewalk": "DED8CB",
+    "CenterPaint": "EDD194",
+    "EdgePaint": "F4EBDD"
+  },
+  "glb": "road_straight.glb",
+  "source": "source/road_straight.blend",
+  "sha256": "6b252f89fd554d090f65ea9a0802769cf503bc06f184cb5accfe399accea1bd6"
+}

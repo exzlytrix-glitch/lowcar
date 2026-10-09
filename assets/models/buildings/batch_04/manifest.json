@@ -1,0 +1,316 @@
+{
+  "batch": 4,
+  "units": "meters",
+  "godot_front": "+Z",
+  "origin": "ground center",
+  "style": "Pastel French Quarter / New Orleans Creole",
+  "palette_srgb": {
+    "cream": "F5E7CD",
+    "stone": "D7C8AC",
+    "coral": "E9967C",
+    "coral_dark": "CC715D",
+    "mint": "83B9A8",
+    "mint_dark": "62978F",
+    "yellow": "EBC567",
+    "yellow_dark": "C99B46",
+    "roof": "52738C",
+    "teal": "328D89",
+    "ink": "24394B",
+    "glass": "34576B",
+    "reflection": "739BAC",
+    "green": "7BAA67",
+    "green_dark": "527B53",
+    "pot": "BE7659",
+    "metal": "8A9B9E",
+    "blue": "96BFD4",
+    "blue_dark": "648FA9",
+    "lilac": "B7A8CF"
+  },
+  "models": [
+    {
+      "id": "flower_shop",
+      "name": "FlowerShop",
+      "description": "Coral single-story flower shop; broad blue canopy; low hipped roof; faceted flower planters.",
+      "glb": "flower_shop.glb",
+      "source": "source/flower_shop.blend",
+      "triangles": 2078,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 99,
+      "materials": [
+        "Coral \u2014 E9967C",
+        "Coral_Dark \u2014 CC715D",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Green \u2014 7BAA67",
+        "Green_Dark \u2014 527B53",
+        "Ink \u2014 24394B",
+        "Pot \u2014 BE7659",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89",
+        "Yellow \u2014 EBC567"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -3.76,
+          -4.99,
+          0.0
+        ],
+        "max": [
+          3.76,
+          4.16,
+          4.395
+        ]
+      },
+      "sha256": "656b6e35b8c1f16a72aaf61d1e684b05e9e2cc53c75ae0b6afd46ff68ac1cf35",
+      "roster_id": 7,
+      "footprint_m": [
+        7.0,
+        7.8
+      ],
+      "body_height_m": 3.2,
+      "scene": "res://scenes/buildings/batch_04/flower_shop.tscn",
+      "collision_boxes_m": [
+        [
+          [
+            0,
+            1.6,
+            0
+          ],
+          [
+            7.0,
+            3.2,
+            7.8
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "corner_hardware",
+      "name": "CornerHardware",
+      "description": "Broad terracotta hardware shop; tall double doors; chunky white pilasters; raised parapet.",
+      "glb": "corner_hardware.glb",
+      "source": "source/corner_hardware.blend",
+      "triangles": 5288,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 271,
+      "materials": [
+        "Coral_Dark \u2014 CC715D",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Metal \u2014 8A9B9E",
+        "Reflection \u2014 739BAC",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -6.06,
+          -5.04,
+          0.0
+        ],
+        "max": [
+          6.06,
+          4.56,
+          7.81
+        ]
+      },
+      "sha256": "81307beebb224c815709fb6f351472a73c34fb7209d51f7d23060b1a1bc081b8",
+      "roster_id": 8,
+      "footprint_m": [
+        11.6,
+        8.6
+      ],
+      "body_height_m": 6.7,
+      "scene": "res://scenes/buildings/batch_04/corner_hardware.tscn",
+      "collision_boxes_m": [
+        [
+          [
+            0,
+            3.35,
+            0
+          ],
+          [
+            11.6,
+            6.7,
+            8.6
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "spin_laundry",
+      "name": "SpinLaundry",
+      "description": "Long mint laundry; repeating square windows; low blue roof lip; offset entrance.",
+      "glb": "spin_laundry.glb",
+      "source": "source/spin_laundry.blend",
+      "triangles": 2460,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 119,
+      "materials": [
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Metal \u2014 8A9B9E",
+        "Mint \u2014 83B9A8",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -6.16,
+          -4.22,
+          0.0
+        ],
+        "max": [
+          6.16,
+          3.86,
+          4.5
+        ]
+      },
+      "sha256": "013850c2c8b32163c3be97520e338c927ebcdc0e87836e0fd3c7b47ffac1fcf8",
+      "roster_id": 9,
+      "footprint_m": [
+        11.8,
+        7.2
+      ],
+      "body_height_m": 3.35,
+      "scene": "res://scenes/buildings/batch_04/spin_laundry.tscn",
+      "collision_boxes_m": [
+        [
+          [
+            0,
+            1.675,
+            0
+          ],
+          [
+            11.8,
+            3.35,
+            7.2
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "courtyard_duplex",
+      "name": "CourtyardDuplex",
+      "description": "Butter-yellow L-shaped duplex; open entry courtyard; low white walls; inward-facing balcony.",
+      "glb": "courtyard_duplex.glb",
+      "source": "source/courtyard_duplex.blend",
+      "triangles": 7132,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 433,
+      "materials": [
+        "Blue_Dark \u2014 648FA9",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Green \u2014 7BAA67",
+        "Ink \u2014 24394B",
+        "Metal \u2014 8A9B9E",
+        "Pot \u2014 BE7659",
+        "Reflection \u2014 739BAC",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89",
+        "Yellow \u2014 EBC567"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -5.565,
+          -4.965,
+          0.0
+        ],
+        "max": [
+          5.565,
+          4.965,
+          7.21
+        ]
+      },
+      "sha256": "a64e57262b5ce2f26fd54cd4ac9454ecb6c9e6d85ca0f6621fa1266339af11fe",
+      "roster_id": 42,
+      "footprint_m": [
+        10.6,
+        9.4
+      ],
+      "body_height_m": 6.3,
+      "scene": "res://scenes/buildings/batch_04/courtyard_duplex.tscn",
+      "collision_boxes_m": [
+        [
+          [
+            -3.2,
+            3.15,
+            0
+          ],
+          [
+            4.2,
+            6.3,
+            9.4
+          ]
+        ],
+        [
+          [
+            2.1,
+            3.15,
+            -2.6
+          ],
+          [
+            6.4,
+            6.3,
+            4.2
+          ]
+        ],
+        [
+          [
+            0,
+            0.5,
+            4.7
+          ],
+          [
+            2.2,
+            1,
+            0.2
+          ]
+        ],
+        [
+          [
+            4.6,
+            0.5,
+            4.7
+          ],
+          [
+            1.4,
+            1,
+            0.2
+          ]
+        ],
+        [
+          [
+            5.3,
+            0.5,
+            2.1
+          ],
+          [
+            0.2,
+            1,
+            5.2
+          ]
+        ],
+        [
+          [
+            2.1,
+            0.035,
+            2.1
+          ],
+          [
+            6.4,
+            0.07,
+            5.2
+          ]
+        ]
+      ]
+    }
+  ]
+}

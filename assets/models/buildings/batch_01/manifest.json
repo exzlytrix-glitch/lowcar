@@ -1,0 +1,199 @@
+{
+  "batch": 1,
+  "units": "meters",
+  "godot_front": "+Z",
+  "origin": "ground center",
+  "style": "Pastel French Quarter / New Orleans Creole",
+  "palette_srgb": {
+    "cream": "F5E7CD",
+    "stone": "D7C8AC",
+    "coral": "E9967C",
+    "coral_dark": "CC715D",
+    "mint": "83B9A8",
+    "mint_dark": "62978F",
+    "yellow": "EBC567",
+    "yellow_dark": "C99B46",
+    "roof": "52738C",
+    "teal": "328D89",
+    "ink": "24394B",
+    "glass": "34576B",
+    "reflection": "739BAC",
+    "green": "7BAA67",
+    "green_dark": "527B53",
+    "pot": "BE7659",
+    "metal": "8A9B9E",
+    "blue": "96BFD4",
+    "blue_dark": "648FA9",
+    "lilac": "B7A8CF"
+  },
+  "models": [
+    {
+      "id": "corner_cafe",
+      "name": "CornerCafe",
+      "description": "Butter-yellow corner cafe; mint storefront; wraparound white scrollwork gallery.",
+      "glb": "corner_cafe.glb",
+      "source": "source/corner_cafe.blend",
+      "triangles": 8734,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 579,
+      "materials": [
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Green \u2014 7BAA67",
+        "Ink \u2014 24394B",
+        "Mint \u2014 83B9A8",
+        "Mint_Dark \u2014 62978F",
+        "Pot \u2014 BE7659",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89",
+        "Yellow \u2014 EBC567",
+        "Yellow_Dark \u2014 C99B46"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -4.66,
+          -5.72,
+          -0.0
+        ],
+        "max": [
+          5.72,
+          4.66,
+          7.45
+        ]
+      },
+      "sha256": "d22f425dd80002ffecd85d5deca7cf85db523bb0281cd9ca05161385e451bc8f",
+      "roster_id": 23,
+      "footprint_m": [
+        8.8,
+        8.8
+      ],
+      "body_height_m": 6.7,
+      "scene": "res://scenes/buildings/batch_01/corner_cafe.tscn"
+    },
+    {
+      "id": "coral_row_house",
+      "name": "CoralRowHouse",
+      "description": "Coral two-story row house; teal shutters; full-width gallery; low hipped roof.",
+      "glb": "coral_row_house.glb",
+      "source": "source/coral_row_house.blend",
+      "triangles": 4706,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 320,
+      "materials": [
+        "Coral \u2014 E9967C",
+        "Coral_Dark \u2014 CC715D",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -3.21,
+          -5.675,
+          0.0
+        ],
+        "max": [
+          3.21,
+          4.81,
+          7.875
+        ]
+      },
+      "sha256": "4f472823d419a685c7c425c735e0c716432dd240262c30c49426bc5a1adb4d29",
+      "roster_id": 37,
+      "footprint_m": [
+        5.9,
+        9.1
+      ],
+      "body_height_m": 6.2,
+      "scene": "res://scenes/buildings/batch_01/coral_row_house.tscn"
+    },
+    {
+      "id": "blue_townhouse",
+      "name": "BlueTownhouse",
+      "description": "Powder-blue three-story townhouse; coral shutters; diamond balcony rails; stepped crown.",
+      "glb": "blue_townhouse.glb",
+      "source": "source/blue_townhouse.blend",
+      "triangles": 7130,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 476,
+      "materials": [
+        "Blue \u2014 96BFD4",
+        "Blue_Dark \u2014 648FA9",
+        "Coral_Dark \u2014 CC715D",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Reflection \u2014 739BAC",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -3.01,
+          -5.805,
+          0.0
+        ],
+        "max": [
+          3.01,
+          5.16,
+          10.47
+        ]
+      },
+      "sha256": "0566da395ad16890ee9e8bf382f0133b0d05942def25d2e8156008992b90c0ed",
+      "roster_id": 39,
+      "footprint_m": [
+        5.5,
+        9.8
+      ],
+      "body_height_m": 9.3,
+      "scene": "res://scenes/buildings/batch_01/blue_townhouse.tscn"
+    },
+    {
+      "id": "skinny_apartments",
+      "name": "SkinnyApartments",
+      "description": "Skinny mint five-story apartments; one stack of white scrollwork balconies; flat cornice.",
+      "glb": "skinny_apartments.glb",
+      "source": "source/skinny_apartments.blend",
+      "triangles": 11532,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 778,
+      "materials": [
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Metal \u2014 8A9B9E",
+        "Mint \u2014 83B9A8",
+        "Mint_Dark \u2014 62978F",
+        "Reflection \u2014 739BAC",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -3.935,
+          -5.465,
+          0.0
+        ],
+        "max": [
+          3.935,
+          4.56,
+          16.745
+        ]
+      },
+      "sha256": "1808d51008f30e15fa9772b18a6687d080e0b239ea676cdc525b4780e4b5c8e2",
+      "roster_id": 58,
+      "footprint_m": [
+        7.35,
+        8.6
+      ],
+      "body_height_m": 15.5,
+      "scene": "res://scenes/buildings/batch_01/skinny_apartments.tscn"
+    }
+  ]
+}

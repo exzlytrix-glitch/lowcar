@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="VehicleTuning" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/vehicles/vehicle_tuning.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+maximum_speed_mps = 32.0
+reverse_speed_mps = 9.0
+acceleration_mps2 = 15.0
+braking_mps2 = 27.0
+steering_radians_per_second = 1.65
+road_grip = 9.0
+handbrake_grip = 2.3
+gravity_mps2 = 25.0
+terminal_impact_speed_mps = 12.0
+

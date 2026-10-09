@@ -1,0 +1,611 @@
+{
+  "batch": 15,
+  "units": "meters",
+  "godot_front": "+Z",
+  "origin": "ground center",
+  "style": "Pastel French Quarter / New Orleans Creole",
+  "palette_srgb": {
+    "cream": "F5E7CD",
+    "stone": "D7C8AC",
+    "coral": "E9967C",
+    "coral_dark": "CC715D",
+    "mint": "83B9A8",
+    "mint_dark": "62978F",
+    "yellow": "EBC567",
+    "yellow_dark": "C99B46",
+    "roof": "52738C",
+    "teal": "328D89",
+    "ink": "24394B",
+    "glass": "34576B",
+    "reflection": "739BAC",
+    "green": "7BAA67",
+    "green_dark": "527B53",
+    "pot": "BE7659",
+    "metal": "8A9B9E",
+    "blue": "96BFD4",
+    "blue_dark": "648FA9",
+    "lilac": "B7A8CF"
+  },
+  "models": [
+    {
+      "id": "four_unit_walkup",
+      "name": "FourUnitWalkup",
+      "description": "Broad coral two-story walkup; paired cream entrances; four generous shuttered upstairs windows; shallow blue roof cap.",
+      "glb": "four_unit_walkup.glb",
+      "source": "source/four_unit_walkup.blend",
+      "triangles": 4962,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 319,
+      "materials": [
+        "Blue_Dark \u2014 648FA9",
+        "Coral \u2014 E9967C",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Metal \u2014 8A9B9E",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -6.46,
+          -5.18,
+          0.0
+        ],
+        "max": [
+          6.46,
+          4.66,
+          7.35
+        ]
+      },
+      "sha256": "8a506dbfb8835c5a5532be23f118ea31c57a5a03442027468c2cad4f592b763b",
+      "roster_id": 56,
+      "footprint_m": [
+        12.4,
+        8.8
+      ],
+      "body_height_m": 6.2,
+      "scene": "res://scenes/buildings/batch_15/four_unit_walkup.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            0,
+            3.1,
+            0
+          ],
+          "size": [
+            12.4,
+            6.2,
+            8.8
+          ]
+        }
+      ]
+    },
+    {
+      "id": "exterior_stair_apartments",
+      "name": "ExteriorStairApartments",
+      "description": "Powder-blue three-story apartments; chunky open switchback stair; alternating access landings; cream rails; low flat roof.",
+      "glb": "exterior_stair_apartments.glb",
+      "source": "source/exterior_stair_apartments.blend",
+      "triangles": 7870,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 472,
+      "materials": [
+        "Blue \u2014 96BFD4",
+        "Blue_Dark \u2014 648FA9",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Mint_Dark \u2014 62978F",
+        "Reflection \u2014 739BAC",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -5.975,
+          -5.095,
+          -0.0
+        ],
+        "max": [
+          6.76,
+          4.76,
+          9.84
+        ]
+      },
+      "sha256": "437f392448b9bca1b6345e8636a7e757033470bcf5f4333fb9de4ae89d68f283",
+      "roster_id": 59,
+      "footprint_m": [
+        13.0,
+        9.0
+      ],
+      "body_height_m": 9.3,
+      "scene": "res://scenes/buildings/batch_15/exterior_stair_apartments.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            1.5,
+            4.65,
+            0
+          ],
+          "size": [
+            10.0,
+            9.3,
+            9.0
+          ]
+        },
+        {
+          "center": [
+            -4.75,
+            0.025,
+            0.45
+          ],
+          "size": [
+            2.45,
+            0.05,
+            8.95
+          ]
+        },
+        {
+          "center": [
+            -4.75,
+            0.17833333333333334,
+            3.65
+          ],
+          "size": [
+            1.7,
+            0.16,
+            0.52
+          ]
+        },
+        {
+          "center": [
+            -4.75,
+            0.4366666666666667,
+            3.15
+          ],
+          "size": [
+            1.7,
+            0.16,
+            0.52
+          ]
+        },
+        {
+          "center": [
+            -4.75,
+            0.6950000000000001,
+            2.65
+          ],
+          "size": [
+            1.7,
+            0.16,
+            0.52
+          ]
+        },
+        {
+          "center": [
+            -4.75,
+            0.9533333333333335,
+            2.15
+          ],
+          "size": [
+            1.7,
+            0.16,
+            0.52
+          ]
+        },
+        {
+          "center": [
+            -4.75,
+            1.2116666666666667,
+            1.65
+          ],
+          "size": [
+            1.7,
+            0.16,
+            0.52
+          ]
+        },
+        {
+          "center": [
+            -4.75,
+            1.47,
+            1.15
+          ],
+          "size": [
+            1.7,
+            0.16,
+            0.52
+          ]
+        },
+        {
+          "center": [
+            -4.75,
+            1.7283333333333333,
+            0.6499999999999999
+          ],
+          "size": [
+            1.7,
+            0.16,
+            0.52
+          ]
+        },
+        {
+          "center": [
+            -4.75,
+            1.9866666666666668,
+            0.1499999999999999
+          ],
+          "size": [
+            1.7,
+            0.16,
+            0.52
+          ]
+        },
+        {
+          "center": [
+            -4.75,
+            2.245,
+            -0.3500000000000001
+          ],
+          "size": [
+            1.7,
+            0.16,
+            0.52
+          ]
+        },
+        {
+          "center": [
+            -4.75,
+            2.5033333333333334,
+            -0.8500000000000001
+          ],
+          "size": [
+            1.7,
+            0.16,
+            0.52
+          ]
+        },
+        {
+          "center": [
+            -4.75,
+            2.7616666666666667,
+            -1.35
+          ],
+          "size": [
+            1.7,
+            0.16,
+            0.52
+          ]
+        },
+        {
+          "center": [
+            -4.75,
+            3.02,
+            -1.85
+          ],
+          "size": [
+            1.7,
+            0.16,
+            0.52
+          ]
+        },
+        {
+          "center": [
+            -4.75,
+            3.2783333333333333,
+            -1.85
+          ],
+          "size": [
+            1.7,
+            0.16,
+            0.52
+          ]
+        },
+        {
+          "center": [
+            -4.75,
+            3.5366666666666666,
+            -1.35
+          ],
+          "size": [
+            1.7,
+            0.16,
+            0.52
+          ]
+        },
+        {
+          "center": [
+            -4.75,
+            3.795,
+            -0.8500000000000001
+          ],
+          "size": [
+            1.7,
+            0.16,
+            0.52
+          ]
+        },
+        {
+          "center": [
+            -4.75,
+            4.053333333333334,
+            -0.3500000000000001
+          ],
+          "size": [
+            1.7,
+            0.16,
+            0.52
+          ]
+        },
+        {
+          "center": [
+            -4.75,
+            4.3116666666666665,
+            0.1499999999999999
+          ],
+          "size": [
+            1.7,
+            0.16,
+            0.52
+          ]
+        },
+        {
+          "center": [
+            -4.75,
+            4.57,
+            0.6499999999999999
+          ],
+          "size": [
+            1.7,
+            0.16,
+            0.52
+          ]
+        },
+        {
+          "center": [
+            -4.75,
+            4.828333333333333,
+            1.15
+          ],
+          "size": [
+            1.7,
+            0.16,
+            0.52
+          ]
+        },
+        {
+          "center": [
+            -4.75,
+            5.086666666666667,
+            1.65
+          ],
+          "size": [
+            1.7,
+            0.16,
+            0.52
+          ]
+        },
+        {
+          "center": [
+            -4.75,
+            5.345000000000001,
+            2.15
+          ],
+          "size": [
+            1.7,
+            0.16,
+            0.52
+          ]
+        },
+        {
+          "center": [
+            -4.75,
+            5.6033333333333335,
+            2.65
+          ],
+          "size": [
+            1.7,
+            0.16,
+            0.52
+          ]
+        },
+        {
+          "center": [
+            -4.75,
+            5.861666666666666,
+            3.15
+          ],
+          "size": [
+            1.7,
+            0.16,
+            0.52
+          ]
+        },
+        {
+          "center": [
+            -4.75,
+            6.12,
+            3.65
+          ],
+          "size": [
+            1.7,
+            0.16,
+            0.52
+          ]
+        },
+        {
+          "center": [
+            -4.55,
+            0.08,
+            4.2
+          ],
+          "size": [
+            2.14,
+            0.16,
+            1.29
+          ]
+        },
+        {
+          "center": [
+            -4.55,
+            3.18,
+            -2.66
+          ],
+          "size": [
+            2.14,
+            0.16,
+            1.29
+          ]
+        },
+        {
+          "center": [
+            -4.55,
+            6.28,
+            4.2
+          ],
+          "size": [
+            2.14,
+            0.16,
+            1.29
+          ]
+        }
+      ]
+    },
+    {
+      "id": "faceted_corner_apartments",
+      "name": "FacetedCornerApartments",
+      "description": "Broad butter-yellow four-story corner block; chamfered blue window column; staggered shallow balconies; blue roof cap.",
+      "glb": "faceted_corner_apartments.glb",
+      "source": "source/faceted_corner_apartments.blend",
+      "triangles": 9712,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 650,
+      "materials": [
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Mint_Dark \u2014 62978F",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89",
+        "Yellow \u2014 EBC567"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -6.6005,
+          -5.705,
+          0.0
+        ],
+        "max": [
+          6.585,
+          5.085,
+          13.435
+        ]
+      },
+      "sha256": "e56b027e9934e640f623ac4ef11ed45a7b3f6354bf6e281bb5568e23ff4c20e7",
+      "roster_id": 60,
+      "footprint_m": [
+        12.6,
+        9.6
+      ],
+      "body_height_m": 12.4,
+      "scene": "res://scenes/buildings/batch_15/faceted_corner_apartments.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            1.0,
+            6.2,
+            0
+          ],
+          "size": [
+            10.6,
+            12.4,
+            9.6
+          ]
+        },
+        {
+          "center": [
+            -5.3,
+            6.2,
+            -1.0
+          ],
+          "size": [
+            2.0,
+            12.4,
+            7.6
+          ]
+        },
+        {
+          "center": [
+            -4.8,
+            6.2,
+            3.3
+          ],
+          "size": [
+            1.0,
+            12.4,
+            1.0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wide_window_apartments",
+      "name": "WideWindowApartments",
+      "description": "Long cream four-story apartments; recessed horizontal navy window groups; offset lobby; two shallow ornamental balconies.",
+      "glb": "wide_window_apartments.glb",
+      "source": "source/wide_window_apartments.blend",
+      "triangles": 8526,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 602,
+      "materials": [
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Metal \u2014 8A9B9E",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -7.66,
+          -5.295,
+          0.0
+        ],
+        "max": [
+          7.66,
+          4.66,
+          13.46
+        ]
+      },
+      "sha256": "4b364e41c813bdec507d25f2c84131df29693c5c3ce068d988ad2b6c6319ad8f",
+      "roster_id": 61,
+      "footprint_m": [
+        14.8,
+        8.8
+      ],
+      "body_height_m": 12.4,
+      "scene": "res://scenes/buildings/batch_15/wide_window_apartments.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            0,
+            6.2,
+            0
+          ],
+          "size": [
+            14.8,
+            12.4,
+            8.8
+          ]
+        }
+      ]
+    }
+  ]
+}

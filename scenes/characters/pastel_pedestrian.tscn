@@ -1,0 +1,4 @@
+[gd_scene load_steps=2 format=3]
+[ext_resource type="PackedScene" path="res://assets/models/characters/pastel_pedestrian/pastel_pedestrian.glb" id="1"]
+[node name="PastelPedestrian" type="Node3D"]
+[node name="Model" parent="." instance=ExtResource("1")]

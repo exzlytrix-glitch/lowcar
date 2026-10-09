@@ -1,0 +1,90 @@
+[gd_scene load_steps=16 format=3]
+
+[ext_resource type="Script" path="res://scripts/vehicles/arcade_vehicle.gd" id="1"]
+[ext_resource type="Resource" path="res://resources/vehicles/red_muscle_car.tres" id="2"]
+[ext_resource type="Script" path="res://scripts/vehicles/player_input.gd" id="3"]
+[ext_resource type="Script" path="res://scripts/vehicles/vehicle_presentation.gd" id="4"]
+[ext_resource type="Script" path="res://scripts/attachments/launcher_attachment.gd" id="5"]
+[ext_resource type="Resource" path="res://resources/attachments/ground_punch.tres" id="6"]
+[ext_resource type="PackedScene" path="res://scenes/camera/chase_camera.tscn" id="7"]
+[ext_resource type="PackedScene" path="res://scenes/vehicles/red_muscle_car.tscn" id="8"]
+
+[ext_resource type="AnimationLibrary" path="res://resources/animation/car_animation_pack.tres" id="9"]
+[ext_resource type="Script" path="res://scripts/vehicles/car_motion_accents.gd" id="10"]
+
+[sub_resource type="StandardMaterial3D" id="Metal"]
+albedo_color = Color(0.65098, 0.65490, 0.62745, 1)
+roughness = 0.75
+
+[sub_resource type="StandardMaterial3D" id="Amber"]
+albedo_color = Color(0.90980, 0.67843, 0.26275, 1)
+roughness = 0.75
+
+[sub_resource type="BoxMesh" id="Mesh_Foot"]
+size = Vector3(0.9, 0.16, 0.92)
+
+[sub_resource type="BoxMesh" id="Mesh_Shaft"]
+size = Vector3(0.24, 0.48, 0.24)
+
+[sub_resource type="BoxShape3D" id="Collision_body"]
+size = Vector3(2.3, 1.72, 4.95)
+
+[node name="PlayerCar" type="CharacterBody3D"]
+process_mode = 1
+collision_layer = 2
+collision_mask = 13
+floor_snap_length = 0.5
+script = ExtResource("1")
+tuning = ExtResource("2")
+
+[node name="Collision" type="CollisionShape3D" parent="."]
+position = Vector3(0, 0.86, 0)
+shape = SubResource("Collision_body")
+
+[node name="PlayerInput" type="Node" parent="."]
+script = ExtResource("3")
+
+[node name="Attachments" type="Node" parent="."]
+
+[node name="GroundPunch" type="Node" parent="Attachments"]
+script = ExtResource("5")
+definition = ExtResource("6")
+
+[node name="Presentation" type="Node3D" parent="."]
+script = ExtResource("4")
+
+[node name="Model" parent="Presentation" instance=ExtResource("8")]
+
+[node name="LauncherFoot" type="Node3D" parent="Presentation"]
+position = Vector3(0, 0.12, 0.2)
+
+[node name="Foot" type="MeshInstance3D" parent="Presentation/LauncherFoot"]
+mesh = SubResource("Mesh_Foot")
+material_override = SubResource("Amber")
+
+[node name="Shaft" type="MeshInstance3D" parent="Presentation/LauncherFoot"]
+position = Vector3(0, 0.28, 0)
+mesh = SubResource("Mesh_Shaft")
+material_override = SubResource("Metal")
+
+[node name="Pose" type="Node3D" parent="Presentation"]
+
+[node name="Trunk" type="Node3D" parent="Presentation/Pose"]
+
+[node name="Tires" type="Node3D" parent="Presentation/Pose"]
+
+[node name="Crash" type="Node3D" parent="Presentation/Pose"]
+
+[node name="Foot" type="Node3D" parent="Presentation/Pose"]
+position = Vector3(0, 0.12, 0.2)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Presentation"]
+callback_mode_process = 2
+libraries = {
+&"car": ExtResource("9")
+}
+
+[node name="MotionAccents" type="Node3D" parent="Presentation"]
+script = ExtResource("10")
+
+[node name="ChaseCamera" parent="." instance=ExtResource("7")]

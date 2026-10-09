@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/review/building_gallery.gd" id="1"]
+
+[node name="BuildingBatch05" type="Node3D"]
+script = ExtResource("1")
+asset_dir = "res://assets/models/buildings/batch_05/"
+ids = Array[String](["junction_convenience", "cycle_shop", "blue_gable_house", "slim_mint_tower"])
+titles = Array[String](["JUNCTION CONVENIENCE", "CYCLE SHOP", "BLUE GABLE HOUSE", "MINT OFFICE BLOCK"])
+notes = Array[String](["Powder blue / yellow storefront / wrap canopy / roof terrace", "Mint / wide double doors / blue gable / side entry", "Cream / steep blue gable / attic window / white porch", "Mint / four stories / broad white facade frame / low roof room"])
+scene_folder = "res://scenes/buildings/batch_05/"
+lineup_spacing = 14.0
+lineup_size = 39.0
+lineup_heading = "BATCH 05 / PASTEL FRENCH QUARTER"

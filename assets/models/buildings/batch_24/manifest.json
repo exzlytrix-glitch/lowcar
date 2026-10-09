@@ -1,0 +1,285 @@
+{
+  "batch": 24,
+  "units": "meters",
+  "godot_front": "+Z",
+  "origin": "ground center",
+  "style": "Pastel French Quarter / New Orleans Creole",
+  "palette_srgb": {
+    "cream": "F5E7CD",
+    "stone": "D7C8AC",
+    "coral": "E9967C",
+    "coral_dark": "CC715D",
+    "mint": "83B9A8",
+    "mint_dark": "62978F",
+    "yellow": "EBC567",
+    "yellow_dark": "C99B46",
+    "roof": "52738C",
+    "teal": "328D89",
+    "ink": "24394B",
+    "glass": "34576B",
+    "reflection": "739BAC",
+    "green": "7BAA67",
+    "green_dark": "527B53",
+    "pot": "BE7659",
+    "metal": "8A9B9E",
+    "blue": "96BFD4",
+    "blue_dark": "648FA9",
+    "lilac": "B7A8CF"
+  },
+  "models": [
+    {
+      "id": "postal_sorting_building",
+      "name": "PostalSortingBuilding",
+      "description": "Broad terracotta two-story postal building with closed rear loading bays, narrow high windows and a front office canopy.",
+      "glb": "postal_sorting_building.glb",
+      "source": "source/postal_sorting_building.blend",
+      "triangles": 4720,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 299,
+      "materials": [
+        "Coral_Dark \u2014 CC715D",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -9.66,
+          -6.92,
+          0.0
+        ],
+        "max": [
+          9.66,
+          6.26,
+          6.76
+        ]
+      },
+      "sha256": "fd5bcf63decfa5c811405c93cf55589cf22324d991eee77b87ecc9c84e6089e2",
+      "roster_id": 96,
+      "footprint_m": [
+        18.8,
+        12.0
+      ],
+      "body_height_m": 6.4,
+      "scene": "res://scenes/buildings/batch_24/postal_sorting_building.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            0,
+            3.2,
+            0
+          ],
+          "size": [
+            18.8,
+            6.4,
+            12.0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "design_studio",
+      "name": "DesignStudio",
+      "description": "Cream and muted-lilac three-story studio with oversized top-floor windows, small terrace and offset lower entrance.",
+      "glb": "design_studio.glb",
+      "source": "source/design_studio.blend",
+      "triangles": 6028,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 363,
+      "materials": [
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Green \u2014 7BAA67",
+        "Ink \u2014 24394B",
+        "Lilac \u2014 B7A8CF",
+        "Pot \u2014 BE7659",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -7.76,
+          -7.46,
+          0.0
+        ],
+        "max": [
+          7.76,
+          5.76,
+          9.66
+        ]
+      },
+      "sha256": "97bf0b659d88cf76bad0bc7924db4e073a98d6a30f50dc2424cfcd7d8763d842",
+      "roster_id": 97,
+      "footprint_m": [
+        15.0,
+        11.0
+      ],
+      "body_height_m": 9.3,
+      "scene": "res://scenes/buildings/batch_24/design_studio.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            0,
+            3.1,
+            0
+          ],
+          "size": [
+            15.0,
+            6.2,
+            11.0
+          ]
+        },
+        {
+          "center": [
+            -0.4,
+            7.75,
+            -1.2
+          ],
+          "size": [
+            11.8,
+            3.1,
+            7.8
+          ]
+        },
+        {
+          "center": [
+            4.5,
+            1.55,
+            5.9
+          ],
+          "size": [
+            4.2,
+            3.1,
+            2.6
+          ]
+        }
+      ]
+    },
+    {
+      "id": "publishing_office",
+      "name": "PublishingOffice",
+      "description": "Broad powder-blue four-story publishing office with double-height front lobby, paired upper glazing and rear roof service enclosure.",
+      "glb": "publishing_office.glb",
+      "source": "source/publishing_office.blend",
+      "triangles": 5596,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 359,
+      "materials": [
+        "Blue \u2014 96BFD4",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -7.16,
+          -6.46,
+          0.0
+        ],
+        "max": [
+          7.16,
+          6.46,
+          13.645
+        ]
+      },
+      "sha256": "fcd09b49ff9b2992771c1cb55a2fb12875fe53fc60e8c302ad955e5f9e39ee70",
+      "roster_id": 98,
+      "footprint_m": [
+        13.8,
+        12.4
+      ],
+      "body_height_m": 12.4,
+      "scene": "res://scenes/buildings/batch_24/publishing_office.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            0,
+            6.2,
+            0
+          ],
+          "size": [
+            13.8,
+            12.4,
+            12.4
+          ]
+        }
+      ]
+    },
+    {
+      "id": "car_showroom",
+      "name": "CarShowroom",
+      "description": "Wide cream one-story showroom with two tall blue glazing bays, deep projecting roof slab and lower rear service wing.",
+      "glb": "car_showroom.glb",
+      "source": "source/car_showroom.blend",
+      "triangles": 2610,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 150,
+      "materials": [
+        "Blue \u2014 96BFD4",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -10.0,
+          -7.41,
+          0.0
+        ],
+        "max": [
+          10.0,
+          6.26,
+          5.18
+        ]
+      },
+      "sha256": "5e6dc82d7c3e9cd704002541ba1c2a70a4f1d60b24902c47ec3cb774b471a344",
+      "roster_id": 99,
+      "footprint_m": [
+        19.0,
+        12.0
+      ],
+      "body_height_m": 4.5,
+      "scene": "res://scenes/buildings/batch_24/car_showroom.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            0,
+            2.25,
+            1.7
+          ],
+          "size": [
+            19.0,
+            4.5,
+            8.6
+          ]
+        },
+        {
+          "center": [
+            0,
+            1.525,
+            -4.3
+          ],
+          "size": [
+            19.0,
+            3.05,
+            3.4
+          ]
+        }
+      ]
+    }
+  ]
+}

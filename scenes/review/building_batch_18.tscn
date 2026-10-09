@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/review/building_gallery.gd" id="1"]
+
+[node name="BuildingBatch18" type="Node3D"]
+script = ExtResource("1")
+asset_dir = "res://assets/models/buildings/batch_18/"
+ids = Array[String](["teal_glass_office", "coral_stair_office", "square_blue_cap_office", "joined_office_wings"])
+titles = Array[String](["TEAL-GLASS OFFICE", "CORAL STAIR OFFICE", "SQUARE BLUE-CAP OFFICE", "JOINED OFFICE WINGS"])
+notes = Array[String](["Teal / broad three stories / cream bands / projecting glass lobby", "Cream / four stories / integrated coral stair section / white trim", "Cream / square four-story block / blue roof cap / recessed corner lobby", "Mint and powder blue / three-story wings / low shared lobby / open forecourt"])
+scene_folder = "res://scenes/buildings/batch_18/"
+lineup_spacing = 21.0
+lineup_size = 53.0
+lineup_heading = "BATCH 18 / PASTEL FRENCH QUARTER"

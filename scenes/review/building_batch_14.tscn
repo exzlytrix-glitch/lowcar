@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/review/building_gallery.gd" id="1"]
+
+[node name="BuildingBatch14" type="Node3D"]
+script = ExtResource("1")
+asset_dir = "res://assets/models/buildings/batch_14/"
+ids = Array[String](["small_courtyard_house", "tile_roof_bungalow", "artists_townhouse", "annex_townhouse"])
+titles = Array[String](["SMALL COURTYARD HOUSE", "TILE-ROOF BUNGALOW", "ARTIST'S TOWNHOUSE", "ANNEX TOWNHOUSE"])
+notes = Array[String](["Terracotta / U-shaped home / two roof heights / open courtyard gate", "Cream / one story / terracotta roof / thick porch columns / offset door", "Lilac / three stories / tall studio window / small blue roof setback", "Mint / two-story front / low rear annex / side service door"])
+scene_folder = "res://scenes/buildings/batch_14/"
+lineup_spacing = 17.0
+lineup_size = 44.0
+lineup_heading = "BATCH 14 / PASTEL FRENCH QUARTER"

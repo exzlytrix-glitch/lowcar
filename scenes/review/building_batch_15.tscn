@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/review/building_gallery.gd" id="1"]
+
+[node name="BuildingBatch15" type="Node3D"]
+script = ExtResource("1")
+asset_dir = "res://assets/models/buildings/batch_15/"
+ids = Array[String](["four_unit_walkup", "exterior_stair_apartments", "faceted_corner_apartments", "wide_window_apartments"])
+titles = Array[String](["FOUR-UNIT WALKUP", "EXTERIOR-STAIR APARTMENTS", "FACETED CORNER APARTMENTS", "WIDE WINDOW APARTMENTS"])
+notes = Array[String](["Coral / two stories / paired entrances / four broad shuttered windows", "Powder blue / three stories / open switchback stair / access landings", "Butter yellow / broad four-story corner / chamfered windows / balconies", "Cream and navy / long four-story block / horizontal windows / offset lobby"])
+scene_folder = "res://scenes/buildings/batch_15/"
+lineup_spacing = 18.0
+lineup_size = 48.0
+lineup_heading = "BATCH 15 / PASTEL FRENCH QUARTER"

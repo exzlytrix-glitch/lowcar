@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="VehicleTuning" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/vehicles/vehicle_tuning.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+maximum_speed_mps = 36.0
+acceleration_mps2 = 14.0
+steering_radians_per_second = 3.0
+road_grip = 13.0
+braking_mps2 = 32.0

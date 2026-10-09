@@ -1,0 +1,22 @@
+{
+  "pieces": [
+    "Nose",
+    "Hood",
+    "LeftDoor",
+    "Underbody",
+    "RightDoor",
+    "RearBody",
+    "Trunk",
+    "Cabin",
+    "FrontLeft",
+    "FrontRight",
+    "RearLeft",
+    "RearRight"
+  ],
+  "piece_count": 12,
+  "source": "source/explosion_parts.blend",
+  "glb": "explosion_parts.glb",
+  "forward": "Godot -Z",
+  "units": "meters",
+  "sha256": "ad37a41c10ee9a3d8eb6586570c236a55f80dce0a3d9b9cb3db90eb1a9ca628c"
+}

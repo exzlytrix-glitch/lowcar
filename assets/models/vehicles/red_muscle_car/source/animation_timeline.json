@@ -1,0 +1,152 @@
+[
+  {
+    "clip": "RESET",
+    "start_frame": 1,
+    "end_frame": 2
+  },
+  {
+    "clip": "idle",
+    "start_frame": 5,
+    "end_frame": 17
+  },
+  {
+    "clip": "drive",
+    "start_frame": 20,
+    "end_frame": 32
+  },
+  {
+    "clip": "accelerate",
+    "start_frame": 35,
+    "end_frame": 42
+  },
+  {
+    "clip": "brake",
+    "start_frame": 45,
+    "end_frame": 52
+  },
+  {
+    "clip": "recover",
+    "start_frame": 55,
+    "end_frame": 60
+  },
+  {
+    "clip": "turn_left_a",
+    "start_frame": 63,
+    "end_frame": 71
+  },
+  {
+    "clip": "turn_left_b",
+    "start_frame": 74,
+    "end_frame": 82
+  },
+  {
+    "clip": "turn_left_c",
+    "start_frame": 85,
+    "end_frame": 93
+  },
+  {
+    "clip": "turn_left_hold",
+    "start_frame": 96,
+    "end_frame": 108
+  },
+  {
+    "clip": "handbrake_left",
+    "start_frame": 111,
+    "end_frame": 119
+  },
+  {
+    "clip": "turn_right_a",
+    "start_frame": 122,
+    "end_frame": 130
+  },
+  {
+    "clip": "turn_right_b",
+    "start_frame": 133,
+    "end_frame": 141
+  },
+  {
+    "clip": "turn_right_c",
+    "start_frame": 144,
+    "end_frame": 152
+  },
+  {
+    "clip": "turn_right_hold",
+    "start_frame": 155,
+    "end_frame": 167
+  },
+  {
+    "clip": "handbrake_right",
+    "start_frame": 170,
+    "end_frame": 178
+  },
+  {
+    "clip": "launch",
+    "start_frame": 181,
+    "end_frame": 187
+  },
+  {
+    "clip": "air_rise",
+    "start_frame": 190,
+    "end_frame": 198
+  },
+  {
+    "clip": "air_hang",
+    "start_frame": 201,
+    "end_frame": 207
+  },
+  {
+    "clip": "air_drop",
+    "start_frame": 210,
+    "end_frame": 218
+  },
+  {
+    "clip": "land_soft_a",
+    "start_frame": 221,
+    "end_frame": 228
+  },
+  {
+    "clip": "land_soft_b",
+    "start_frame": 231,
+    "end_frame": 238
+  },
+  {
+    "clip": "land_medium_a",
+    "start_frame": 241,
+    "end_frame": 250
+  },
+  {
+    "clip": "land_medium_b",
+    "start_frame": 253,
+    "end_frame": 262
+  },
+  {
+    "clip": "land_medium_c",
+    "start_frame": 265,
+    "end_frame": 274
+  },
+  {
+    "clip": "land_hard_a",
+    "start_frame": 277,
+    "end_frame": 288
+  },
+  {
+    "clip": "land_hard_b",
+    "start_frame": 291,
+    "end_frame": 302
+  },
+  {
+    "clip": "land_hard_c",
+    "start_frame": 305,
+    "end_frame": 316
+  },
+  {
+    "clip": "crash_a",
+    "start_frame": 319,
+    "end_frame": 331
+  },
+  {
+    "clip": "crash_b",
+    "start_frame": 334,
+    "end_frame": 346
+  }
+]

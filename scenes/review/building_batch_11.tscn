@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/review/building_gallery.gd" id="1"]
+
+[node name="BuildingBatch11" type="Node3D"]
+script = ExtResource("1")
+asset_dir = "res://assets/models/buildings/batch_11/"
+ids = Array[String](["taco_corner", "neighborhood_restaurant", "city_food_hall", "paired_semi_detached"])
+titles = Array[String](["TACO CORNER", "NEIGHBORHOOD RESTAURANT", "CITY FOOD HALL", "PAIRED HOMES"])
+notes = Array[String](["Terracotta / L-shaped restaurant / open mint terrace / rear kitchen", "Coral / three stories / paired balconies / setback roof terrace", "Butter yellow / broad two-story hall / tall entry / rear sawtooth roof", "Coral and mint / two stories / mirrored doors / projecting bay / shared gable"])
+scene_folder = "res://scenes/buildings/batch_11/"
+lineup_spacing = 18.0
+lineup_size = 47.0
+lineup_heading = "BATCH 11 / PASTEL FRENCH QUARTER"

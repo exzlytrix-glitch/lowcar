@@ -1,0 +1,287 @@
+{
+  "batch": 12,
+  "units": "meters",
+  "godot_front": "+Z",
+  "origin": "ground center",
+  "style": "Pastel French Quarter / New Orleans Creole",
+  "palette_srgb": {
+    "cream": "F5E7CD",
+    "stone": "D7C8AC",
+    "coral": "E9967C",
+    "coral_dark": "CC715D",
+    "mint": "83B9A8",
+    "mint_dark": "62978F",
+    "yellow": "EBC567",
+    "yellow_dark": "C99B46",
+    "roof": "52738C",
+    "teal": "328D89",
+    "ink": "24394B",
+    "glass": "34576B",
+    "reflection": "739BAC",
+    "green": "7BAA67",
+    "green_dark": "527B53",
+    "pot": "BE7659",
+    "metal": "8A9B9E",
+    "blue": "96BFD4",
+    "blue_dark": "648FA9",
+    "lilac": "B7A8CF"
+  },
+  "models": [
+    {
+      "id": "step_entry_house",
+      "name": "StepEntryHouse",
+      "description": "Powder-blue two-story home; raised cream steps; deeply recessed door; flat parapet and offset roof cap.",
+      "glb": "step_entry_house.glb",
+      "source": "source/step_entry_house.blend",
+      "triangles": 4420,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 267,
+      "materials": [
+        "Blue \u2014 96BFD4",
+        "Blue_Dark \u2014 648FA9",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Mint_Dark \u2014 62978F",
+        "Reflection \u2014 739BAC",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -4.06,
+          -5.645,
+          0.0
+        ],
+        "max": [
+          4.06,
+          4.56,
+          7.225
+        ]
+      },
+      "sha256": "69aeea84faf700dc54d3ad622333cae82d0658ff5173c92241d020fe63da480c",
+      "roster_id": 43,
+      "footprint_m": [
+        7.6,
+        8.6
+      ],
+      "body_height_m": 6.2,
+      "scene": "res://scenes/buildings/batch_12/step_entry_house.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            0,
+            3.1,
+            0
+          ],
+          "size": [
+            7.6,
+            6.2,
+            8.6
+          ]
+        },
+        {
+          "center": [
+            -2.15,
+            0.3,
+            4.52
+          ],
+          "size": [
+            1.78,
+            0.6,
+            0.45
+          ]
+        },
+        {
+          "center": [
+            -2.15,
+            0.2,
+            4.97
+          ],
+          "size": [
+            1.78,
+            0.4,
+            0.45
+          ]
+        },
+        {
+          "center": [
+            -2.15,
+            0.1,
+            5.42
+          ],
+          "size": [
+            1.78,
+            0.2,
+            0.45
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gabled_corner_home",
+      "name": "GabledCornerHome",
+      "description": "Mint two-story corner home; intersecting broad blue gables; windows on both street sides; small cream porch.",
+      "glb": "gabled_corner_home.glb",
+      "source": "source/gabled_corner_home.blend",
+      "triangles": 4284,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 273,
+      "materials": [
+        "Blue_Dark \u2014 648FA9",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Mint \u2014 83B9A8",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -5.36,
+          -6.175,
+          0.0
+        ],
+        "max": [
+          5.635,
+          5.035,
+          8.2017
+        ]
+      },
+      "sha256": "c0e2e45766505d85e31a6238dad73bc194539a57052dbbbeb572b8c88eb38dc9",
+      "roster_id": 44,
+      "footprint_m": [
+        10.2,
+        9.4
+      ],
+      "body_height_m": 6.2,
+      "scene": "res://scenes/buildings/batch_12/gabled_corner_home.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            0,
+            3.1,
+            0
+          ],
+          "size": [
+            10.2,
+            6.2,
+            9.4
+          ]
+        }
+      ]
+    },
+    {
+      "id": "attic_house",
+      "name": "AtticHouse",
+      "description": "Broad butter-yellow two-story attic home; two chunky cream dormers; broad upper windows; short entry canopy.",
+      "glb": "attic_house.glb",
+      "source": "source/attic_house.blend",
+      "triangles": 4566,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 293,
+      "materials": [
+        "Blue_Dark \u2014 648FA9",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89",
+        "Yellow \u2014 EBC567"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -5.66,
+          -5.375,
+          0.0
+        ],
+        "max": [
+          5.66,
+          4.96,
+          8.7478
+        ]
+      },
+      "sha256": "2e36ab753a17fce002e5b1d95e3c28231b1613795dd8f12cbc2c74cc5a26fc11",
+      "roster_id": 45,
+      "footprint_m": [
+        10.8,
+        9.4
+      ],
+      "body_height_m": 6.3,
+      "scene": "res://scenes/buildings/batch_12/attic_house.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            0,
+            3.15,
+            0
+          ],
+          "size": [
+            10.8,
+            6.3,
+            9.4
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bay_window_house",
+      "name": "BayWindowHouse",
+      "description": "Mint three-story home; two stacked faceted bays; inset side entrance; blue shutters; flat roof.",
+      "glb": "bay_window_house.glb",
+      "source": "source/bay_window_house.blend",
+      "triangles": 7060,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 446,
+      "materials": [
+        "Blue_Dark \u2014 648FA9",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Mint \u2014 83B9A8",
+        "Mint_Dark \u2014 62978F",
+        "Reflection \u2014 739BAC",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -4.16,
+          -5.735,
+          0.0
+        ],
+        "max": [
+          4.16,
+          4.81,
+          10.45
+        ]
+      },
+      "sha256": "986a4b2382cdfba343ee8bb115cb06e787e33375ca8e207ff80ea60484416b9e",
+      "roster_id": 46,
+      "footprint_m": [
+        7.8,
+        9.1
+      ],
+      "body_height_m": 9.3,
+      "scene": "res://scenes/buildings/batch_12/bay_window_house.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            0,
+            4.65,
+            0
+          ],
+          "size": [
+            7.8,
+            9.3,
+            9.1
+          ]
+        }
+      ]
+    }
+  ]
+}

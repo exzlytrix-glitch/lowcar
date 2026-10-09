@@ -1,0 +1,311 @@
+{
+  "batch": 22,
+  "units": "meters",
+  "godot_front": "+Z",
+  "origin": "ground center",
+  "style": "Pastel French Quarter / New Orleans Creole",
+  "palette_srgb": {
+    "cream": "F5E7CD",
+    "stone": "D7C8AC",
+    "coral": "E9967C",
+    "coral_dark": "CC715D",
+    "mint": "83B9A8",
+    "mint_dark": "62978F",
+    "yellow": "EBC567",
+    "yellow_dark": "C99B46",
+    "roof": "52738C",
+    "teal": "328D89",
+    "ink": "24394B",
+    "glass": "34576B",
+    "reflection": "739BAC",
+    "green": "7BAA67",
+    "green_dark": "527B53",
+    "pot": "BE7659",
+    "metal": "8A9B9E",
+    "blue": "96BFD4",
+    "blue_dark": "648FA9",
+    "lilac": "B7A8CF"
+  },
+  "models": [
+    {
+      "id": "three_wing_office",
+      "name": "ThreeWingOffice",
+      "description": "Three connected mint and cream three-story wings with a recessed central entrance and gently staggered matching parapets.",
+      "glb": "three_wing_office.glb",
+      "source": "source/three_wing_office.blend",
+      "triangles": 14524,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 955,
+      "materials": [
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Mint \u2014 83B9A8",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -9.16,
+          -5.66,
+          0.0
+        ],
+        "max": [
+          9.16,
+          5.66,
+          10.12
+        ]
+      },
+      "sha256": "795685112e072eac5b7d420309ed91b969b8eaf8c344618cbd64a0af824ae2f1",
+      "roster_id": 88,
+      "footprint_m": [
+        17.8,
+        10.8
+      ],
+      "body_height_m": 9.54,
+      "scene": "res://scenes/buildings/batch_22/three_wing_office.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            -6.3,
+            4.5,
+            0
+          ],
+          "size": [
+            5.2,
+            9.0,
+            10.8
+          ]
+        },
+        {
+          "center": [
+            0,
+            4.65,
+            -1.2
+          ],
+          "size": [
+            7.4,
+            9.3,
+            8.4
+          ]
+        },
+        {
+          "center": [
+            6.3,
+            4.77,
+            -0.9
+          ],
+          "size": [
+            5.2,
+            9.54,
+            9.0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "department_store",
+      "name": "DepartmentStore",
+      "description": "Broad cream four-story department store with coral ground floor, large street glazing and a strong wraparound cornice.",
+      "glb": "department_store.glb",
+      "source": "source/department_store.blend",
+      "triangles": 11730,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 731,
+      "materials": [
+        "Coral \u2014 E9967C",
+        "Coral_Dark \u2014 CC715D",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -9.46,
+          -7.48,
+          0.0
+        ],
+        "max": [
+          9.46,
+          6.76,
+          13.755
+        ]
+      },
+      "sha256": "75df08bfcec0155b22bc8afd57e2e368d7a071186739a06b16ce4ca18e5e1148",
+      "roster_id": 89,
+      "footprint_m": [
+        18.4,
+        13.0
+      ],
+      "body_height_m": 12.48,
+      "scene": "res://scenes/buildings/batch_22/department_store.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            0,
+            6.24,
+            0
+          ],
+          "size": [
+            18.4,
+            12.48,
+            13.0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "supermarket",
+      "name": "Supermarket",
+      "description": "Low wide mint supermarket with two broad glazed bays, a long cream canopy and taller enclosed rear stockroom.",
+      "glb": "supermarket.glb",
+      "source": "source/supermarket.blend",
+      "triangles": 2494,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 137,
+      "materials": [
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Mint \u2014 83B9A8",
+        "Mint_Dark \u2014 62978F",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -9.76,
+          -7.465,
+          0.0
+        ],
+        "max": [
+          9.76,
+          6.26,
+          6.26
+        ]
+      },
+      "sha256": "9b79dcc5142af4e8c2de42cfd5d2faac304234616d9e535a177b293d8335f049",
+      "roster_id": 90,
+      "footprint_m": [
+        19.0,
+        12.0
+      ],
+      "body_height_m": 5.9,
+      "scene": "res://scenes/buildings/batch_22/supermarket.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            0,
+            2.1,
+            0
+          ],
+          "size": [
+            19.0,
+            4.2,
+            12.0
+          ]
+        },
+        {
+          "center": [
+            0,
+            5.05,
+            -3.5
+          ],
+          "size": [
+            10.8,
+            1.7,
+            4.8
+          ]
+        }
+      ]
+    },
+    {
+      "id": "garden_office",
+      "name": "GardenOffice",
+      "description": "Wide powder-blue three-story office with a central inset lobby, broad upper windows and two low front planters.",
+      "glb": "garden_office.glb",
+      "source": "source/garden_office.blend",
+      "triangles": 6224,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 391,
+      "materials": [
+        "Blue \u2014 96BFD4",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Green \u2014 7BAA67",
+        "Green_Dark \u2014 527B53",
+        "Ink \u2014 24394B",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -9.06,
+          -6.435,
+          0.0
+        ],
+        "max": [
+          9.06,
+          5.46,
+          9.81
+        ]
+      },
+      "sha256": "eb6f54cb0a6cc99a980a118a9fe79e900d15e7583d7632dc4684b8925eed0a9d",
+      "roster_id": 91,
+      "footprint_m": [
+        17.6,
+        10.4
+      ],
+      "body_height_m": 9.45,
+      "scene": "res://scenes/buildings/batch_22/garden_office.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            0,
+            4.725,
+            0
+          ],
+          "size": [
+            17.6,
+            9.45,
+            10.4
+          ]
+        },
+        {
+          "center": [
+            -5.8,
+            0.4,
+            6.0
+          ],
+          "size": [
+            5.6,
+            0.8,
+            0.8
+          ]
+        },
+        {
+          "center": [
+            5.8,
+            0.4,
+            6.0
+          ],
+          "size": [
+            5.6,
+            0.8,
+            0.8
+          ]
+        }
+      ]
+    }
+  ]
+}

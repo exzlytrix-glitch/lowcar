@@ -1,0 +1,343 @@
+{
+  "batch": 26,
+  "units": "meters",
+  "godot_front": "+Z",
+  "origin": "ground center",
+  "style": "Pastel French Quarter / New Orleans Creole",
+  "palette_srgb": {
+    "cream": "F5E7CD",
+    "stone": "D7C8AC",
+    "coral": "E9967C",
+    "coral_dark": "CC715D",
+    "mint": "83B9A8",
+    "mint_dark": "62978F",
+    "yellow": "EBC567",
+    "yellow_dark": "C99B46",
+    "roof": "52738C",
+    "teal": "328D89",
+    "ink": "24394B",
+    "glass": "34576B",
+    "reflection": "739BAC",
+    "green": "7BAA67",
+    "green_dark": "527B53",
+    "pot": "BE7659",
+    "metal": "8A9B9E",
+    "blue": "96BFD4",
+    "blue_dark": "648FA9",
+    "lilac": "B7A8CF"
+  },
+  "models": [
+    {
+      "id": "raised_roof_storehouse",
+      "name": "RaisedRoofStorehouse",
+      "description": "Butter-yellow low storehouse with two front shutters, raised central roof strip and narrow clerestory windows.",
+      "glb": "raised_roof_storehouse.glb",
+      "source": "source/raised_roof_storehouse.blend",
+      "triangles": 3974,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 258,
+      "materials": [
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89",
+        "Yellow \u2014 EBC567"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -7.26,
+          -7.925,
+          0.0
+        ],
+        "max": [
+          7.26,
+          7.46,
+          5.99
+        ]
+      },
+      "sha256": "0a1d06deb19ca5ac0b1b9bbdac6f54b2f4311ab8fd2aa5f769206e4934cc06fc",
+      "roster_id": 104,
+      "footprint_m": [
+        14.0,
+        14.4
+      ],
+      "body_height_m": 5.64,
+      "scene": "res://scenes/buildings/batch_26/raised_roof_storehouse.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            0,
+            2.15,
+            0
+          ],
+          "size": [
+            14.0,
+            4.3,
+            14.4
+          ]
+        },
+        {
+          "center": [
+            0,
+            4.97,
+            0
+          ],
+          "size": [
+            6.0,
+            1.34,
+            14.4
+          ]
+        }
+      ]
+    },
+    {
+      "id": "textile_factory",
+      "name": "TextileFactory",
+      "description": "Broad terracotta three-story factory with tall repeated windows, thick cream floor bands and low attached loading wing.",
+      "glb": "textile_factory.glb",
+      "source": "source/textile_factory.blend",
+      "triangles": 6712,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 431,
+      "materials": [
+        "Coral_Dark \u2014 CC715D",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -9.86,
+          -6.26,
+          0.0
+        ],
+        "max": [
+          9.86,
+          6.26,
+          9.66
+        ]
+      },
+      "sha256": "2a70c8af1665995b6d67eb2df6563926a42bc4b5cf112096f2365db6526f43f8",
+      "roster_id": 105,
+      "footprint_m": [
+        19.2,
+        12.0
+      ],
+      "body_height_m": 9.3,
+      "scene": "res://scenes/buildings/batch_26/textile_factory.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            -2.6,
+            4.65,
+            0
+          ],
+          "size": [
+            14.0,
+            9.3,
+            12.0
+          ]
+        },
+        {
+          "center": [
+            7.0,
+            1.9,
+            -2.0
+          ],
+          "size": [
+            5.2,
+            3.8,
+            8.0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "print_workshop",
+      "name": "PrintWorkshop",
+      "description": "Powder-blue two-story print shop with broad upper studio windows, two ground service shutters and stepped navy parapet.",
+      "glb": "print_workshop.glb",
+      "source": "source/print_workshop.blend",
+      "triangles": 4378,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 263,
+      "materials": [
+        "Blue \u2014 96BFD4",
+        "Blue_Dark \u2014 648FA9",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -8.06,
+          -5.81,
+          0.0
+        ],
+        "max": [
+          8.06,
+          5.36,
+          7.765
+        ]
+      },
+      "sha256": "d2dbd7cf5b671f0646bbe4cb302b899ff4be322e57cb9c4a688083636caeb510",
+      "roster_id": 106,
+      "footprint_m": [
+        15.6,
+        10.2
+      ],
+      "body_height_m": 6.5,
+      "scene": "res://scenes/buildings/batch_26/print_workshop.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            0,
+            3.25,
+            0
+          ],
+          "size": [
+            15.6,
+            6.5,
+            10.2
+          ]
+        }
+      ]
+    },
+    {
+      "id": "carpenters_workshop",
+      "name": "CarpentersWorkshop",
+      "description": "Low cream L-shaped carpenter shed with a deep covered workfront, blue gable roof, teal benches and attached office.",
+      "glb": "carpenters_workshop.glb",
+      "source": "source/carpenters_workshop.blend",
+      "triangles": 3432,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 169,
+      "materials": [
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -9.035,
+          -6.235,
+          0.0
+        ],
+        "max": [
+          9.06,
+          6.26,
+          5.2234
+        ]
+      },
+      "sha256": "2e7e9cdc3c8a933c34729c448b164d030e5455d8c35685cdbaa2aab2655109f9",
+      "roster_id": 107,
+      "footprint_m": [
+        17.6,
+        12.0
+      ],
+      "body_height_m": 3.6,
+      "scene": "res://scenes/buildings/batch_26/carpenters_workshop.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            -2.8,
+            1.8,
+            0.2
+          ],
+          "size": [
+            12.0,
+            3.6,
+            6.8
+          ]
+        },
+        {
+          "center": [
+            6.0,
+            1.525,
+            -2.9
+          ],
+          "size": [
+            5.6,
+            3.05,
+            6.2
+          ]
+        },
+        {
+          "center": [
+            -8.5,
+            1.88,
+            5.78
+          ],
+          "size": [
+            0.44,
+            3.6,
+            0.44
+          ]
+        },
+        {
+          "center": [
+            -2.8,
+            1.88,
+            5.78
+          ],
+          "size": [
+            0.44,
+            3.6,
+            0.44
+          ]
+        },
+        {
+          "center": [
+            2.9,
+            1.88,
+            5.78
+          ],
+          "size": [
+            0.44,
+            3.6,
+            0.44
+          ]
+        },
+        {
+          "center": [
+            -2.8,
+            0.075,
+            4.8
+          ],
+          "size": [
+            12.0,
+            0.15,
+            2.4
+          ]
+        },
+        {
+          "center": [
+            -2.8,
+            3.6,
+            4.8
+          ],
+          "size": [
+            12.0,
+            0.18,
+            2.4
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/review/building_gallery.gd" id="1"]
+
+[node name="BuildingBatch01" type="Node3D"]
+script = ExtResource("1")
+asset_dir = "res://assets/models/buildings/batch_01/"
+ids = Array[String](["corner_cafe", "coral_row_house", "blue_townhouse", "skinny_apartments"])
+titles = Array[String](["CORNER CAFE", "CORAL ROW HOUSE", "BLUE TOWNHOUSE", "SKINNY APARTMENTS"])
+notes = Array[String](["Butter yellow / mint storefront / wraparound scrollwork gallery", "Coral / teal shutters / white balcony / hipped roof", "Powder blue / coral shutters / diamond balcony rails / stepped crown", "Mint / five stories / white balcony stack / ordinary apartments"])
+scene_folder = "res://scenes/buildings/batch_01/"
+lineup_spacing = 14.0
+lineup_size = 39.0
+lineup_heading = "BATCH 01 / PASTEL FRENCH QUARTER"

@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/review/building_gallery.gd" id="1"]
+
+[node name="BuildingBatch25" type="Node3D"]
+script = ExtResource("1")
+asset_dir = "res://assets/models/buildings/batch_25/"
+ids = Array[String](["produce_wholesaler", "body_repair_workshop", "small_motor_garage", "long_loading_warehouse"])
+titles = Array[String](["PRODUCE WHOLESALER", "BODY REPAIR WORKSHOP", "SMALL MOTOR GARAGE", "LONG LOADING WAREHOUSE"])
+notes = Array[String](["Butter yellow / two stories / broad loading shutters / shallow ridge", "Coral / low workshop / service shutter / two-story office", "Mint / one open service bay / one shutter / low parapet", "Cream and blue / long low shed / five side bays / front office"])
+scene_folder = "res://scenes/buildings/batch_25/"
+lineup_spacing = 23.0
+lineup_size = 61.0
+lineup_heading = "BATCH 25 / PASTEL FRENCH QUARTER"

@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/review/building_gallery.gd" id="1"]
+
+[node name="BuildingBatch20" type="Node3D"]
+script = ExtResource("1")
+asset_dir = "res://assets/models/buildings/batch_20/"
+ids = Array[String](["wedge_office", "offset_core_office", "double_setback_office", "simple_city_office"])
+titles = Array[String](["WEDGE OFFICE", "OFFSET-CORE OFFICE", "DOUBLE-SETBACK OFFICE", "SIMPLE CITY OFFICE"])
+notes = Array[String](["Coral / broad three-story wedge / angled windows / stepped roof edge", "Mint / broad four-story body / cream stair core / offset roof equipment", "Cream and powder blue / four stories / two shallow upper setbacks / wide lobby", "Butter yellow / three stories / square blue window grid / offset door"])
+scene_folder = "res://scenes/buildings/batch_20/"
+lineup_spacing = 21.0
+lineup_size = 53.0
+lineup_heading = "BATCH 20 / PASTEL FRENCH QUARTER"

@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/review/building_gallery.gd" id="1"]
+
+[node name="BuildingBatch12" type="Node3D"]
+script = ExtResource("1")
+asset_dir = "res://assets/models/buildings/batch_12/"
+ids = Array[String](["step_entry_house", "gabled_corner_home", "attic_house", "bay_window_house"])
+titles = Array[String](["STEP-ENTRY HOUSE", "GABLED CORNER HOME", "ATTIC HOUSE", "BAY-WINDOW HOUSE"])
+notes = Array[String](["Powder blue / two stories / raised steps / inset door / offset roof cap", "Mint / two stories / intersecting blue gables / small corner porch", "Butter yellow / two stories and attic / twin cream dormers / broad windows", "Mint / three stories / stacked faceted bays / inset entry / flat roof"])
+scene_folder = "res://scenes/buildings/batch_12/"
+lineup_spacing = 16.0
+lineup_size = 41.0
+lineup_heading = "BATCH 12 / PASTEL FRENCH QUARTER"

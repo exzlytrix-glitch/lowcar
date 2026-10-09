@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/review/building_gallery.gd" id="1"]
+
+[node name="BuildingBatch02" type="Node3D"]
+script = ExtResource("1")
+asset_dir = "res://assets/models/buildings/batch_02/"
+ids = Array[String](["everyday_bodega", "neighborhood_barber", "neighborhood_bakery", "wide_row_house"])
+titles = Array[String](["EVERYDAY BODEGA", "NEIGHBORHOOD BARBER", "NEIGHBORHOOD BAKERY", "WIDE ROW HOUSE"])
+notes = Array[String](["Butter yellow / full-width striped canopy / upper shutters", "Cream / teal shutters / shallow balcony / barber pole", "Butter yellow / blue gable / round attic window / shopfront", "Mint / three upper windows / white entrance portico / flat cornice"])
+scene_folder = "res://scenes/buildings/batch_02/"
+lineup_spacing = 14.0
+lineup_size = 32.0
+lineup_heading = "BATCH 02 / PASTEL FRENCH QUARTER"

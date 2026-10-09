@@ -1,0 +1,192 @@
+LOWCAR / CHARGE BOOST VERIFIED
+Godot 4.7 stable / native Compatibility rendering on Apple A18 Pro
+139 checks passed: 22 scene lifecycle, 59 animation, 20 motion effects, 38 boost.
+Actual Shift press/release and Ctrl handbrake input verified.
+Charge caps at ten seconds; max thrust is 64 m/s for four seconds.
+Longer charge slows the car more and increases both burst speed and duration.
+Pause, restart, title, recharging, actual jump interaction, and boosted building impact verified.
+12 FPS held flame geometry at 30/60/120 render FPS; one bounded mesh for twin exhausts.
+Native preview: 216 actual driving frames, including a full real ten-second hold.
+Flare and pipe clearance visually inspected during the release nose lift.
+Fresh playable build opened; updated title-screen controls visually confirmed.
+Original GLB hash still matches the model manifest.
+
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Started Project initialization (5 steps)[39m[0m
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Scanning file structure...[39m[0m
+[  16% ] [90m[1mfirst_scan_filesystem[22m | Loading global class names...[39m[0m
+[  33% ] [90m[1mfirst_scan_filesystem[22m | Verifying GDExtensions...[39m[0m
+[  50% ] [90m[1mfirst_scan_filesystem[22m | Creating autoload scripts...[39m[0m
+[  66% ] [90m[1mfirst_scan_filesystem[22m | Initializing plugins...[39m[0m
+[  83% ] [90m[1mfirst_scan_filesystem[22m | Starting file scan...[39m[0m
+[92m[ DONE ][39m [1mfirst_scan_filesystem[22m
+[0m
+[   0% ] [90m[1mupdate_scripts_classes[22m | Started Registering global classes... (3 steps)[39m[0m
+[   0% ] [90m[1mupdate_scripts_classes[22m | BoostExhaust[39m[0m
+[  25% ] [90m[1mupdate_scripts_classes[22m | CarPresentation[39m[0m
+[  50% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[92m[ DONE ][39m [1mupdate_scripts_classes[22m
+[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Started Loading editor (5 steps)[39m[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Loading editor layout...[39m[0m
+[  16% ] [90m[1mloading_editor_layout[22m | Loading docks...[39m[0m
+[  33% ] [90m[1mloading_editor_layout[22m | Reopening scenes...[39m[0m
+[  50% ] [90m[1mloading_editor_layout[22m | Loading central editor layout...[39m[0m
+[  66% ] [90m[1mloading_editor_layout[22m | Loading plugin window layout...[39m[0m
+[  83% ] [90m[1mloading_editor_layout[22m | Editor layout ready.[39m[0m
+[92m[ DONE ][39m [1mloading_editor_layout[22m
+[0m
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+PASS: Startup reaches the title state
+PASS: Initial city loads the configured block neighborhood
+PASS: Master, SFX, Music, and UI audio buses load
+PASS: Car settles on the generated road
+PASS: Driving accelerates the car
+PASS: Run distance tracks actual movement
+PASS: Launcher produces real vertical movement
+PASS: Launcher cannot retrigger while airborne
+PASS: Pause stops vehicle physics
+PASS: Pause stops run time
+PASS: Restart preserves the city seed
+PASS: Restart clears run distance
+PASS: Restart resets attachment cooldown
+PASS: Restart restores the car spawn
+PASS: Double-click mouse input reaches the launcher
+PASS: Streaming supplies the car's current block
+PASS: Streaming remains bounded after crossing multiple blocks
+PASS: Capture hook ends the run
+PASS: Restart exits the result state
+PASS: Actual building collision ends the run
+PASS: Return-to-title restores the menu state
+PASS: Title state disables driving
+LOWCAR_SMOKE_PASS: startup, input driving, launch, pause, restart, streaming, capture hook, title
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+PASS: All 30 authored clips load
+PASS: Every clip has finite, positive, stepped 12 FPS tracks
+PASS: Trunk lid is a separate hinged mesh
+PASS: Four independent suspension, steering, and spin pivots import
+PASS: Exactly 12 body samples at 30 render FPS
+PASS: Exactly 12 body samples at 60 render FPS
+PASS: Exactly 12 body samples at 120 render FPS
+PASS: Body holds its pose while wheel spin continues between samples
+PASS: Visual squash leaves the physical collider and vehicle scale intact
+PASS: A loaded left turn compresses the outside tires
+PASS: Loaded tire centers preserve their road contact height
+PASS: Releasing steering carries the bank instead of snapping through neutral
+PASS: Transition poses stay held between 12 FPS samples
+PASS: The first recovery step unloads weight without erasing the bank
+PASS: Turn recovery settles completely into driving
+PASS: Opposite steering responds immediately while preserving the outgoing pose
+PASS: An opposite turn crosses into its new bank within three held poses
+PASS: Rapid maneuvers preserve 12 pose samples at 30 render FPS
+PASS: Rapid maneuvers preserve 12 pose samples at 60 render FPS
+PASS: Rapid maneuvers preserve 12 pose samples at 120 render FPS
+PASS: Held forward braking keeps its directional weight load
+PASS: Held reverse braking keeps its directional weight load
+PASS: Turn 1 keeps one style without per-frame random jitter
+PASS: Turn 2 keeps one style without per-frame random jitter
+PASS: Turn 3 keeps one style without per-frame random jitter
+PASS: Turn 4 keeps one style without per-frame random jitter
+PASS: Turn 5 keeps one style without per-frame random jitter
+PASS: Turn 6 keeps one style without per-frame random jitter
+PASS: Repeated turns use bounded variants with no immediate repeat
+PASS: Turn exaggeration varies subtly within the intended range
+PASS: Restart seed reproduces the first turn style
+PASS: Opposite steering interrupts turn-in promptly
+PASS: Held handbrake preserves the slide yaw instead of losing it to a normal turn
+PASS: Sustained braking holds its final pose without repeating the impact
+PASS: Brake release triggers a controlled recovery
+PASS: Ground Punch activates the authored launch
+PASS: Launch anticipation plays immediately
+PASS: Real jump traverses rise, apex hang, and falling clips
+PASS: Trunk opens during the fall before floor contact
+PASS: Full jump produces a clearly flattened hard landing
+PASS: Trunk slams shut and body returns to neutral after recovery
+PASS: A real hard landing slams the trunk closed on the contact squash
+PASS: New steering follows the main landing rebound before the recovery tail ends
+PASS: Real 1.2 m, 4 m, and 12 m drops select soft, medium, and hard impacts
+PASS: Squash increases with actual drop severity
+DROP_EVIDENCE: categories=["soft", "medium", "hard"] minimum_body_heights=[0.85310935974121, 0.71213376522064, 0.51496511697769]
+PASS: Pause freezes clip time, body, trunk, and physics together
+PASS: Resume continues the interrupted animation
+PASS: Review scene can inspect the held squash pose
+PASS: Reset clears deformation, trunk, and variation state
+PASS: Actual wall impact triggers the crash animation
+PASS: Crash settles completely after controls are disabled
+PASS: All landings and crashes preserve physical collision dimensions
+PASS: Garage timeline scrubs a paused impact pose
+PASS: Garage follows an actual high drop and plays its falling clip
+PASS: Returning from a physics demo restores the clip-review camera
+PASS: Garage launch waits for real floor contact before activating
+PASS: Garage pause button freezes the real physics demo
+PASS: Garage play button resumes the real physics demo
+PASS: Garage keyboard navigation exits physics and selects the next clip
+LOWCAR_ANIMATION_PASS: 59 checks
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+PASS: Parked car creates no airflow
+PASS: Airflow builds with actual driving speed
+PASS: Wind stays within the fixed streak budget
+PASS: Wind follows smooth travel while its drawn shape holds between ticks
+PASS: Disabling driving fades airflow out
+PASS: Effects keep 12 held samples at 30 render FPS
+PASS: Effects keep 12 held samples at 60 render FPS
+PASS: Effects keep 12 held samples at 120 render FPS
+PASS: Harder impacts produce a larger bounded dust cloud
+PASS: Landing dust stays at the impact location as the car moves away
+PASS: One hundred impacts reuse the pool without growing the scene
+PASS: Clouds and impact strokes expire completely
+PASS: Launch swishes stay distinct from landing clouds
+PASS: Reset clears all effects immediately
+PASS: Actual landing dust anchors to floor contact rather than the trailing airborne visual
+PASS: Actual 12-meter drop triggers the cloud and outward impact strokes
+PASS: Pause freezes wind and impact ages together
+PASS: Garage effects review exposes the actual airflow renderer
+PASS: Paused effects timeline scrubs body and cloud together
+PASS: Leaving effects review cleans up both layers
+LOWCAR_MOTION_EFFECTS_PASS: 20 checks
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+PASS: Title screen cannot charge or fire a boost
+PASS: Physical Shift charges boost without applying the handbrake
+PASS: Holding charge slows actual driving even with acceleration held
+PASS: Charge visibly burns from both exhausts
+PASS: Physical Shift release launches a real forward boost
+PASS: Release turns the charging fire into longer thrust flames
+PASS: Ctrl keeps the handbrake and cancels active thrust
+PASS: Gamepad right shoulder maps to the same charge/release action
+PASS: 1-second hold trades speed for charge
+PASS: 4-second hold trades speed for charge
+PASS: 10-second hold trades speed for charge
+PASS: Longer holds produce strictly faster actual bursts
+PASS: Longer holds also produce longer boost duration
+PASS: Charging progressively sacrifices more driving speed
+PASS: Full charge respects the tuned speed and duration limits
+BOOST_TIERS: speeds_mps=[38.728, 47.152, 64.0] duration_seconds=[0.9868, 1.9912, 4.0] charge_speeds_mps=[21.9072, 18.4512, 11.5391999999999]
+PASS: Ending thrust sheds speed without snapping the car back to cruise
+PASS: Boost expires and driving returns smoothly to cruise speed
+PASS: Exhaust fire fades out after thrust expires
+PASS: Holding beyond ten seconds caps charge and waits for release
+PASS: The HUD clearly marks the fully charged state
+PASS: Releasing a capped hold delivers full power
+PASS: Full-boost nose lift keeps both pipe mouths and jet tips clear of the road
+PASS: A new Shift hold cuts thrust, slows the car, and starts a fresh charge
+PASS: Recharging replaces the old burst rather than stacking duration or power
+PASS: Boost can be charged again without a hidden cooldown
+PASS: Pause freezes charge and flames, including a release while paused
+PASS: A paused release fires only when play resumes
+PASS: Restart clears charge, thrust, and fire together
+PASS: A release from rest creates thrust without needing W held
+PASS: Charge boost combines with an actual Ground Punch jump
+PASS: A boosted building impact ends the run and clears thrust
+PASS: Return to title removes all boost flames
+PASS: Flame drawings hold at 12 FPS under 30 render FPS
+PASS: Flame drawings hold at 12 FPS under 60 render FPS
+PASS: Flame drawings hold at 12 FPS under 120 render FPS
+PASS: Flame geometry stays unchanged between held samples
+PASS: Twin flames stay attached to the animated exhaust pipes
+PASS: Repeated bursts reuse one bounded twin-flame mesh
+LOWCAR_BOOST_PASS: 38 checks

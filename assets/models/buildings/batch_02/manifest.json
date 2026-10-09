@@ -1,0 +1,198 @@
+{
+  "batch": 2,
+  "units": "meters",
+  "godot_front": "+Z",
+  "origin": "ground center",
+  "style": "Pastel French Quarter / New Orleans Creole",
+  "palette_srgb": {
+    "cream": "F5E7CD",
+    "stone": "D7C8AC",
+    "coral": "E9967C",
+    "coral_dark": "CC715D",
+    "mint": "83B9A8",
+    "mint_dark": "62978F",
+    "yellow": "EBC567",
+    "yellow_dark": "C99B46",
+    "roof": "52738C",
+    "teal": "328D89",
+    "ink": "24394B",
+    "glass": "34576B",
+    "reflection": "739BAC",
+    "green": "7BAA67",
+    "green_dark": "527B53",
+    "pot": "BE7659",
+    "metal": "8A9B9E",
+    "blue": "96BFD4",
+    "blue_dark": "648FA9",
+    "lilac": "B7A8CF"
+  },
+  "models": [
+    {
+      "id": "everyday_bodega",
+      "name": "EverydayBodega",
+      "description": "Butter-yellow bodega; full-width striped canopy; three shuttered upper windows.",
+      "glb": "everyday_bodega.glb",
+      "source": "source/everyday_bodega.blend",
+      "triangles": 5314,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 315,
+      "materials": [
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Metal \u2014 8A9B9E",
+        "Mint_Dark \u2014 62978F",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89",
+        "Yellow \u2014 EBC567",
+        "Yellow_Dark \u2014 C99B46"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -3.96,
+          -5.545,
+          0.0
+        ],
+        "max": [
+          3.96,
+          4.66,
+          7.46
+        ]
+      },
+      "sha256": "1907dcee2fc0ec545f393be6ec433d6ceae38c0ae59fba733422175c1ac42a58",
+      "roster_id": 4,
+      "footprint_m": [
+        7.4,
+        8.8
+      ],
+      "body_height_m": 6.4,
+      "scene": "res://scenes/buildings/batch_02/everyday_bodega.tscn"
+    },
+    {
+      "id": "neighborhood_barber",
+      "name": "NeighborhoodBarber",
+      "description": "Skinny cream barber shop; teal shutters; diamond balcony; faceted barber pole.",
+      "glb": "neighborhood_barber.glb",
+      "source": "source/neighborhood_barber.blend",
+      "triangles": 5010,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 283,
+      "materials": [
+        "Coral_Dark \u2014 CC715D",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Mint_Dark \u2014 62978F",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -2.685,
+          -4.72,
+          0.0
+        ],
+        "max": [
+          2.685,
+          4.085,
+          6.96
+        ]
+      },
+      "sha256": "161a3ddc08c31a5857bf347f586e3125f4ddb2bc8e5e7c75c931dee4f90d062e",
+      "roster_id": 10,
+      "footprint_m": [
+        4.85,
+        7.65
+      ],
+      "body_height_m": 6.3,
+      "scene": "res://scenes/buildings/batch_02/neighborhood_barber.tscn"
+    },
+    {
+      "id": "neighborhood_bakery",
+      "name": "NeighborhoodBakery",
+      "description": "Butter-yellow bakery; broad display window; blue gable; round attic window.",
+      "glb": "neighborhood_bakery.glb",
+      "source": "source/neighborhood_bakery.blend",
+      "triangles": 4238,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 261,
+      "materials": [
+        "Blue_Dark \u2014 648FA9",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89",
+        "Yellow \u2014 EBC567",
+        "Yellow_Dark \u2014 C99B46"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -3.775,
+          -5.535,
+          0.0
+        ],
+        "max": [
+          3.775,
+          4.965,
+          8.525
+        ]
+      },
+      "sha256": "18b83fd1cffd0a7e640564b71d74fc0066bcc98e3892dd3d6130feaab4f34959",
+      "roster_id": 24,
+      "footprint_m": [
+        6.8,
+        9.2
+      ],
+      "body_height_m": 6.3,
+      "scene": "res://scenes/buildings/batch_02/neighborhood_bakery.tscn"
+    },
+    {
+      "id": "wide_row_house",
+      "name": "WideRowHouse",
+      "description": "Ordinary mint row house; symmetrical windows; white entrance portico; flat cornice.",
+      "glb": "wide_row_house.glb",
+      "source": "source/wide_row_house.blend",
+      "triangles": 4474,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 280,
+      "materials": [
+        "Blue_Dark \u2014 648FA9",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Mint \u2014 83B9A8",
+        "Mint_Dark \u2014 62978F",
+        "Reflection \u2014 739BAC",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -4.66,
+          -5.45,
+          0.0
+        ],
+        "max": [
+          4.66,
+          4.46,
+          7.33
+        ]
+      },
+      "sha256": "e0683789cacc2decfc10f41ef2cc6d42b24cf4b3ada853acf1b33f2aa3ebddc5",
+      "roster_id": 38,
+      "footprint_m": [
+        8.8,
+        8.4
+      ],
+      "body_height_m": 6.1,
+      "scene": "res://scenes/buildings/batch_02/wide_row_house.tscn"
+    }
+  ]
+}

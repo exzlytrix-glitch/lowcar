@@ -1,0 +1,304 @@
+{
+  "batch": 19,
+  "units": "meters",
+  "godot_front": "+Z",
+  "origin": "ground center",
+  "style": "Pastel French Quarter / New Orleans Creole",
+  "palette_srgb": {
+    "cream": "F5E7CD",
+    "stone": "D7C8AC",
+    "coral": "E9967C",
+    "coral_dark": "CC715D",
+    "mint": "83B9A8",
+    "mint_dark": "62978F",
+    "yellow": "EBC567",
+    "yellow_dark": "C99B46",
+    "roof": "52738C",
+    "teal": "328D89",
+    "ink": "24394B",
+    "glass": "34576B",
+    "reflection": "739BAC",
+    "green": "7BAA67",
+    "green_dark": "527B53",
+    "pot": "BE7659",
+    "metal": "8A9B9E",
+    "blue": "96BFD4",
+    "blue_dark": "648FA9",
+    "lilac": "B7A8CF"
+  },
+  "models": [
+    {
+      "id": "terrace_office_block",
+      "name": "TerraceOfficeBlock",
+      "description": "Broad cream four-story office; mint ground floor and terrace wall; long window groups; smaller top floor and short rear roof room.",
+      "glb": "terrace_office_block.glb",
+      "source": "source/terrace_office_block.blend",
+      "triangles": 7246,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 477,
+      "materials": [
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Green \u2014 7BAA67",
+        "Ink \u2014 24394B",
+        "Mint \u2014 83B9A8",
+        "Mint_Dark \u2014 62978F",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -7.86,
+          -6.155,
+          0.0
+        ],
+        "max": [
+          7.86,
+          5.66,
+          13.35
+        ]
+      },
+      "sha256": "55132e9dce71623ae3b39d410603bc26afaa720cca1b7da92cb77093076975ae",
+      "roster_id": 76,
+      "footprint_m": [
+        15.2,
+        10.8
+      ],
+      "body_height_m": 12.2,
+      "scene": "res://scenes/buildings/batch_19/terrace_office_block.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            0,
+            4.575,
+            0
+          ],
+          "size": [
+            15.2,
+            9.15,
+            10.8
+          ]
+        },
+        {
+          "center": [
+            0,
+            10.675,
+            -2.2
+          ],
+          "size": [
+            12.2,
+            3.05,
+            6.4
+          ]
+        }
+      ]
+    },
+    {
+      "id": "narrow_window_office",
+      "name": "NarrowWindowOffice",
+      "description": "Broad butter-yellow three-story office; three groups of slender navy-blue windows; cream ground floor; shallow parapet.",
+      "glb": "narrow_window_office.glb",
+      "source": "source/narrow_window_office.blend",
+      "triangles": 7484,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 505,
+      "materials": [
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89",
+        "Yellow \u2014 EBC567"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -7.16,
+          -5.32,
+          0.0
+        ],
+        "max": [
+          7.16,
+          4.76,
+          10.0
+        ]
+      },
+      "sha256": "bbd955caf174b7029342406b3b3febfc8d51f20935a64a1ea17ce76d1c892485",
+      "roster_id": 77,
+      "footprint_m": [
+        13.8,
+        9.0
+      ],
+      "body_height_m": 9.45,
+      "scene": "res://scenes/buildings/batch_19/narrow_window_office.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            0,
+            4.725,
+            0
+          ],
+          "size": [
+            13.8,
+            9.45,
+            9.0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "faceted_corner_office",
+      "name": "FacetedCornerOffice",
+      "description": "Broad powder-blue four-story corner office; large chamfered street face; wrapping recessed blue windows; cream base and flat blue cap.",
+      "glb": "faceted_corner_office.glb",
+      "source": "source/faceted_corner_office.blend",
+      "triangles": 8856,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 596,
+      "materials": [
+        "Blue \u2014 96BFD4",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -7.275,
+          -5.575,
+          0.0
+        ],
+        "max": [
+          7.275,
+          5.575,
+          12.64
+        ]
+      },
+      "sha256": "2a7e02e16e4c5009ab261c0d82b00cb2fb9a774b93024e3d5cd3b7e8dc2ae263",
+      "roster_id": 78,
+      "footprint_m": [
+        14.0,
+        10.6
+      ],
+      "body_height_m": 12.2,
+      "scene": "res://scenes/buildings/batch_19/faceted_corner_office.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            1.65,
+            6.1,
+            0
+          ],
+          "size": [
+            10.7,
+            12.2,
+            10.6
+          ]
+        },
+        {
+          "center": [
+            -5.35,
+            6.1,
+            -1.5
+          ],
+          "size": [
+            3.3,
+            12.2,
+            7.6
+          ]
+        }
+      ],
+      "collision_hull_godot_m": [
+        [
+          -7,
+          0,
+          2.3
+        ],
+        [
+          -3.7,
+          0,
+          5.3
+        ],
+        [
+          -3.7,
+          0,
+          2.3
+        ],
+        [
+          -7,
+          12.2,
+          2.3
+        ],
+        [
+          -3.7,
+          12.2,
+          5.3
+        ],
+        [
+          -3.7,
+          12.2,
+          2.3
+        ]
+      ]
+    },
+    {
+      "id": "broad_finance_office",
+      "name": "BroadFinanceOffice",
+      "description": "Wide cream three-story finance office; deeper painted blue window recesses; central teal canopy and entry bay; small rear roof room.",
+      "glb": "broad_finance_office.glb",
+      "source": "source/broad_finance_office.blend",
+      "triangles": 6448,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 434,
+      "materials": [
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -9.06,
+          -6.22,
+          0.0
+        ],
+        "max": [
+          9.06,
+          5.36,
+          10.59
+        ]
+      },
+      "sha256": "cfa3e58715e6911a7004e6c36acf48511d5d3d447b24213669618afd60d9d32e",
+      "roster_id": 79,
+      "footprint_m": [
+        17.6,
+        10.2
+      ],
+      "body_height_m": 9.6,
+      "scene": "res://scenes/buildings/batch_19/broad_finance_office.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            0,
+            4.8,
+            0
+          ],
+          "size": [
+            17.6,
+            9.6,
+            10.2
+          ]
+        }
+      ]
+    }
+  ]
+}

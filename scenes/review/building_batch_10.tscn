@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/review/building_gallery.gd" id="1"]
+
+[node name="BuildingBatch10" type="Node3D"]
+script = ExtResource("1")
+asset_dir = "res://assets/models/buildings/batch_10/"
+ids = Array[String](["harbor_fish_market", "tea_house", "sandwich_shop", "burger_stand"])
+titles = Array[String](["HARBOR FISH MARKET", "TEA HOUSE", "SANDWICH SHOP", "BURGER STAND"])
+notes = Array[String](["Cream and blue / three gables / open market bays / small side office", "Lilac / two stories / recessed entrance / white scrollwork balcony", "Butter yellow / one story / thick canopy / taller rear kitchen", "Cream and coral / deep corner canopy / serving windows / blue hip roof"])
+scene_folder = "res://scenes/buildings/batch_10/"
+lineup_spacing = 16.0
+lineup_size = 41.0
+lineup_heading = "BATCH 10 / PASTEL FRENCH QUARTER"

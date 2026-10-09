@@ -1,0 +1,362 @@
+{
+  "batch": 23,
+  "units": "meters",
+  "godot_front": "+Z",
+  "origin": "ground center",
+  "style": "Pastel French Quarter / New Orleans Creole",
+  "palette_srgb": {
+    "cream": "F5E7CD",
+    "stone": "D7C8AC",
+    "coral": "E9967C",
+    "coral_dark": "CC715D",
+    "mint": "83B9A8",
+    "mint_dark": "62978F",
+    "yellow": "EBC567",
+    "yellow_dark": "C99B46",
+    "roof": "52738C",
+    "teal": "328D89",
+    "ink": "24394B",
+    "glass": "34576B",
+    "reflection": "739BAC",
+    "green": "7BAA67",
+    "green_dark": "527B53",
+    "pot": "BE7659",
+    "metal": "8A9B9E",
+    "blue": "96BFD4",
+    "blue_dark": "648FA9",
+    "lilac": "B7A8CF"
+  },
+  "models": [
+    {
+      "id": "courtyard_shopping_centre",
+      "name": "CourtyardShoppingCentre",
+      "description": "Butter-yellow two-story shops around an open front courtyard; continuous teal-edged canopies and raised central entry crown.",
+      "glb": "courtyard_shopping_centre.glb",
+      "source": "source/courtyard_shopping_centre.blend",
+      "triangles": 10150,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 613,
+      "materials": [
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Reflection \u2014 739BAC",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89",
+        "Yellow \u2014 EBC567"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -9.76,
+          -6.26,
+          0.0
+        ],
+        "max": [
+          9.76,
+          6.26,
+          7.415
+        ]
+      },
+      "sha256": "64fa53d0c679d76848cd9ef9d95c6691edaf4fd815da355a1232424091e7d3a6",
+      "roster_id": 92,
+      "footprint_m": [
+        19.0,
+        12.0
+      ],
+      "body_height_m": 6.24,
+      "scene": "res://scenes/buildings/batch_23/courtyard_shopping_centre.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            -7.15,
+            3.12,
+            0
+          ],
+          "size": [
+            4.7,
+            6.24,
+            12.0
+          ]
+        },
+        {
+          "center": [
+            7.15,
+            3.12,
+            0
+          ],
+          "size": [
+            4.7,
+            6.24,
+            12.0
+          ]
+        },
+        {
+          "center": [
+            0,
+            3.12,
+            -3.9
+          ],
+          "size": [
+            9.6,
+            6.24,
+            4.2
+          ]
+        }
+      ]
+    },
+    {
+      "id": "neighborhood_bank",
+      "name": "NeighborhoodBank",
+      "description": "Broad cream two-story bank with three thick entrance piers, recessed blue doors and a short raised lobby roof section.",
+      "glb": "neighborhood_bank.glb",
+      "source": "source/neighborhood_bank.blend",
+      "triangles": 5150,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 290,
+      "materials": [
+        "Blue_Dark \u2014 648FA9",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -7.96,
+          -6.475,
+          0.0
+        ],
+        "max": [
+          7.96,
+          5.26,
+          8.015
+        ]
+      },
+      "sha256": "512e3f73cf8f41c330fbcc7dc4922b07583ab9ce1e9e46950827696b15c90495",
+      "roster_id": 93,
+      "footprint_m": [
+        15.4,
+        10.0
+      ],
+      "body_height_m": 6.7,
+      "scene": "res://scenes/buildings/batch_23/neighborhood_bank.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            0,
+            3.35,
+            0
+          ],
+          "size": [
+            15.4,
+            6.7,
+            10.0
+          ]
+        },
+        {
+          "center": [
+            -3.4,
+            1.65,
+            5.64
+          ],
+          "size": [
+            0.92,
+            3.3,
+            0.92
+          ]
+        },
+        {
+          "center": [
+            0,
+            1.65,
+            5.64
+          ],
+          "size": [
+            0.92,
+            3.3,
+            0.92
+          ]
+        },
+        {
+          "center": [
+            3.4,
+            1.65,
+            5.64
+          ],
+          "size": [
+            0.92,
+            3.3,
+            0.92
+          ]
+        }
+      ]
+    },
+    {
+      "id": "corner_clinic",
+      "name": "CornerClinic",
+      "description": "Mint four-story corner clinic with a chamfered glazed entrance, long narrow blue window groups and thick cream trim.",
+      "glb": "corner_clinic.glb",
+      "source": "source/corner_clinic.blend",
+      "triangles": 8790,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 590,
+      "materials": [
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Mint \u2014 83B9A8",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -7.6102,
+          -5.6102,
+          0.0
+        ],
+        "max": [
+          7.465,
+          5.465,
+          12.63
+        ]
+      },
+      "sha256": "599e36ed90fc698cd50a48cc8a6bb1873825003a637bc3589438545936ef3a00",
+      "roster_id": 94,
+      "footprint_m": [
+        14.4,
+        10.4
+      ],
+      "body_height_m": 12.2,
+      "scene": "res://scenes/buildings/batch_23/corner_clinic.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            1.05,
+            6.1,
+            0
+          ],
+          "size": [
+            12.3,
+            12.2,
+            10.4
+          ]
+        },
+        {
+          "center": [
+            -6.15,
+            6.1,
+            -1.05
+          ],
+          "size": [
+            2.1,
+            12.2,
+            8.3
+          ]
+        }
+      ],
+      "collision_hull_godot_m": [
+        [
+          -7.2,
+          0,
+          3.1
+        ],
+        [
+          -5.1,
+          0,
+          5.2
+        ],
+        [
+          -5.1,
+          0,
+          3.1
+        ],
+        [
+          -7.2,
+          12.2,
+          3.1
+        ],
+        [
+          -5.1,
+          12.2,
+          5.2
+        ],
+        [
+          -5.1,
+          12.2,
+          3.1
+        ]
+      ]
+    },
+    {
+      "id": "hardware_superstore",
+      "name": "HardwareSuperstore",
+      "description": "Low butter-yellow hardware shed with blue roof, deep canopy, closed side loading door and attached two-story office.",
+      "glb": "hardware_superstore.glb",
+      "source": "source/hardware_superstore.blend",
+      "triangles": 4514,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 265,
+      "materials": [
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89",
+        "Yellow \u2014 EBC567"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -9.76,
+          -7.44,
+          0.0
+        ],
+        "max": [
+          9.76,
+          6.26,
+          6.4
+        ]
+      },
+      "sha256": "dbe0fa53e908b92624b2b90df272ffade17f77b1c0ae11358cea461b0479f4ea",
+      "roster_id": 95,
+      "footprint_m": [
+        19.0,
+        12.0
+      ],
+      "body_height_m": 6.04,
+      "scene": "res://scenes/buildings/batch_23/hardware_superstore.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            -2.6,
+            2.125,
+            0
+          ],
+          "size": [
+            13.8,
+            4.25,
+            12.0
+          ]
+        },
+        {
+          "center": [
+            6.9,
+            3.02,
+            0
+          ],
+          "size": [
+            5.2,
+            6.04,
+            12.0
+          ]
+        }
+      ]
+    }
+  ]
+}

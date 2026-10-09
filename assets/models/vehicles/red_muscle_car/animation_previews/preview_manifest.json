@@ -1,0 +1,34 @@
+{
+  "renderer": "Godot 4.7 Compatibility / native viewport",
+  "pose_fps": 12,
+  "authored_frames": 79,
+  "real_physics_frames": 48,
+  "real_physics_clip_states": [
+    "launch",
+    "air_rise",
+    "air_hang",
+    "air_drop",
+    "land_hard_c",
+    "idle"
+  ],
+  "real_physics_minimum_body_height": 0.515039324760437,
+  "real_physics_minimum_trunk_degrees": -19.7416458052828,
+  "motion_effects_frames": 81,
+  "motion_effects_gameplay_frames": 84,
+  "animation_polish_frames": 120,
+  "animation_polish_states": [
+    "accelerate",
+    "drive",
+    "turn_left_b",
+    "turn_right_b",
+    "recover",
+    "brake",
+    "launch",
+    "air_rise",
+    "air_hang",
+    "air_drop",
+    "land_hard_c",
+    "handbrake_right",
+    "turn_left_c"
+  ]
+}

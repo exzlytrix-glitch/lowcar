@@ -1,0 +1,64 @@
+{
+  "id": "police_officer",
+  "name": "Cube police officer",
+  "units": "meters",
+  "front": "Godot +Z",
+  "origin": "ground center",
+  "base_model": "pastel_pedestrian",
+  "base_glb_sha256": "6cd7ebf02efa53f57d4b0d966228e1573d057c8a67a9a3254b7cc3eb2b79b761",
+  "height_m": 1.752,
+  "palette_srgb": {
+    "PastelLavender": "B7A5DB",
+    "SoftNavy": "3D5878",
+    "ButterGold": "E9CA81"
+  },
+  "materials": 3,
+  "textures": 0,
+  "runtime_meshes": 1,
+  "triangles": 1116,
+  "editable_parts": 26,
+  "gear_parts": [
+    "Navy_cap_crown",
+    "Short_cap_peak",
+    "Gold_cap_badge",
+    "Vest_front",
+    "Vest_back",
+    "Vest_shoulder_strap_-1",
+    "Vest_shoulder_strap_1",
+    "Simple_duty_belt",
+    "Gold_belt_buckle",
+    "Belt_pouch_-1",
+    "Belt_pouch_1",
+    "Small_shoulder_radio",
+    "Radio_antenna",
+    "Plain_shield_badge"
+  ],
+  "bones": [
+    "Hips",
+    "Torso",
+    "Head",
+    "Arm_L",
+    "Hand_L",
+    "Arm_R",
+    "Hand_R",
+    "Leg_L",
+    "Foot_L",
+    "Leg_R",
+    "Foot_R"
+  ],
+  "glb": "police_officer.glb",
+  "source": "source/police_officer.blend",
+  "blender_bounds_m": {
+    "min": [
+      -0.476,
+      -0.335,
+      0.0
+    ],
+    "max": [
+      0.476,
+      0.203,
+      1.752
+    ]
+  },
+  "sha256": "de90686671c8b0a0d2d928327b591dde90006285a9d8ba2dc41d0e8110c8ea06"
+}

@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/review/building_gallery.gd" id="1"]
+
+[node name="BuildingBatch04" type="Node3D"]
+script = ExtResource("1")
+asset_dir = "res://assets/models/buildings/batch_04/"
+ids = Array[String](["flower_shop", "corner_hardware", "spin_laundry", "courtyard_duplex"])
+titles = Array[String](["FLOWER SHOP", "CORNER HARDWARE", "SPIN LAUNDRY", "COURTYARD DUPLEX"])
+notes = Array[String](["Coral / blue canopy / low hipped roof / flower planters", "Terracotta / chunky white pilasters / double doors / raised parapet", "Mint / repeating square windows / blue roof lip / offset door", "Butter yellow / L-shaped body / open courtyard / white balcony"])
+scene_folder = "res://scenes/buildings/batch_04/"
+lineup_spacing = 14.0
+lineup_size = 34.0
+lineup_heading = "BATCH 04 / PASTEL FRENCH QUARTER"

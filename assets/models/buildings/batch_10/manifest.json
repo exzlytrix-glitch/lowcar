@@ -1,0 +1,336 @@
+{
+  "batch": 10,
+  "units": "meters",
+  "godot_front": "+Z",
+  "origin": "ground center",
+  "style": "Pastel French Quarter / New Orleans Creole",
+  "palette_srgb": {
+    "cream": "F5E7CD",
+    "stone": "D7C8AC",
+    "coral": "E9967C",
+    "coral_dark": "CC715D",
+    "mint": "83B9A8",
+    "mint_dark": "62978F",
+    "yellow": "EBC567",
+    "yellow_dark": "C99B46",
+    "roof": "52738C",
+    "teal": "328D89",
+    "ink": "24394B",
+    "glass": "34576B",
+    "reflection": "739BAC",
+    "green": "7BAA67",
+    "green_dark": "527B53",
+    "pot": "BE7659",
+    "metal": "8A9B9E",
+    "blue": "96BFD4",
+    "blue_dark": "648FA9",
+    "lilac": "B7A8CF"
+  },
+  "models": [
+    {
+      "id": "harbor_fish_market",
+      "name": "HarborFishMarket",
+      "description": "Low cream fish market; three blue gables; open front bays; enclosed powder-blue side office.",
+      "glb": "harbor_fish_market.glb",
+      "source": "source/harbor_fish_market.blend",
+      "triangles": 3032,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 166,
+      "materials": [
+        "Blue \u2014 96BFD4",
+        "Blue_Dark \u2014 648FA9",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Metal \u2014 8A9B9E",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -7.135,
+          -4.735,
+          0.0
+        ],
+        "max": [
+          7.135,
+          4.735,
+          4.775
+        ]
+      },
+      "sha256": "0ea566dda9290577d1d05ea31483d6e3048542b1eaaad315ef2de92897f26377",
+      "roster_id": 30,
+      "footprint_m": [
+        13.8,
+        9.0
+      ],
+      "body_height_m": 3.4,
+      "scene": "res://scenes/buildings/batch_10/harbor_fish_market.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            0,
+            0.075,
+            0
+          ],
+          "size": [
+            13.8,
+            0.15,
+            9.0
+          ]
+        },
+        {
+          "center": [
+            0,
+            1.74,
+            -4.31
+          ],
+          "size": [
+            13.8,
+            3.18,
+            0.38
+          ]
+        },
+        {
+          "center": [
+            -6.71,
+            1.74,
+            0
+          ],
+          "size": [
+            0.38,
+            3.18,
+            9.0
+          ]
+        },
+        {
+          "center": [
+            5.4,
+            1.7,
+            0
+          ],
+          "size": [
+            3.0,
+            3.4,
+            9.0
+          ]
+        },
+        {
+          "center": [
+            -6.675,
+            1.59,
+            4.31
+          ],
+          "size": [
+            0.45,
+            2.88,
+            0.38
+          ]
+        },
+        {
+          "center": [
+            -3.3,
+            1.59,
+            4.31
+          ],
+          "size": [
+            0.9,
+            2.88,
+            0.38
+          ]
+        },
+        {
+          "center": [
+            0.3,
+            1.59,
+            4.31
+          ],
+          "size": [
+            0.9,
+            2.88,
+            0.38
+          ]
+        },
+        {
+          "center": [
+            3.675,
+            1.59,
+            4.31
+          ],
+          "size": [
+            0.45,
+            2.88,
+            0.38
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tea_house",
+      "name": "TeaHouse",
+      "description": "Compact lilac tea house; recessed frontage; small scrollwork balcony; shuttered upper windows.",
+      "glb": "tea_house.glb",
+      "source": "source/tea_house.blend",
+      "triangles": 5362,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 310,
+      "materials": [
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Green \u2014 7BAA67",
+        "Ink \u2014 24394B",
+        "Lilac \u2014 B7A8CF",
+        "Pot \u2014 BE7659",
+        "Reflection \u2014 739BAC",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -4.46,
+          -5.315,
+          0.0
+        ],
+        "max": [
+          4.46,
+          4.66,
+          7.03
+        ]
+      },
+      "sha256": "d3ba6202063963575fac09289966caf6ceb6afcaa743b097a10a1f0094c629c8",
+      "roster_id": 31,
+      "footprint_m": [
+        8.4,
+        8.8
+      ],
+      "body_height_m": 6.3,
+      "scene": "res://scenes/buildings/batch_10/tea_house.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            0,
+            3.15,
+            0
+          ],
+          "size": [
+            8.4,
+            6.3,
+            8.8
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sandwich_shop",
+      "name": "SandwichShop",
+      "description": "Butter-yellow one-story sandwich shop; broad pane; offset door; thick canopy; raised rear kitchen.",
+      "glb": "sandwich_shop.glb",
+      "source": "source/sandwich_shop.blend",
+      "triangles": 2474,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 105,
+      "materials": [
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Metal \u2014 8A9B9E",
+        "Reflection \u2014 739BAC",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89",
+        "Yellow \u2014 EBC567",
+        "Yellow_Dark \u2014 C99B46"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -3.66,
+          -4.955,
+          0.0
+        ],
+        "max": [
+          3.66,
+          4.26,
+          4.725
+        ]
+      },
+      "sha256": "f9eb0d90cbb6c858847730da7aead6beea21f52aac23266af48d20193608c183",
+      "roster_id": 32,
+      "footprint_m": [
+        6.8,
+        8.0
+      ],
+      "body_height_m": 3.1,
+      "scene": "res://scenes/buildings/batch_10/sandwich_shop.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            0,
+            1.55,
+            0
+          ],
+          "size": [
+            6.8,
+            3.1,
+            8.0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "burger_stand",
+      "name": "BurgerStand",
+      "description": "Square cream burger stand; coral banding; broad serving panes; corner canopy; blue hip roof.",
+      "glb": "burger_stand.glb",
+      "source": "source/burger_stand.blend",
+      "triangles": 2106,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 83,
+      "materials": [
+        "Coral \u2014 E9967C",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Metal \u2014 8A9B9E",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -4.355,
+          -4.808,
+          0.0
+        ],
+        "max": [
+          4.72,
+          4.355,
+          4.545
+        ]
+      },
+      "sha256": "0527a3d18c04c482a10d4041ce84161a8504f6e0bd20c0144d4860ea18727be1",
+      "roster_id": 33,
+      "footprint_m": [
+        7.4,
+        7.4
+      ],
+      "body_height_m": 3.05,
+      "scene": "res://scenes/buildings/batch_10/burger_stand.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            0,
+            1.525,
+            0
+          ],
+          "size": [
+            7.4,
+            3.05,
+            7.4
+          ]
+        }
+      ]
+    }
+  ]
+}

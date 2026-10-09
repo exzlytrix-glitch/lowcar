@@ -1,0 +1,298 @@
+{
+  "batch": 21,
+  "units": "meters",
+  "godot_front": "+Z",
+  "origin": "ground center",
+  "style": "Pastel French Quarter / New Orleans Creole",
+  "palette_srgb": {
+    "cream": "F5E7CD",
+    "stone": "D7C8AC",
+    "coral": "E9967C",
+    "coral_dark": "CC715D",
+    "mint": "83B9A8",
+    "mint_dark": "62978F",
+    "yellow": "EBC567",
+    "yellow_dark": "C99B46",
+    "roof": "52738C",
+    "teal": "328D89",
+    "ink": "24394B",
+    "glass": "34576B",
+    "reflection": "739BAC",
+    "green": "7BAA67",
+    "green_dark": "527B53",
+    "pot": "BE7659",
+    "metal": "8A9B9E",
+    "blue": "96BFD4",
+    "blue_dark": "648FA9",
+    "lilac": "B7A8CF"
+  },
+  "models": [
+    {
+      "id": "frame_office_block",
+      "name": "FrameOfficeBlock",
+      "description": "Broad four-story office with a substantial cream facade grid, muted navy infill and recessed central doorway.",
+      "glb": "frame_office_block.glb",
+      "source": "source/frame_office_block.blend",
+      "triangles": 7214,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 474,
+      "materials": [
+        "Blue_Dark \u2014 648FA9",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -7.66,
+          -5.46,
+          0.0
+        ],
+        "max": [
+          7.66,
+          5.46,
+          12.68
+        ]
+      },
+      "sha256": "d231769a04333773569d126af4db203db8351f68526aeebbb1b5cb53f3ebca26",
+      "roster_id": 84,
+      "footprint_m": [
+        14.8,
+        10.4
+      ],
+      "body_height_m": 12.32,
+      "scene": "res://scenes/buildings/batch_21/frame_office_block.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            0,
+            6.16,
+            0
+          ],
+          "size": [
+            14.8,
+            12.32,
+            10.4
+          ]
+        }
+      ]
+    },
+    {
+      "id": "balcony_mixed_use_block",
+      "name": "BalconyMixedUseBlock",
+      "description": "Coral four-story neighborhood block over shops; stacked ornamental balconies, paired windows and small top terrace.",
+      "glb": "balcony_mixed_use_block.glb",
+      "source": "source/balcony_mixed_use_block.blend",
+      "triangles": 8672,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 591,
+      "materials": [
+        "Coral \u2014 E9967C",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Green \u2014 7BAA67",
+        "Ink \u2014 24394B",
+        "Mint_Dark \u2014 62978F",
+        "Pot \u2014 BE7659",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -7.06,
+          -6.005,
+          0.0
+        ],
+        "max": [
+          7.06,
+          5.26,
+          12.76
+        ]
+      },
+      "sha256": "b817cc56873d9f832bc854076918d6d27ceb3eb5e3afefea1979c5fe79da4c15",
+      "roster_id": 85,
+      "footprint_m": [
+        13.6,
+        10.0
+      ],
+      "body_height_m": 12.4,
+      "scene": "res://scenes/buildings/batch_21/balcony_mixed_use_block.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            0,
+            4.65,
+            0
+          ],
+          "size": [
+            13.6,
+            9.3,
+            10.0
+          ]
+        },
+        {
+          "center": [
+            0.7,
+            10.85,
+            -0.7
+          ],
+          "size": [
+            10.8,
+            3.1,
+            8.0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "long_city_office",
+      "name": "LongCityOffice",
+      "description": "Long powder-blue three-story office with repeating blue windows, quiet cream cornice and lower projecting entrance.",
+      "glb": "long_city_office.glb",
+      "source": "source/long_city_office.blend",
+      "triangles": 6896,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 471,
+      "materials": [
+        "Blue \u2014 96BFD4",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -9.76,
+          -6.76,
+          0.0
+        ],
+        "max": [
+          9.76,
+          4.46,
+          9.51
+        ]
+      },
+      "sha256": "fb5aa223c646f9f95b44295d2ad1b53a26607e54f474bb409e2731cc9006bd3e",
+      "roster_id": 86,
+      "footprint_m": [
+        19.0,
+        8.4
+      ],
+      "body_height_m": 9.15,
+      "scene": "res://scenes/buildings/batch_21/long_city_office.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            0,
+            4.575,
+            0
+          ],
+          "size": [
+            19.0,
+            9.15,
+            8.4
+          ]
+        },
+        {
+          "center": [
+            0,
+            1.525,
+            5.0
+          ],
+          "size": [
+            5.8,
+            3.05,
+            3.0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "capped_civic_office",
+      "name": "CappedCivicOffice",
+      "description": "Broad cream three-story civic office; tall blue windows, columned lobby and shallow blue pyramidal roof.",
+      "glb": "capped_civic_office.glb",
+      "source": "source/capped_civic_office.blend",
+      "triangles": 6438,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 408,
+      "materials": [
+        "Blue_Dark \u2014 648FA9",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -7.26,
+          -6.955,
+          0.0
+        ],
+        "max": [
+          7.26,
+          5.26,
+          11.015
+        ]
+      },
+      "sha256": "69ef851d0195f87c9dfe2b8a2288e362e6c85e39e644f347d98553d7565f0999",
+      "roster_id": 87,
+      "footprint_m": [
+        14.0,
+        10.0
+      ],
+      "body_height_m": 9.6,
+      "scene": "res://scenes/buildings/batch_21/capped_civic_office.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            0,
+            4.8,
+            0
+          ],
+          "size": [
+            14.0,
+            9.6,
+            10.0
+          ]
+        },
+        {
+          "center": [
+            -2.32,
+            1.55,
+            6.0
+          ],
+          "size": [
+            0.68,
+            3.1,
+            0.68
+          ]
+        },
+        {
+          "center": [
+            2.32,
+            1.55,
+            6.0
+          ],
+          "size": [
+            0.68,
+            3.1,
+            0.68
+          ]
+        }
+      ]
+    }
+  ]
+}

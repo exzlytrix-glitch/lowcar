@@ -1,0 +1,24 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/main/main.gd" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/world/city_world.tscn" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/vehicles/player_car.tscn" id="3"]
+[ext_resource type="PackedScene" path="res://scenes/ui/game_ui.tscn" id="4"]
+[ext_resource type="PackedScene" path="res://scenes/chase/chase_director.tscn" id="5"]
+
+[node name="Lowcar" type="Node3D"]
+process_mode = 3
+script = ExtResource("1")
+
+[node name="World" parent="." instance=ExtResource("2")]
+
+[node name="Vehicles" type="Node3D" parent="."]
+process_mode = 1
+
+[node name="PlayerCar" parent="Vehicles" instance=ExtResource("3")]
+position = Vector3(4.5, 0.1, 8)
+
+[node name="ChaseDirector" parent="." instance=ExtResource("5")]
+process_mode = 1
+
+[node name="GameUI" parent="." instance=ExtResource("4")]

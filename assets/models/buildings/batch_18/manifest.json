@@ -1,0 +1,308 @@
+{
+  "batch": 18,
+  "units": "meters",
+  "godot_front": "+Z",
+  "origin": "ground center",
+  "style": "Pastel French Quarter / New Orleans Creole",
+  "palette_srgb": {
+    "cream": "F5E7CD",
+    "stone": "D7C8AC",
+    "coral": "E9967C",
+    "coral_dark": "CC715D",
+    "mint": "83B9A8",
+    "mint_dark": "62978F",
+    "yellow": "EBC567",
+    "yellow_dark": "C99B46",
+    "roof": "52738C",
+    "teal": "328D89",
+    "ink": "24394B",
+    "glass": "34576B",
+    "reflection": "739BAC",
+    "green": "7BAA67",
+    "green_dark": "527B53",
+    "pot": "BE7659",
+    "metal": "8A9B9E",
+    "blue": "96BFD4",
+    "blue_dark": "648FA9",
+    "lilac": "B7A8CF"
+  },
+  "models": [
+    {
+      "id": "teal_glass_office",
+      "name": "TealGlassOffice",
+      "description": "Broad teal three-story office; painted blue glass panels between cream floor bands; projecting cream lobby base.",
+      "glb": "teal_glass_office.glb",
+      "source": "source/teal_glass_office.blend",
+      "triangles": 6008,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 410,
+      "materials": [
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -7.16,
+          -6.56,
+          0.0
+        ],
+        "max": [
+          7.16,
+          4.96,
+          9.81
+        ]
+      },
+      "sha256": "d68a6dc0227d21184a50f4d48cc095f3c81343469c2f9ed9920f510412b36cb9",
+      "roster_id": 72,
+      "footprint_m": [
+        13.8,
+        11.0
+      ],
+      "body_height_m": 9.45,
+      "scene": "res://scenes/buildings/batch_18/teal_glass_office.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            0,
+            4.725,
+            0
+          ],
+          "size": [
+            13.8,
+            9.45,
+            9.4
+          ]
+        },
+        {
+          "center": [
+            0,
+            1.575,
+            5.5
+          ],
+          "size": [
+            7.0,
+            3.15,
+            1.6
+          ]
+        }
+      ]
+    },
+    {
+      "id": "coral_stair_office",
+      "name": "CoralStairOffice",
+      "description": "Broad cream four-story office with an integrated coral stair spine; three-window rhythm; substantial white trim; low roof cap.",
+      "glb": "coral_stair_office.glb",
+      "source": "source/coral_stair_office.blend",
+      "triangles": 11750,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 808,
+      "materials": [
+        "Blue_Dark \u2014 648FA9",
+        "Coral \u2014 E9967C",
+        "Coral_Dark \u2014 CC715D",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -7.06,
+          -5.36,
+          0.0
+        ],
+        "max": [
+          7.06,
+          5.36,
+          12.835
+        ]
+      },
+      "sha256": "7229eda8199a53dd818dcae49905b5c2d59e5f2dd71e21ff0e6d6f2db332a6f8",
+      "roster_id": 73,
+      "footprint_m": [
+        13.6,
+        10.2
+      ],
+      "body_height_m": 12.4,
+      "scene": "res://scenes/buildings/batch_18/coral_stair_office.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            1.6,
+            6.2,
+            0
+          ],
+          "size": [
+            10.4,
+            12.4,
+            9.2
+          ]
+        },
+        {
+          "center": [
+            -5.2,
+            6.2,
+            0
+          ],
+          "size": [
+            3.2,
+            12.4,
+            10.2
+          ]
+        }
+      ]
+    },
+    {
+      "id": "square_blue_cap_office",
+      "name": "SquareBlueCapOffice",
+      "description": "Square cream four-story office; symmetrical window grid; broad cornice and shallow blue hip cap; recessed corner lobby.",
+      "glb": "square_blue_cap_office.glb",
+      "source": "source/square_blue_cap_office.blend",
+      "triangles": 7206,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 495,
+      "materials": [
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -5.96,
+          -6.425,
+          0.0
+        ],
+        "max": [
+          5.96,
+          5.96,
+          13.085
+        ]
+      },
+      "sha256": "2b19d9ea6bd3fbbdc69acab9c29ea0912f3d89f3d55fcc4bf05b3343b4c2fe5a",
+      "roster_id": 74,
+      "footprint_m": [
+        11.4,
+        11.4
+      ],
+      "body_height_m": 12.2,
+      "scene": "res://scenes/buildings/batch_18/square_blue_cap_office.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            0,
+            6.1,
+            0
+          ],
+          "size": [
+            11.4,
+            12.2,
+            11.4
+          ]
+        }
+      ]
+    },
+    {
+      "id": "joined_office_wings",
+      "name": "JoinedOfficeWings",
+      "description": "Two broad three-story office wings in mint and powder blue; low shared cream entrance; open forecourt; slightly different roof heights and setbacks.",
+      "glb": "joined_office_wings.glb",
+      "source": "source/joined_office_wings.blend",
+      "triangles": 11064,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 718,
+      "materials": [
+        "Blue \u2014 96BFD4",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Mint \u2014 83B9A8",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -9.36,
+          -5.46,
+          0.0
+        ],
+        "max": [
+          9.36,
+          5.46,
+          10.145
+        ]
+      },
+      "sha256": "c25a1e884e1c72dc52a8fdab8c38b144109644c3bb7490d8d7dd4b13d82de689",
+      "roster_id": 75,
+      "footprint_m": [
+        18.2,
+        10.4
+      ],
+      "body_height_m": 9.3,
+      "scene": "res://scenes/buildings/batch_18/joined_office_wings.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            -5.9,
+            4.65,
+            0
+          ],
+          "size": [
+            6.4,
+            9.3,
+            10.4
+          ]
+        },
+        {
+          "center": [
+            5.9,
+            4.425,
+            -1.0
+          ],
+          "size": [
+            6.4,
+            8.85,
+            8.4
+          ]
+        },
+        {
+          "center": [
+            0,
+            1.55,
+            -1.9
+          ],
+          "size": [
+            5.4,
+            3.1,
+            6.6
+          ]
+        },
+        {
+          "center": [
+            0,
+            0.04,
+            3.3
+          ],
+          "size": [
+            5.4,
+            0.08,
+            3.8
+          ]
+        }
+      ]
+    }
+  ]
+}

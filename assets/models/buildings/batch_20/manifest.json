@@ -1,0 +1,316 @@
+{
+  "batch": 20,
+  "units": "meters",
+  "godot_front": "+Z",
+  "origin": "ground center",
+  "style": "Pastel French Quarter / New Orleans Creole",
+  "palette_srgb": {
+    "cream": "F5E7CD",
+    "stone": "D7C8AC",
+    "coral": "E9967C",
+    "coral_dark": "CC715D",
+    "mint": "83B9A8",
+    "mint_dark": "62978F",
+    "yellow": "EBC567",
+    "yellow_dark": "C99B46",
+    "roof": "52738C",
+    "teal": "328D89",
+    "ink": "24394B",
+    "glass": "34576B",
+    "reflection": "739BAC",
+    "green": "7BAA67",
+    "green_dark": "527B53",
+    "pot": "BE7659",
+    "metal": "8A9B9E",
+    "blue": "96BFD4",
+    "blue_dark": "648FA9",
+    "lilac": "B7A8CF"
+  },
+  "models": [
+    {
+      "id": "wedge_office",
+      "name": "WedgeOffice",
+      "description": "Broad coral three-story office; gently angled street frontage; regular blue windows; cream ground floor and stepped roof edge.",
+      "glb": "wedge_office.glb",
+      "source": "source/wedge_office.blend",
+      "triangles": 6164,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 398,
+      "materials": [
+        "Coral \u2014 E9967C",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Reflection \u2014 739BAC",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -7.435,
+          -5.2424,
+          0.0
+        ],
+        "max": [
+          7.435,
+          5.235,
+          10.44
+        ]
+      },
+      "sha256": "1f52e170db4ff0baab79e2954a5c62f11226f28571acb471c1556eb201fcb13c",
+      "roster_id": 80,
+      "footprint_m": [
+        14.4,
+        10.0
+      ],
+      "body_height_m": 9.45,
+      "scene": "res://scenes/buildings/batch_20/wedge_office.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            0,
+            4.725,
+            -1.0
+          ],
+          "size": [
+            14.4,
+            9.45,
+            8.0
+          ]
+        }
+      ],
+      "collision_hull_godot_m": [
+        [
+          -7.2,
+          0,
+          3.0
+        ],
+        [
+          7.2,
+          0,
+          5.0
+        ],
+        [
+          7.2,
+          0,
+          3.0
+        ],
+        [
+          -7.2,
+          9.45,
+          3.0
+        ],
+        [
+          7.2,
+          9.45,
+          5.0
+        ],
+        [
+          7.2,
+          9.45,
+          3.0
+        ]
+      ]
+    },
+    {
+      "id": "offset_core_office",
+      "name": "OffsetCoreOffice",
+      "description": "Broad mint four-story office; integrated cream stair core on one side; wide blue windows; offset roof equipment.",
+      "glb": "offset_core_office.glb",
+      "source": "source/offset_core_office.blend",
+      "triangles": 12134,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 816,
+      "materials": [
+        "Blue_Dark \u2014 648FA9",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Metal \u2014 8A9B9E",
+        "Mint \u2014 83B9A8",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -7.26,
+          -5.26,
+          0.0
+        ],
+        "max": [
+          7.26,
+          5.26,
+          13.25
+        ]
+      },
+      "sha256": "1a6666ba3a44a1479957113c29893a873760b8a8efbb10f9ecd442f661de3ef6",
+      "roster_id": 81,
+      "footprint_m": [
+        14.0,
+        10.0
+      ],
+      "body_height_m": 12.2,
+      "scene": "res://scenes/buildings/batch_20/offset_core_office.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            1.55,
+            6.1,
+            -0.5
+          ],
+          "size": [
+            10.9,
+            12.2,
+            9.0
+          ]
+        },
+        {
+          "center": [
+            -5.45,
+            6.1,
+            0
+          ],
+          "size": [
+            3.1,
+            12.2,
+            10.0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "double_setback_office",
+      "name": "DoubleSetbackOffice",
+      "description": "Broad cream four-story office with two shallow upper setbacks; powder-blue third floor; grouped windows and generous lobby.",
+      "glb": "double_setback_office.glb",
+      "source": "source/double_setback_office.blend",
+      "triangles": 6406,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 399,
+      "materials": [
+        "Blue \u2014 96BFD4",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -8.06,
+          -6.43,
+          0.0
+        ],
+        "max": [
+          8.06,
+          5.76,
+          12.56
+        ]
+      },
+      "sha256": "a20df5c59427cd45e705d685853d65653e92bb34c3e720773031ff3688f4bf3c",
+      "roster_id": 82,
+      "footprint_m": [
+        15.6,
+        11.0
+      ],
+      "body_height_m": 12.2,
+      "scene": "res://scenes/buildings/batch_20/double_setback_office.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            0,
+            3.05,
+            0
+          ],
+          "size": [
+            15.6,
+            6.1,
+            11.0
+          ]
+        },
+        {
+          "center": [
+            -0.2,
+            7.625,
+            -0.6
+          ],
+          "size": [
+            13.2,
+            3.05,
+            9.2
+          ]
+        },
+        {
+          "center": [
+            -0.65,
+            10.675,
+            -1.4
+          ],
+          "size": [
+            10.6,
+            3.05,
+            7.4
+          ]
+        }
+      ]
+    },
+    {
+      "id": "simple_city_office",
+      "name": "SimpleCityOffice",
+      "description": "Ordinary broad butter-yellow three-story office; square blue window grid; offset door; quiet cream cornice and flat blue lip.",
+      "glb": "simple_city_office.glb",
+      "source": "source/simple_city_office.blend",
+      "triangles": 5004,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 343,
+      "materials": [
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89",
+        "Yellow \u2014 EBC567"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -6.86,
+          -5.055,
+          0.0
+        ],
+        "max": [
+          6.86,
+          4.66,
+          9.785
+        ]
+      },
+      "sha256": "bffc33b07a6507385e747fd2141f3ff5f7b3a005e3cd6f2669256c2d4a1f22e9",
+      "roster_id": 83,
+      "footprint_m": [
+        13.2,
+        8.8
+      ],
+      "body_height_m": 9.45,
+      "scene": "res://scenes/buildings/batch_20/simple_city_office.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            0,
+            4.725,
+            0
+          ],
+          "size": [
+            13.2,
+            9.45,
+            8.8
+          ]
+        }
+      ]
+    }
+  ]
+}

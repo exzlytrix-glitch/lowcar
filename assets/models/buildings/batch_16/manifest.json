@@ -1,0 +1,340 @@
+{
+  "batch": 16,
+  "units": "meters",
+  "godot_front": "+Z",
+  "origin": "ground center",
+  "style": "Pastel French Quarter / New Orleans Creole",
+  "palette_srgb": {
+    "cream": "F5E7CD",
+    "stone": "D7C8AC",
+    "coral": "E9967C",
+    "coral_dark": "CC715D",
+    "mint": "83B9A8",
+    "mint_dark": "62978F",
+    "yellow": "EBC567",
+    "yellow_dark": "C99B46",
+    "roof": "52738C",
+    "teal": "328D89",
+    "ink": "24394B",
+    "glass": "34576B",
+    "reflection": "739BAC",
+    "green": "7BAA67",
+    "green_dark": "527B53",
+    "pot": "BE7659",
+    "metal": "8A9B9E",
+    "blue": "96BFD4",
+    "blue_dark": "648FA9",
+    "lilac": "B7A8CF"
+  },
+  "models": [
+    {
+      "id": "blue_roof_apartments",
+      "name": "BlueRoofApartments",
+      "description": "Broad coral four-story apartments; faceted blue pitched roof; two cream dormers; paired upper windows; chunky entrance portico.",
+      "glb": "blue_roof_apartments.glb",
+      "source": "source/blue_roof_apartments.blend",
+      "triangles": 9968,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 657,
+      "materials": [
+        "Blue_Dark \u2014 648FA9",
+        "Coral \u2014 E9967C",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -6.66,
+          -6.02,
+          0.0
+        ],
+        "max": [
+          6.66,
+          4.86,
+          13.9796
+        ]
+      },
+      "sha256": "63789d3330d54111c1b9b4092e1605dc49bb934cc43eaf234dfd118f528d0d74",
+      "roster_id": 62,
+      "footprint_m": [
+        12.8,
+        9.2
+      ],
+      "body_height_m": 11.8,
+      "scene": "res://scenes/buildings/batch_16/blue_roof_apartments.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            0,
+            5.9,
+            0
+          ],
+          "size": [
+            12.8,
+            11.8,
+            9.2
+          ]
+        }
+      ]
+    },
+    {
+      "id": "setback_apartments",
+      "name": "SetbackApartments",
+      "description": "Broad mint three-story base with a smaller fourth floor; generous front and side terrace; corner balcony stack; offset roof access room.",
+      "glb": "setback_apartments.glb",
+      "source": "source/setback_apartments.blend",
+      "triangles": 9460,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 612,
+      "materials": [
+        "Blue_Dark \u2014 648FA9",
+        "Coral_Dark \u2014 CC715D",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Green \u2014 7BAA67",
+        "Ink \u2014 24394B",
+        "Mint \u2014 83B9A8",
+        "Mint_Dark \u2014 62978F",
+        "Pot \u2014 BE7659",
+        "Reflection \u2014 739BAC",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -7.16,
+          -6.045,
+          0.0
+        ],
+        "max": [
+          7.16,
+          5.36,
+          13.375
+        ]
+      },
+      "sha256": "076e93b20c243f0617681dc7afd61cfae8f1e0d0192eb241f642c106c4145464",
+      "roster_id": 63,
+      "footprint_m": [
+        13.8,
+        10.2
+      ],
+      "body_height_m": 12.4,
+      "scene": "res://scenes/buildings/batch_16/setback_apartments.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            0,
+            4.65,
+            0
+          ],
+          "size": [
+            13.8,
+            9.3,
+            10.2
+          ]
+        },
+        {
+          "center": [
+            1.2,
+            10.85,
+            -0.8
+          ],
+          "size": [
+            8.8,
+            3.1,
+            7.2
+          ]
+        }
+      ]
+    },
+    {
+      "id": "courtyard_apartments",
+      "name": "CourtyardApartments",
+      "description": "Broad cream four-story U-shaped apartments; terracotta floor accents and parapet; open central courtyard; real ground-level passage through left wing.",
+      "glb": "courtyard_apartments.glb",
+      "source": "source/courtyard_apartments.blend",
+      "triangles": 18354,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 1182,
+      "materials": [
+        "Coral_Dark \u2014 CC715D",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Green \u2014 7BAA67",
+        "Ink \u2014 24394B",
+        "Mint_Dark \u2014 62978F",
+        "Pot \u2014 BE7659",
+        "Reflection \u2014 739BAC",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -8.84,
+          -6.24,
+          0.0
+        ],
+        "max": [
+          8.84,
+          6.24,
+          12.99
+        ]
+      },
+      "sha256": "8b1577c93641a6dea1558371ed4d63146e6b73ea623947ed0fc3ddd549ed8c41",
+      "roster_id": 64,
+      "footprint_m": [
+        17.2,
+        12.0
+      ],
+      "body_height_m": 12.4,
+      "scene": "res://scenes/buildings/batch_16/courtyard_apartments.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            -5.85,
+            7.75,
+            0
+          ],
+          "size": [
+            5.5,
+            9.3,
+            12.0
+          ]
+        },
+        {
+          "center": [
+            -5.85,
+            1.55,
+            4.475
+          ],
+          "size": [
+            5.5,
+            3.1,
+            3.05
+          ]
+        },
+        {
+          "center": [
+            -5.85,
+            1.55,
+            -2.475
+          ],
+          "size": [
+            5.5,
+            3.1,
+            7.05
+          ]
+        },
+        {
+          "center": [
+            5.85,
+            6.2,
+            0
+          ],
+          "size": [
+            5.5,
+            12.4,
+            12.0
+          ]
+        },
+        {
+          "center": [
+            0,
+            6.2,
+            -4.15
+          ],
+          "size": [
+            6.2,
+            12.4,
+            3.7
+          ]
+        },
+        {
+          "center": [
+            -5.85,
+            0.075,
+            2.0
+          ],
+          "size": [
+            5.5,
+            0.15,
+            1.9
+          ]
+        },
+        {
+          "center": [
+            0,
+            0.035,
+            1.85
+          ],
+          "size": [
+            6.2,
+            0.07,
+            8.3
+          ]
+        }
+      ]
+    },
+    {
+      "id": "long_balcony_apartments",
+      "name": "LongBalconyApartments",
+      "description": "Wide powder-blue three-story apartments; two full-width cream ornamental galleries; central entrance; flat blue roof edge.",
+      "glb": "long_balcony_apartments.glb",
+      "source": "source/long_balcony_apartments.blend",
+      "triangles": 10648,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 762,
+      "materials": [
+        "Blue \u2014 96BFD4",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Metal \u2014 8A9B9E",
+        "Mint_Dark \u2014 62978F",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -8.36,
+          -5.575,
+          -0.0
+        ],
+        "max": [
+          8.36,
+          4.56,
+          10.31
+        ]
+      },
+      "sha256": "972cdad964ebfe7739aec8124572719730d664592456a9b1daeec5304e579788",
+      "roster_id": 65,
+      "footprint_m": [
+        16.2,
+        8.6
+      ],
+      "body_height_m": 9.3,
+      "scene": "res://scenes/buildings/batch_16/long_balcony_apartments.tscn",
+      "collision_boxes": [
+        {
+          "center": [
+            0,
+            4.65,
+            0
+          ],
+          "size": [
+            16.2,
+            9.3,
+            8.6
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="PackedScene" path="res://assets/models/buildings/batch_04/courtyard_duplex.glb" id="1"]
+
+[sub_resource type="BoxShape3D" id="Body_0"]
+size = Vector3(4.2, 6.3, 9.4)
+
+[sub_resource type="BoxShape3D" id="Body_1"]
+size = Vector3(6.4, 6.3, 4.2)
+
+[sub_resource type="BoxShape3D" id="Body_2"]
+size = Vector3(2.2, 1, 0.2)
+
+[sub_resource type="BoxShape3D" id="Body_3"]
+size = Vector3(1.4, 1, 0.2)
+
+[sub_resource type="BoxShape3D" id="Body_4"]
+size = Vector3(0.2, 1, 5.2)
+
+[sub_resource type="BoxShape3D" id="Body_5"]
+size = Vector3(6.4, 0.07, 5.2)
+
+[node name="CourtyardDuplex" type="Node3D"]
+
+[node name="Visual" parent="." instance=ExtResource("1")]
+
+[node name="BuildingBody" type="StaticBody3D" parent="."]
+collision_layer = 1
+collision_mask = 0
+
+[node name="Collision" type="CollisionShape3D" parent="BuildingBody"]
+position = Vector3(-3.2, 3.15, 0)
+shape = SubResource("Body_0")
+
+[node name="Collision_1" type="CollisionShape3D" parent="BuildingBody"]
+position = Vector3(2.1, 3.15, -2.6)
+shape = SubResource("Body_1")
+
+[node name="Collision_2" type="CollisionShape3D" parent="BuildingBody"]
+position = Vector3(0, 0.5, 4.7)
+shape = SubResource("Body_2")
+
+[node name="Collision_3" type="CollisionShape3D" parent="BuildingBody"]
+position = Vector3(4.6, 0.5, 4.7)
+shape = SubResource("Body_3")
+
+[node name="Collision_4" type="CollisionShape3D" parent="BuildingBody"]
+position = Vector3(5.3, 0.5, 2.1)
+shape = SubResource("Body_4")
+
+[node name="Collision_5" type="CollisionShape3D" parent="BuildingBody"]
+position = Vector3(2.1, 0.035, 2.1)
+shape = SubResource("Body_5")

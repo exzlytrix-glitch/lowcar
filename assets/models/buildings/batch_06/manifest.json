@@ -1,0 +1,198 @@
+{
+  "batch": 6,
+  "units": "meters",
+  "godot_front": "+Z",
+  "origin": "ground center",
+  "style": "Pastel French Quarter / New Orleans Creole",
+  "palette_srgb": {
+    "cream": "F5E7CD",
+    "stone": "D7C8AC",
+    "coral": "E9967C",
+    "coral_dark": "CC715D",
+    "mint": "83B9A8",
+    "mint_dark": "62978F",
+    "yellow": "EBC567",
+    "yellow_dark": "C99B46",
+    "roof": "52738C",
+    "teal": "328D89",
+    "ink": "24394B",
+    "glass": "34576B",
+    "reflection": "739BAC",
+    "green": "7BAA67",
+    "green_dark": "527B53",
+    "pot": "BE7659",
+    "metal": "8A9B9E",
+    "blue": "96BFD4",
+    "blue_dark": "648FA9",
+    "lilac": "B7A8CF"
+  },
+  "models": [
+    {
+      "id": "tailor_shop",
+      "name": "TailorShop",
+      "description": "Lilac three-story shop house; small projecting window box; blue shutters; compact angled door canopy.",
+      "glb": "tailor_shop.glb",
+      "source": "source/tailor_shop.blend",
+      "triangles": 5962,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 363,
+      "materials": [
+        "Blue_Dark \u2014 648FA9",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Lilac \u2014 B7A8CF",
+        "Metal \u2014 8A9B9E",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -3.46,
+          -5.18,
+          0.0
+        ],
+        "max": [
+          3.46,
+          4.66,
+          10.2
+        ]
+      },
+      "sha256": "64c6e42f0a49bc79a6d1f65ddcb842b508b031497ab41c0032f2a46d7e0cd5b1",
+      "roster_id": 15,
+      "footprint_m": [
+        6.4,
+        8.8
+      ],
+      "body_height_m": 9.3,
+      "scene": "res://scenes/buildings/batch_06/tailor_shop.tscn"
+    },
+    {
+      "id": "shoe_shop",
+      "name": "ShoeShop",
+      "description": "Coral two-story corner shop; deep display windows; thick cream corner pier; flat blue roof cap.",
+      "glb": "shoe_shop.glb",
+      "source": "source/shoe_shop.blend",
+      "triangles": 3180,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 185,
+      "materials": [
+        "Coral \u2014 E9967C",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Metal \u2014 8A9B9E",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -5.06,
+          -4.73,
+          0.0
+        ],
+        "max": [
+          5.06,
+          4.16,
+          7.335
+        ]
+      },
+      "sha256": "1aa43c02e265b8cdea354c74b2182d1a9480f179566b734f775a3834d280e158",
+      "roster_id": 16,
+      "footprint_m": [
+        9.6,
+        7.8
+      ],
+      "body_height_m": 6.4,
+      "scene": "res://scenes/buildings/batch_06/shoe_shop.tscn"
+    },
+    {
+      "id": "newsstand",
+      "name": "Newsstand",
+      "description": "Tiny cream kiosk; open newspaper counter; partly rolled shutter; deep teal overhang; side door.",
+      "glb": "newsstand.glb",
+      "source": "source/newsstand.blend",
+      "triangles": 1364,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 58,
+      "materials": [
+        "Blue \u2014 96BFD4",
+        "Coral \u2014 E9967C",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Metal \u2014 8A9B9E",
+        "Mint \u2014 83B9A8",
+        "Reflection \u2014 739BAC",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89",
+        "Yellow \u2014 EBC567"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -2.86,
+          -2.735,
+          0.0
+        ],
+        "max": [
+          2.86,
+          2.255,
+          2.9164
+        ]
+      },
+      "sha256": "3d1be0b5ddf240c5c432d9cd0e6dea3c9cfebf97bd914ff2fc7dd1eadbebff57",
+      "roster_id": 17,
+      "footprint_m": [
+        4.5,
+        3.8
+      ],
+      "body_height_m": 2.6,
+      "scene": "res://scenes/buildings/batch_06/newsstand.tscn"
+    },
+    {
+      "id": "terrace_bungalow",
+      "name": "TerraceBungalow",
+      "description": "Broad cream bungalow; low blue hipped roof over a shallow terrace; white porch columns; teal shutters.",
+      "glb": "terrace_bungalow.glb",
+      "source": "source/terrace_bungalow.blend",
+      "triangles": 2040,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 134,
+      "materials": [
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Green \u2014 7BAA67",
+        "Ink \u2014 24394B",
+        "Pot \u2014 BE7659",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -6.32,
+          -6.38,
+          0.0
+        ],
+        "max": [
+          6.32,
+          4.53,
+          4.43
+        ]
+      },
+      "sha256": "9b61f4733ff3d9eb7cbc7e980996c4b447cb4d247864d431b6a555c67461b9dc",
+      "roster_id": 48,
+      "footprint_m": [
+        12.0,
+        8.4
+      ],
+      "body_height_m": 3.05,
+      "scene": "res://scenes/buildings/batch_06/terrace_bungalow.tscn"
+    }
+  ]
+}

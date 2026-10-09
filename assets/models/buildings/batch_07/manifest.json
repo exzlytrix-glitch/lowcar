@@ -1,0 +1,195 @@
+{
+  "batch": 7,
+  "units": "meters",
+  "godot_front": "+Z",
+  "origin": "ground center",
+  "style": "Pastel French Quarter / New Orleans Creole",
+  "palette_srgb": {
+    "cream": "F5E7CD",
+    "stone": "D7C8AC",
+    "coral": "E9967C",
+    "coral_dark": "CC715D",
+    "mint": "83B9A8",
+    "mint_dark": "62978F",
+    "yellow": "EBC567",
+    "yellow_dark": "C99B46",
+    "roof": "52738C",
+    "teal": "328D89",
+    "ink": "24394B",
+    "glass": "34576B",
+    "reflection": "739BAC",
+    "green": "7BAA67",
+    "green_dark": "527B53",
+    "pot": "BE7659",
+    "metal": "8A9B9E",
+    "blue": "96BFD4",
+    "blue_dark": "648FA9",
+    "lilac": "B7A8CF"
+  },
+  "models": [
+    {
+      "id": "furniture_shop",
+      "name": "FurnitureShop",
+      "description": "Broad butter-yellow two-story furniture shop; tall display panes; long upper window band; side loading shutter.",
+      "glb": "furniture_shop.glb",
+      "source": "source/furniture_shop.blend",
+      "triangles": 4456,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 252,
+      "materials": [
+        "Blue_Dark \u2014 648FA9",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Metal \u2014 8A9B9E",
+        "Reflection \u2014 739BAC",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89",
+        "Yellow \u2014 EBC567"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -6.66,
+          -5.56,
+          0.0
+        ],
+        "max": [
+          6.66,
+          4.96,
+          7.7
+        ]
+      },
+      "sha256": "09d1e643bf9170af1a0b27d3c137df9992dcf7cca3e853f77ed2f0ce6e63a8f8",
+      "roster_id": 14,
+      "footprint_m": [
+        12.8,
+        9.4
+      ],
+      "body_height_m": 6.8,
+      "scene": "res://scenes/buildings/batch_07/furniture_shop.tscn"
+    },
+    {
+      "id": "pet_supply_shop",
+      "name": "PetSupplyShop",
+      "description": "Low powder-blue pet shop; offset entrance; two display windows; raised roof section over the door.",
+      "glb": "pet_supply_shop.glb",
+      "source": "source/pet_supply_shop.blend",
+      "triangles": 2180,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 95,
+      "materials": [
+        "Blue \u2014 96BFD4",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Metal \u2014 8A9B9E",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -5.66,
+          -4.765,
+          0.0
+        ],
+        "max": [
+          5.66,
+          4.36,
+          4.5
+        ]
+      },
+      "sha256": "1c2cd21b92668bbf7ca27ab7ae5e11437f9e4be5fba9b83db582eddcfe896486",
+      "roster_id": 18,
+      "footprint_m": [
+        10.8,
+        8.2
+      ],
+      "body_height_m": 3.35,
+      "scene": "res://scenes/buildings/batch_07/pet_supply_shop.tscn"
+    },
+    {
+      "id": "vintage_clothing",
+      "name": "VintageClothing",
+      "description": "Mint three-story shop house; recessed shopfront; coral shutters; small diamond balcony; roof stair room.",
+      "glb": "vintage_clothing.glb",
+      "source": "source/vintage_clothing.blend",
+      "triangles": 6598,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 410,
+      "materials": [
+        "Coral_Dark \u2014 CC715D",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Mint \u2014 83B9A8",
+        "Mint_Dark \u2014 62978F",
+        "Reflection \u2014 739BAC",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -3.66,
+          -5.395,
+          0.0
+        ],
+        "max": [
+          3.66,
+          4.81,
+          10.645
+        ]
+      },
+      "sha256": "598d7bf5b5bb44f7bad5a1359651db220dd4ab1b1ee41b246b94319fdc9d06ac",
+      "roster_id": 20,
+      "footprint_m": [
+        6.8,
+        9.1
+      ],
+      "body_height_m": 9.3,
+      "scene": "res://scenes/buildings/batch_07/vintage_clothing.tscn"
+    },
+    {
+      "id": "camera_shop",
+      "name": "CameraShop",
+      "description": "Compact cream two-story camera shop; projecting ground-floor display bay; side door; stepped blue roof edge.",
+      "glb": "camera_shop.glb",
+      "source": "source/camera_shop.blend",
+      "triangles": 4828,
+      "runtime_meshes": 1,
+      "editable_mesh_parts": 263,
+      "materials": [
+        "Blue_Dark \u2014 648FA9",
+        "Cream \u2014 F5E7CD",
+        "Glass \u2014 34576B",
+        "Ink \u2014 24394B",
+        "Metal \u2014 8A9B9E",
+        "Reflection \u2014 739BAC",
+        "Roof \u2014 52738C",
+        "Stone \u2014 D7C8AC",
+        "Teal \u2014 328D89"
+      ],
+      "blender_bounds_m": {
+        "min": [
+          -3.76,
+          -4.975,
+          0.0
+        ],
+        "max": [
+          3.76,
+          4.36,
+          7.27
+        ]
+      },
+      "sha256": "5a5f68fffd30af806a675847de211d090e198641c23f95297062fe3772c0690e",
+      "roster_id": 21,
+      "footprint_m": [
+        7.0,
+        8.2
+      ],
+      "body_height_m": 6.2,
+      "scene": "res://scenes/buildings/batch_07/camera_shop.tscn"
+    }
+  ]
+}

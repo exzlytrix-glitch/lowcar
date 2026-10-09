@@ -1,0 +1,5 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="PackedScene" path="res://assets/models/buildings/style_trial/corner_market.glb" id="1"]
+
+[node name="CornerMarket" instance=ExtResource("1")]

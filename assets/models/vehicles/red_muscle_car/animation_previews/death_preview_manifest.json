@@ -1,0 +1,15 @@
+{
+  "renderer": "Godot 4.7 Compatibility / native viewport",
+  "pose_fps": 12,
+  "clips": {
+    "crash_front": 21,
+    "crash_left": 21,
+    "crash_right": 21,
+    "explode": 37
+  },
+  "fragment_count": 4,
+  "native_frames": 100,
+  "fire_style": "BoostExhaust six-sided orange tongues with cream cores; 12 FPS",
+  "source": "resources/animation/car_clips.json",
+  "library": "resources/animation/car_animation_pack.tres"
+}
