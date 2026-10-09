@@ -1,0 +1,204 @@
+# Self-play chase training: learned cops vs a learned runner (training/train_chase.py).
+# One round = several training lines in parallel (one job each, up to ~5 h), then a merge job that
+# keeps the strong lines, restarts the weakest from copies of the best, pools every line's past
+# versions into the league, and picks the best cop and runner brains (artifact "chase-round").
+# With rounds > 1 the merge job starts the next round itself, continuing from this one.
+#
+# First round:  gh workflow run train-chase.yml -f school_run_id=<driving-school run id>
+# Continue:     gh workflow run train-chase.yml -f resume_run_id=<previous chase run id> -f round=<n>
+# Stop a chain: cancel the running workflow in the Actions tab.
+name: Train chase
+
+on:
+  workflow_dispatch:
+    inputs:
+      lines:
+        description: Training lines in parallel (one job each, keep under 19)
+        default: "12"
+        type: string
+      hours:
+        description: Hours each line trains per round (keep under 5.3)
+        default: "5.2"
+        type: string
+      rounds:
+        description: Rounds to run back to back (each one starts the next)
+        default: "1"
+        type: string
+      resume_run_id:
+        description: Continue from this earlier chase run (run id, optional)
+        default: ""
+        type: string
+      school_run_id:
+        description: First round only, start both sides from this driving-school run's brain (optional)
+        default: ""
+        type: string
+      round:
+        description: Round number (set automatically when chaining)
+        default: "1"
+        type: string
+      procs:
+        description: Training worlds per line
+        default: "3"
+        type: string
+      matches:
+        description: Chases per training world
+        default: "6"
+        type: string
+
+permissions:
+  contents: read
+  actions: write
+
+env:
+  GODOT_URL: https://github.com/godotengine/godot/releases/download/4.7-stable/Godot_v4.7-stable_linux.x86_64.zip
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      lines: ${{ steps.lines.outputs.lines }}
+    steps:
+      - id: lines
+        run: python3 -c "import json; print('lines=' + json.dumps(list(range(min(int('${{ inputs.lines }}'), 19)))))" >> "$GITHUB_OUTPUT"
+
+  train:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 345
+    strategy:
+      fail-fast: false
+      matrix:
+        line: ${{ fromJSON(needs.plan.outputs.lines) }}
+    env:
+      LINE: ${{ matrix.line }}
+      HOURS: ${{ inputs.hours }}
+      PROCS: ${{ inputs.procs }}
+      MATCHES: ${{ inputs.matches }}
+      ROUND: ${{ inputs.round }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install training packages
+        run: |
+          pip install --quiet numpy
+          pip install --quiet torch --index-url https://download.pytorch.org/whl/cpu
+
+      - name: Install Godot 4.7
+        run: |
+          curl -fsSL -o godot.zip "$GODOT_URL"
+          unzip -q godot.zip
+          sudo mv Godot_v4.7-stable_linux.x86_64 /usr/local/bin/godot
+          rm godot.zip
+
+      - name: Import project
+        run: |
+          godot --headless --import --path . || godot --headless --editor --quit --path .
+          test -f .godot/global_script_class_cache.cfg
+
+      - name: Self-test chase arena
+        run: godot --headless --fixed-fps 60 --path . res://scenes/training/chase_arena.tscn -- --matches=6 --selftest=300
+
+      - name: Fetch previous round
+        if: inputs.resume_run_id != ''
+        uses: actions/download-artifact@v4
+        with:
+          name: chase-round
+          path: prev
+          run-id: ${{ inputs.resume_run_id }}
+          github-token: ${{ github.token }}
+
+      - name: Fetch driving-school brain
+        if: inputs.resume_run_id == '' && inputs.school_run_id != ''
+        uses: actions/download-artifact@v4
+        with:
+          name: cop-brain
+          path: school
+          run-id: ${{ inputs.school_run_id }}
+          github-token: ${{ github.token }}
+
+      - name: Train
+        run: |
+          mkdir -p out
+          STYLES=(balanced aggressive speedy careful)
+          STYLE=${STYLES[$((LINE % 4))]}
+          ARGS=""
+          if [ -d prev/lines ]; then
+            COUNT=$(ls -d prev/lines/line_* | wc -l)
+            SOURCE="prev/lines/line_$LINE"
+            [ -d "$SOURCE" ] || SOURCE="prev/lines/line_$((LINE % COUNT))"
+            ARGS="--resume $SOURCE/checkpoint.pt"
+            cp "$SOURCE/progress.csv" out/ 2>/dev/null || true
+          elif [ -f school/cop_brain.json ]; then
+            ARGS="--init school/cop_brain.json"
+          else
+            ARGS="--init resources/ai/cop_brain.json"
+          fi
+          [ -d prev/league ] && ARGS="$ARGS --league-in prev/league"
+          echo "line $LINE, $STYLE runner: $ARGS"
+          python training/train_chase.py --godot godot --project . --out out --line "$LINE" \
+            --runner-style "$STYLE" --hours "$HOURS" --procs "$PROCS" --matches "$MATCHES" \
+            --seed $((LINE + 1 + 100 * ROUND)) $ARGS
+
+      - name: Report
+        if: always()
+        run: cat out/summary.md >> "$GITHUB_STEP_SUMMARY" || echo "No report written." >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Save line
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: line-${{ matrix.line }}
+          path: |
+            out/
+            !out/logs/
+          retention-days: 7
+
+  merge:
+    needs: train
+    if: always() && needs.train.result != 'cancelled'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch previous round
+        if: inputs.resume_run_id != ''
+        uses: actions/download-artifact@v4
+        with:
+          name: chase-round
+          path: prev
+          run-id: ${{ inputs.resume_run_id }}
+          github-token: ${{ github.token }}
+
+      - name: Fetch this round's lines
+        uses: actions/download-artifact@v4
+        with:
+          pattern: line-*
+          path: lines
+
+      - name: Merge
+        run: |
+          PREV=""
+          [ -d prev ] && PREV="--prev prev"
+          python3 training/league_merge.py --lines lines --out round --round "${{ inputs.round }}" $PREV
+          cat round/summary.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Save round
+        uses: actions/upload-artifact@v4
+        with:
+          name: chase-round
+          path: round/
+          retention-days: 30
+
+      - name: Start next round
+        if: fromJSON(inputs.rounds) > 1
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run train-chase.yml --repo "$GITHUB_REPOSITORY" --ref "$GITHUB_REF_NAME" \
+            -f resume_run_id=${{ github.run_id }} -f round=$(( ${{ inputs.round }} + 1 )) \
+            -f rounds=$(( ${{ inputs.rounds }} - 1 )) -f lines=${{ inputs.lines }} -f hours=${{ inputs.hours }} \
+            -f procs=${{ inputs.procs }} -f matches=${{ inputs.matches }}

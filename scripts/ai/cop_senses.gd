@@ -22,6 +22,8 @@ const WALL_MASK: int = 1
 const CAR_MASK: int = 2 | 4
 
 var car: LabVehicle
+## Layers the car rays hit. Chase training gives every chase its own layer.
+var car_mask: int = CAR_MASK
 var _last_yaw: float = 0.0
 var _has_yaw: bool = false
 
@@ -58,7 +60,7 @@ func observe(route: RouteTrack, progress: float, goal: Vector2, goal_velocity: V
 		obs[i] = _ray(space, car.global_position + Vector3.UP * 0.7, forward, right, degrees, WALL_MASK, exclude)
 		i += 1
 	for degrees: float in CAR_RAYS:
-		obs[i] = _ray(space, car.global_position + Vector3.UP * 0.8, forward, right, degrees, CAR_MASK, exclude)
+		obs[i] = _ray(space, car.global_position + Vector3.UP * 0.8, forward, right, degrees, car_mask, exclude)
 		i += 1
 	for ahead: float in PATH_AHEAD:
 		var local: Vector2 = _local(route.point_at(progress + ahead) - here, forward, right) / RAY_RANGE

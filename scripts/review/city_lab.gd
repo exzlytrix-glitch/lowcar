@@ -77,6 +77,8 @@ var _hud_clock: float = 0.0
 var _capture_dir: String = ""
 var _police: Array[LabVehicle] = []
 var chase: LabChase
+## The runner brain from chase training driving your car (K), or null.
+var _ai_runner: RunnerBrainDriver
 var recorder: LabRecorder
 var drives: LabDriveRecorder
 var _layer: CanvasLayer
@@ -155,7 +157,8 @@ func _process(delta: float) -> void:
 		chase_line += "\n● REC %.1f s  ·  press 1 to stop and review the cops" % recorder.recorded_seconds()
 	elif not recorder.replaying:
 		chase_line += "\n1: record the chase  ·  2: watch the last recording"
-	chase_line += "\nCops: %s  ·  B to switch" % chase.driver_label()
+	chase_line += "\nCops: %s  ·  B to switch  ·  K: %s" % [chase.driver_label(),
+		"AI is driving your car (K to take over)" if is_instance_valid(_ai_runner) else "let the AI runner drive"]
 	if drives.recording:
 		chase_line += "\n● TRAINING DRIVE %d:%02d  ·  drive like you normally would and escape  ·  J to save" % [int(drives.seconds()) / 60, int(drives.seconds()) % 60]
 	else:
@@ -208,6 +211,8 @@ func _unhandled_input(event: InputEvent) -> void:
 			if chase.use_brain == false and chase.brain == null:
 				_overlay.text = "No trained brain yet (resources/ai/cop_brain.json)"
 				_overlay.visible = true
+		KEY_K:
+			_toggle_ai_runner()
 		KEY_C:
 			_clear_police()
 			chase.stop()
@@ -343,6 +348,27 @@ func _park_police_ahead() -> void:
 	cop.rotation.y = atan2(-dir.x, -dir.y)
 	cop.reset_physics_interpolation()
 	_police.append(cop)
+
+
+func _toggle_ai_runner() -> void:
+	if is_instance_valid(_ai_runner):
+		_ai_runner.queue_free()
+		_ai_runner = null
+		return
+	var net: PolicyNet = PolicyNet.load_file(RunnerBrainDriver.BRAIN_PATH)
+	if net == null:
+		_overlay.text = "No runner brain yet (resources/ai/chase_runner_brain.json)"
+		_overlay.visible = true
+		await get_tree().create_timer(2.5).timeout
+		if not _wrecked and not _busy:
+			_overlay.visible = false
+		return
+	_ai_runner = RunnerBrainDriver.new()
+	_ai_runner.name = "AIRunner"
+	_ai_runner.net = net
+	_ai_runner.chase = chase
+	_ai_runner.car = player
+	player.add_child(_ai_runner)
 
 
 func _finish_drive(wrecked: bool) -> void:

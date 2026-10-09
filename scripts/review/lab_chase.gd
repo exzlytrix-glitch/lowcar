@@ -26,11 +26,17 @@ var astar := AStar2D.new()
 var cops: Array[LabVehicle] = []
 var _drivers: Dictionary = {}
 const BRAIN_PATH: String = "res://resources/ai/cop_brain.json"
+## Brain from chase training (cops vs a learned runner); used instead of the driving-school one when present.
+const CHASE_BRAIN_PATH: String = "res://resources/ai/chase_cop_brain.json"
 ## Learned cop brain from training (scripts/ai/policy_net.gd). B in the lab switches cops to it.
 var brain: PolicyNet
 var use_brain: bool = false
 var nav: RoadNav
 var _attackers: Dictionary = {}
+## What the cops know about you, shared over the radio (learned chase cops use it).
+var intel := ChaseIntel.new()
+var _sightings: Dictionary = {}
+var _intel_frame: int = 0
 var _spawn_clock: float = 0.0
 var _rng := RandomNumberGenerator.new()
 
@@ -61,6 +67,7 @@ func start() -> void:
 		return
 	active = true
 	auto_spawn = true
+	intel.reset(player)
 	_rng.randomize()
 	for index: int in 2:
 		_spawn(true)
@@ -137,6 +144,9 @@ func _physics_process(delta: float) -> void:
 	if auto_spawn:
 		elapsed += delta
 	_spawn_clock -= delta
+	_intel_frame += 1
+	if _intel_frame % 6 == 0:
+		_update_intel(delta * 6.0)
 	var here := Vector2(player.global_position.x, player.global_position.z)
 	var heading := Vector2(-player.global_basis.z.x, -player.global_basis.z.z).normalized()
 	for cop: LabVehicle in cops.duplicate():
@@ -147,7 +157,7 @@ func _physics_process(delta: float) -> void:
 			continue
 		var behind: bool = heading.dot(at - here) < 0.0
 		var lag: float = clampf((distance - CATCH_UP_START) / (CATCH_UP_FULL - CATCH_UP_START), 0.0, 1.0) if behind else 0.0
-		var ramming: bool = _drivers[cop] is LabCopDriver and (_drivers[cop] as LabCopDriver).burst
+		var ramming: bool = bursting(cop)
 		cop.tuning.maximum_speed_mps = top_speed() * lerpf(1.0, catch_up_boost, lag) * (1.3 if ramming else 1.0)
 		var scripted := _drivers[cop] as LabCopDriver
 		if scripted != null:
@@ -229,6 +239,8 @@ func add_cop_behind() -> void:
 	var dir: Vector2 = (graph.positions[graph.edge_b[id]] - graph.positions[graph.edge_a[id]]).normalized()
 	if dir.dot(forward) < 0.0:
 		dir = -dir
+	if not active:
+		intel.reset(player)
 	active = true
 	_add_cop(point, dir, maxf(player.forward_speed, 10.0))
 
@@ -259,6 +271,14 @@ func _add_cop(point: Vector2, dir: Vector2, start_speed: float) -> void:
 
 
 func _make_driver(cop: LabVehicle) -> Node:
+	if use_brain and brain != null and brain.meta.get("stage", "") == "chase":
+		var chaser := ChaseBrainDriver.new()
+		chaser.name = "Driver"
+		chaser.net = brain
+		chaser.chase = self
+		chaser.car = cop
+		chaser.target = player
+		return chaser
 	if use_brain and brain != null:
 		var learned := BrainCopDriver.new()
 		learned.name = "Driver"
@@ -279,7 +299,9 @@ func _make_driver(cop: LabVehicle) -> Node:
 ## Switches every cop (current and future) between the scripted driver and the learned brain.
 func set_brain(enabled: bool) -> void:
 	if enabled and brain == null:
-		brain = PolicyNet.load_file(BRAIN_PATH)
+		brain = PolicyNet.load_file(CHASE_BRAIN_PATH)
+		if brain == null:
+			brain = PolicyNet.load_file(BRAIN_PATH)
 	use_brain = enabled and brain != null
 	for cop: LabVehicle in cops:
 		var old: Node = _drivers[cop]
@@ -294,6 +316,32 @@ func driver_label() -> String:
 	if use_brain and brain != null:
 		return "learned brain (%s, %s decisions of training)" % [brain.meta.get("stage", "?"), _thousands(int(brain.meta.get("steps", 0)))]
 	return "scripted driver"
+
+
+## Whether this cop saw you at the last radio update.
+func sees(cop: LabVehicle) -> bool:
+	return _sightings.get(cop, false)
+
+
+## Whether this cop is in an attack burst right now (scripted ram or learned burst).
+func bursting(cop: LabVehicle) -> bool:
+	var driver: Node = _drivers.get(cop)
+	if driver is LabCopDriver:
+		return (driver as LabCopDriver).burst
+	if driver is ChaseBrainDriver:
+		return (driver as ChaseBrainDriver).burst.active()
+	return false
+
+
+func _update_intel(step: float) -> void:
+	var list: Array = []
+	for cop: LabVehicle in cops:
+		if is_instance_valid(cop):
+			list.append(cop)
+	var seen: Array[bool] = intel.update(list, player, step)
+	_sightings.clear()
+	for index: int in list.size():
+		_sightings[list[index]] = seen[index]
 
 
 func _thousands(value: int) -> String:
