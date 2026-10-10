@@ -248,8 +248,8 @@ func _report_selftest() -> void:
 		t[14] / maxf(t[11], 1.0) * 3.6])
 	var runner_decisions: float = maxf(t[10], 1.0)
 	var cop_decisions: float = maxf(t[11], 1.0)
-	print("CHASE_SELFTEST abilities: cop bursts/cop-min=%.2f (landed a hit: %d) | runner boosts/min=%.2f (charging %.0f%% of the time, boost rams %d)" % [
-		t[16] / cop_minutes, t[24], t[17] / runner_minutes, t[18] / runner_decisions * 100.0, t[25]])
+	print("CHASE_SELFTEST abilities: cop bursts/cop-min=%.2f (landed a hit: %d) | runner boosts/min=%.2f (charging %.0f%% of the time, boost rams %d) | standoff damage/min %.1f" % [
+		t[16] / cop_minutes, t[24], t[17] / runner_minutes, t[18] / runner_decisions * 100.0, t[25], t[26] / runner_minutes])
 	print("CHASE_SELFTEST controls: drifting cops %.1f%% runner %.1f%% | handbrake cops %.1f%% runner %.1f%% | cops reversing %.1f%%" % [
 		t[19] / cop_decisions * 100.0, t[20] / runner_decisions * 100.0, t[21] / cop_decisions * 100.0,
 		t[22] / runner_decisions * 100.0, t[23] / cop_decisions * 100.0])

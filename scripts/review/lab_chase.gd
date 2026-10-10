@@ -37,6 +37,8 @@ var _attackers: Dictionary = {}
 var intel := ChaseIntel.new()
 var _sightings: Dictionary = {}
 var _intel_frame: int = 0
+## "Slowing down means death" (scripts/ai/standoff_rule.gd), for you and the AI runner alike.
+var standoff := StandoffRule.new()
 var _spawn_clock: float = 0.0
 var _rng := RandomNumberGenerator.new()
 
@@ -147,6 +149,7 @@ func _physics_process(delta: float) -> void:
 	_intel_frame += 1
 	if _intel_frame % 6 == 0:
 		_update_intel(delta * 6.0)
+	standoff.tick(player, cops, delta)
 	var here := Vector2(player.global_position.x, player.global_position.z)
 	var heading := Vector2(-player.global_basis.z.x, -player.global_basis.z.z).normalized()
 	for cop: LabVehicle in cops.duplicate():

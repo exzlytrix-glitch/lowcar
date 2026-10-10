@@ -633,7 +633,7 @@ def main():
                "cop_wrecks_min", "cop_on_cop_min", "cops_per_chase", "known_pct", "cop_return", "runner_return",
                "approach_hint", "cop_bursts_min", "burst_hits", "runner_boosts_min", "runner_charging_pct",
                "boost_rams", "cop_drift_pct", "runner_drift_pct", "cop_handbrake_pct", "runner_handbrake_pct",
-               "cop_reverse_pct"] + [f"cop_route_{name}" for name in COP_ROUTES] + \
+               "cop_reverse_pct", "runner_standoff_dmg_min"] + [f"cop_route_{name}" for name in COP_ROUTES] + \
               [f"runner_route_{name}" for name in RUNNER_ROUTES]
     if os.path.exists(csv_path):
         with open(csv_path, newline="") as handle:
@@ -815,7 +815,8 @@ def main():
                    "runner_drift_pct": round(s[20] / max(s[10], 1) * 100, 1),
                    "cop_handbrake_pct": round(s[21] / max(s[11], 1) * 100, 1),
                    "runner_handbrake_pct": round(s[22] / max(s[10], 1) * 100, 1),
-                   "cop_reverse_pct": round(s[23] / max(s[11], 1) * 100, 1)}
+                   "cop_reverse_pct": round(s[23] / max(s[11], 1) * 100, 1),
+                   "runner_standoff_dmg_min": round(s[26] / runner_min, 2) if len(s) > 26 else 0.0}
             for role, names in (("cop", COP_ROUTES), ("runner", RUNNER_ROUTES)):
                 b = bufs[role]
                 chosen = (b["valid"] * b["nav"]).reshape(-1) > 0.5

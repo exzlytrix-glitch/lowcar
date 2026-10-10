@@ -24,7 +24,7 @@ const MAX_COPS: int = 5
 const COMP_DIM: int = 8
 const PRIV_DIM: int = 12
 const FLAG_DIM: int = 5
-const STATS_DIM: int = 26
+const STATS_DIM: int = 27
 ## Stats summed over the arena between decisions (for training logs):
 ## 0 matches ended  1 runner wrecked  2 runner survived  3 runner damage  4 runner damage from cop hits
 ## 5 runner wall damage  6 cop wall damage  7 cop wrecks  8 cop-on-cop damage  9 runner speed sum
@@ -34,6 +34,7 @@ const STATS_DIM: int = 26
 ## 16 cop bursts fired  17 runner boosts fired  18 runner decisions spent charging  19 cop decisions drifting
 ## 20 runner decisions drifting  21 cop decisions on the handbrake  22 runner decisions on the handbrake
 ## 23 cop decisions reversing  24 damaging cop hits made during a burst  25 damaging runner hits on cops while boosting
+## 26 runner damage from standoffs (StandoffRule)
 const MATCH_SECONDS: float = 120.0
 const RUNNER_TUNING: String = "res://resources/vehicles/red_muscle_car.tres"
 const POLICE_TUNING: String = "res://resources/vehicles/patrol_car.tres"
@@ -82,6 +83,7 @@ var _accum := PackedFloat32Array()
 var _sightings: Array[bool] = []
 var _reinforce_clock: float = 0.0
 var _burst_counts := PackedInt32Array()
+var _standoff := StandoffRule.new()
 var _dt: float = 0.1
 
 
@@ -143,6 +145,7 @@ func restart() -> void:
 	var dir: Vector2 = spot.get("dir", Vector2(0.0, -1.0))
 	_place(runner, point, dir, 0.0 if rng.randf() < RUNNER_STANDING_START else rng.randf_range(15.0, 30.0))
 	runner.health = RUNNER_HEALTH
+	_standoff.reset()
 	active[0] = true
 	agents[0].reset()
 	intel.reset(runner)
@@ -218,11 +221,17 @@ func decide(dt: float) -> void:
 	_observe(dt, cops)
 
 
-## Delivers delayed controls. Call every physics frame.
+## Delivers delayed controls and applies the standoff rule. Call every physics frame.
 func physics_tick() -> void:
 	for slot: int in SLOTS:
 		if active[slot]:
 			agents[slot].physics_tick()
+	var before: float = runner.health
+	var near: Array = _standoff.tick(runner, _active_cops(), 1.0 / Engine.physics_ticks_per_second)
+	var damage: float = before - runner.health
+	if damage > 0.0:
+		for cop: LabVehicle in near:
+			_accum[cars.find(cop) * COMP_DIM + 6] += damage / near.size()
 
 
 ## Applies the actions for this match's slots, which start at `base` in the action array.
@@ -506,6 +515,8 @@ func _on_runner_damaged(amount: float, source: String) -> void:
 	if source == "crash":
 		_accum[6] += amount
 		stats[5] += amount
+	elif source == "standoff":
+		stats[26] += amount
 	else:
 		_pending[0] = amount
 		stats[4] += amount

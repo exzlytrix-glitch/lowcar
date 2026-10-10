@@ -132,6 +132,10 @@ func _story() -> String:
 func _on_damaged(amount: float, source: String) -> void:
 	if _since_change < EVENT_GAP:
 		return
+	if source == "standoff":
+		_say(_pick(["Suspect stalls — and the cops are all over him!", "Standoff! The suspect is getting hammered!"]))
+		_clock = CAPTION_SECONDS
+		return
 	if source == "crash" and amount >= 15.0:
 		_say(_pick(["Suspect slams into a wall!", "OOF — straight into the side of a building!"]))
 		_clock = CAPTION_SECONDS
