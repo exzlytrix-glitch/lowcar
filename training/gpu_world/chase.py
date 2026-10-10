@@ -26,8 +26,11 @@ SPAWN_TRIES = 48
 
 
 class GpuChase:
-    def __init__(self, world, matches=256, device="cpu", seed=1, city_limit=None):
+    def __init__(self, world, matches=256, device="cpu", seed=1, city_limit=None, torch_out=False):
+        """torch_out: step()/reset() return tensors on `device` (for a trainer on the same GPU) instead of
+        numpy arrays."""
         self.device = torch.device(device)
+        self.torch_out = torch_out
         self.data, specs, self.lab = load_specs(os.path.join(world, "cars.json"))
         self.c = self.data["chase"]
         self.cities = Cities(world, device=self.device, limit=city_limit)
@@ -92,7 +95,7 @@ class GpuChase:
         return self._first
 
     def step(self, actions):
-        a = torch.as_tensor(np.asarray(actions, np.float32), device=self.device)
+        a = actions.to(self.device).float() if torch.is_tensor(actions) else torch.as_tensor(np.asarray(actions, np.float32), device=self.device)
         self._act(a)
         for _ in range(DECISION_FRAMES):
             self._physics_frame()
@@ -550,6 +553,8 @@ class GpuChase:
         flags[:, 3] = (self.active & self.nav_open).float()
         stats = self.stats.cpu().numpy().copy()
         self.stats.zero_()
+        if self.torch_out:
+            return obs, priv, parts, flags, stats
         return (obs.cpu().numpy(), priv.cpu().numpy(), parts.cpu().numpy(), flags.cpu().numpy(), stats)
 
     # --- observations (ChaseAgent + ChaseSenses + CopSenses + ChaseNav) -----------------------

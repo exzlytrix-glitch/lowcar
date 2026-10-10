@@ -233,32 +233,40 @@ class Critic(nn.Module):
 
 
 class RunningMeanStd:
-    def __init__(self, shape=()):
-        self.mean = np.zeros(shape, np.float64)
-        self.var = np.ones(shape, np.float64)
-        self.count = 1e-4
+    """Running mean and variance (64-bit, kept on the training device so data never leaves the GPU).
+    update() takes a batch of rows and an optional mask of which rows count."""
 
-    def update(self, x):
-        if len(x) == 0:
+    def __init__(self, shape=()):
+        self.mean = torch.zeros(shape, dtype=torch.float64, device=DEVICE)
+        self.var = torch.ones(shape, dtype=torch.float64, device=DEVICE)
+        self.count = torch.tensor(1e-4, dtype=torch.float64, device=DEVICE)
+
+    def update(self, x, mask=None):
+        x = torch.as_tensor(x, device=DEVICE).double()
+        if x.numel() == 0:
             return
-        batch_mean, batch_var, batch_count = x.mean(0), x.var(0), x.shape[0]
+        w = torch.ones(x.shape[0], dtype=torch.float64, device=DEVICE) if mask is None else mask.double()
+        wx = w if x.dim() == 1 else w[:, None]
+        n = w.sum()
+        batch_mean = (x * wx).sum(0) / n.clamp(min=1.0)
+        batch_var = (((x - batch_mean) ** 2) * wx).sum(0) / n.clamp(min=1.0)
         delta = batch_mean - self.mean
-        total = self.count + batch_count
-        self.mean = self.mean + delta * batch_count / total
-        m2 = self.var * self.count + batch_var * batch_count + delta ** 2 * self.count * batch_count / total
-        self.var = m2 / total
+        total = self.count + n
+        self.mean = self.mean + delta * n / total
+        self.var = (self.var * self.count + batch_var * n + delta ** 2 * self.count * n / total) / total
         self.count = total
 
     def normalize(self, x):
-        return np.clip((x - self.mean) / np.sqrt(self.var + 1e-8), -10.0, 10.0).astype(np.float32)
+        x = torch.as_tensor(x, device=DEVICE).float()
+        return ((x - self.mean.float()) / torch.sqrt(self.var.float() + 1e-8)).clamp(-10.0, 10.0)
 
     def state(self):
-        return {"mean": self.mean.tolist(), "var": self.var.tolist(), "count": self.count}
+        return {"mean": self.mean.cpu().tolist(), "var": self.var.cpu().tolist(), "count": float(self.count)}
 
     def load(self, state):
-        self.mean = np.array(state["mean"], np.float64)
-        self.var = np.array(state["var"], np.float64)
-        self.count = state["count"]
+        self.mean = torch.tensor(state["mean"], dtype=torch.float64, device=DEVICE)
+        self.var = torch.tensor(state["var"], dtype=torch.float64, device=DEVICE)
+        self.count = torch.tensor(float(state["count"]), dtype=torch.float64, device=DEVICE)
 
 
 # Per-line settings ("genome") that population-based training tunes: the merge copies strong lines over
@@ -381,8 +389,9 @@ class Learner:
                     else:
                         target.copy_(value)
             self.obs_rms.load(state["obs_rms"])
-            self.obs_rms.mean = np.concatenate([self.obs_rms.mean, np.zeros(self.obs_dim - old_obs)])
-            self.obs_rms.var = np.concatenate([self.obs_rms.var, np.ones(self.obs_dim - old_obs)])
+            grow = self.obs_dim - old_obs
+            self.obs_rms.mean = torch.cat([self.obs_rms.mean, torch.zeros(grow, dtype=torch.float64, device=DEVICE)])
+            self.obs_rms.var = torch.cat([self.obs_rms.var, torch.ones(grow, dtype=torch.float64, device=DEVICE)])
             print(f"{self.role}: carried over a brain with {old_obs} senses into {self.obs_dim} senses and new outputs")
         self.priv_rms.load(state["priv_rms"])
         self.ret_rms.load(state["ret_rms"])
@@ -394,7 +403,8 @@ class Learner:
         return {"role": self.role, "name": name, "obs_dim": self.obs_dim, "act_dim": self.act_dim,
                 "heads": HEADS[self.role],
                 "hidden": self.actor.net[0].out_features, "actor": copy.deepcopy(self.actor.state_dict()),
-                "obs_mean": self.obs_rms.mean.copy(), "obs_var": self.obs_rms.var.copy(), "steps": self.steps}
+                "obs_mean": self.obs_rms.mean.cpu().numpy().copy(), "obs_var": self.obs_rms.var.cpu().numpy().copy(),
+                "steps": self.steps}
 
 
 class Snapshot:
@@ -413,7 +423,8 @@ class Snapshot:
             var = np.concatenate([var, np.ones(obs_dim - len(var))])
         self.actor.to(DEVICE).eval()
         self.rms = RunningMeanStd((obs_dim,))
-        self.rms.mean, self.rms.var = mean, var
+        self.rms.mean = torch.as_tensor(np.asarray(mean), dtype=torch.float64, device=DEVICE)
+        self.rms.var = torch.as_tensor(np.asarray(var), dtype=torch.float64, device=DEVICE)
         self.data = data
         self.uid = -1
         self.learner_win = 0.5  # how often the current learner beats this version (moving average)
@@ -421,7 +432,8 @@ class Snapshot:
 
     @torch.no_grad()
     def act(self, raw_obs):
-        return self.actor.evaluate(T(self.rms.normalize(raw_obs)))[0].cpu().numpy()
+        """Actions for raw observations (a tensor on the training device)."""
+        return self.actor.evaluate(self.rms.normalize(raw_obs))[0]
 
 
 def transplant(actor, old, role):
@@ -504,9 +516,9 @@ def warm_start(learner, path):
         mean, var = np.array(state["obs_rms"]["mean"]), np.array(state["obs_rms"]["var"])
     transplant(learner.actor, layers, learner.role)
     old_in = layers[0][0].shape[1]
-    learner.obs_rms.mean[:old_in] = mean
-    learner.obs_rms.var[:old_in] = var
-    learner.obs_rms.count = 1e4
+    learner.obs_rms.mean[:old_in] = torch.as_tensor(mean, dtype=torch.float64, device=DEVICE)
+    learner.obs_rms.var[:old_in] = torch.as_tensor(var, dtype=torch.float64, device=DEVICE)
+    learner.obs_rms.count = torch.tensor(1e4, dtype=torch.float64, device=DEVICE)
 
 
 def export_brain(path, learner, meta):
@@ -519,8 +531,8 @@ def export_brain(path, learner, meta):
     data = dict(meta)
     data.update({"stage": "chase", "role": learner.role, "obs_dim": learner.obs_dim, "act_dim": learner.act_dim,
                  "steps": learner.steps,
-                 "obs_mean": learner.obs_rms.mean.astype(float).round(6).tolist(),
-                 "obs_std": np.sqrt(learner.obs_rms.var + 1e-8).astype(float).round(6).tolist(),
+                 "obs_mean": learner.obs_rms.mean.cpu().numpy().astype(float).round(6).tolist(),
+                 "obs_std": np.sqrt(learner.obs_rms.var.cpu().numpy() + 1e-8).astype(float).round(6).tolist(),
                  "obs_clip": 10.0, "layers": layers, "action_names": ACTION_NAMES[learner.role],
                  "heads": [{"kind": kind, "size": size} for kind, size in HEADS[learner.role]]})
     with open(path + ".tmp", "w") as handle:
@@ -597,7 +609,7 @@ def main():
     if args.gpu_world:
         from gpu_world.chase import GpuChase
         env = GpuChase(args.gpu_world, matches=args.gpu_matches, device=args.device, seed=args.seed,
-                       city_limit=args.gpu_cities or None)
+                       city_limit=args.gpu_cities or None, torch_out=True)
         print(f"GPU world: {env.num_matches} chases at once in {env.cities.count} cities on {args.device}")
     else:
         env = ChaseWorlds(args.godot, args.project, procs=args.procs, matches=args.matches, seed=args.seed,
@@ -654,10 +666,20 @@ def main():
                       "gone": z(steps, n), "logp": z(steps, n), "val": z(steps, n), "rew": z(steps, n),
                       "done": z(steps, n), "valid": z(steps, n)}
 
-    raw_obs, raw_priv, _, flags, _ = env.reset()
+    gpu_env = hasattr(env, "torch_out")
+
+    def to_device(packet):
+        """Env output -> (obs, priv, parts, flags) tensors on the training device, plus stats (numpy)."""
+        conv = lambda a: (a if torch.is_tensor(a) else torch.from_numpy(np.ascontiguousarray(a))).to(DEVICE).float()
+        return conv(packet[0]), conv(packet[1]), conv(packet[2]), conv(packet[3]), np.asarray(packet[4], np.float64)
+
+    raw_obs, raw_priv, _, flags, _ = to_device(env.reset())
     controllers = np.array([league.pick() for _ in range(M)], dtype=np.int64).reshape(M, 2)  # per chase: (runner, cops)
-    discounted = {role: np.zeros(len(slots[role])) for role in ROLES}
-    episode_return = {role: np.zeros(len(slots[role])) for role in ROLES}
+    controllers_t = torch.as_tensor(controllers, device=DEVICE)
+    slots_t = {role: torch.as_tensor(slots[role], device=DEVICE) for role in ROLES}
+    match_t = {role: torch.as_tensor(match_of[role], device=DEVICE) for role in ROLES}
+    discounted = {role: torch.zeros(len(slots[role]), device=DEVICE) for role in ROLES}
+    episode_return = {role: torch.zeros(len(slots[role]), device=DEVICE) for role in ROLES}
     finished = {role: deque(maxlen=300) for role in ROLES}
     outcomes = {"current": deque(maxlen=300), "vs_past_runner": deque(maxlen=300), "vs_past_cops": deque(maxlen=300)}
     csv_path = os.path.join(args.out, "progress.csv")
@@ -685,7 +707,7 @@ def main():
     last_save = last_snapshot = time.time()
 
     def controller_of(role):
-        return controllers[match_of[role], 0 if role == "runner" else 1]
+        return controllers_t[match_t[role], 0 if role == "runner" else 1]
 
     def save(final=False):
         trained = prior_seconds + time.time() - started
@@ -725,85 +747,96 @@ def main():
             fade = max(0.0, 1.0 - learners["cop"].steps / max(args.approach_fade_steps, 1.0))
             weights = {role: learners[role].weights.copy() for role in ROLES}
             weights["cop"][APPROACH_PART] *= fade
+            weights_t = {role: torch.as_tensor(weights[role], dtype=torch.float32, device=DEVICE) for role in ROLES}
+            past = {role: sorted(set(controllers[:, 0 if role == "runner" else 1].tolist()) - {League.CURRENT}) for role in ROLES}
             for t in range(steps):
-                actions = np.zeros((S, A), np.float32)
+                actions = torch.zeros((S, A), device=DEVICE)
                 active = flags[:, 1] > 0.5
                 for role in ROLES:
-                    learner, b, idx = learners[role], bufs[role], slots[role]
+                    learner, b, idx = learners[role], bufs[role], slots_t[role]
                     o_raw = raw_obs[idx, :dims[role]]
                     ctrl = controller_of(role)
-                    valid = active[idx] & (ctrl == League.CURRENT)
-                    o_n = T(learner.obs_rms.normalize(o_raw))
-                    p_n = T(learner.priv_rms.normalize(raw_priv[idx]))
-                    nav = T(flags[idx, 3].astype(np.float32))
+                    act_here = active[idx]
+                    valid = act_here & (ctrl == League.CURRENT)
+                    o_n = learner.obs_rms.normalize(o_raw)
+                    p_n = learner.priv_rms.normalize(raw_priv[idx])
+                    nav = flags[idx, 3]
                     with torch.no_grad():
                         act, logp, _ = learner.actor.evaluate(o_n, None, nav)
                         b["logp"][t] = logp
                         b["val"][t] = learner.value(o_n, p_n)
-                    act_np = act.cpu().numpy().copy()
-                    for snap_index in np.unique(ctrl[active[idx] & (ctrl != League.CURRENT)]):
-                        rows = np.nonzero(active[idx] & (ctrl == snap_index))[0]
-                        act_np[rows] = league.by_uid[snap_index].act(o_raw[rows])
+                        out = act.clone()
+                        for uid in past[role]:
+                            rows = torch.nonzero(act_here & (ctrl == uid)).squeeze(1)
+                            if rows.numel():
+                                out[rows] = league.by_uid[uid].act(o_raw[rows])
                     b["obs"][t], b["priv"][t], b["act"][t], b["nav"][t] = o_n, p_n, act, nav
-                    b["valid"][t] = T(valid.astype(np.float32))
-                    actions[idx] = to_game(act_np, learner.actor.n_gauss)
+                    b["valid"][t] = valid.float()
+                    out[:, :learner.actor.n_gauss] = out[:, :learner.actor.n_gauss].clamp(-1.0, 1.0)
+                    actions[idx] = out
                 env_started = time.time()
-                next_obs, next_priv, parts, next_flags, stats = env.step(actions)
+                packet = env.step(actions if gpu_env else actions.cpu().numpy())
+                next_obs, next_priv, parts, next_flags, stats = to_device(packet)
                 env_seconds += time.time() - env_started
                 stats_sum += stats
                 done_all = next_flags[:, 0] > 0.5
                 trunc_all = next_flags[:, 2] > 0.5
                 for role in ROLES:
-                    learner, b, idx = learners[role], bufs[role], slots[role]
+                    learner, b, idx = learners[role], bufs[role], slots_t[role]
                     gamma = learner.gamma
-                    valid = b["valid"][t].cpu().numpy() > 0.5
-                    reward = parts[idx].astype(np.float64) @ weights[role]
-                    b["gone"][t] = T((next_flags[idx, 4] > 0.5).astype(np.float32))
+                    valid = b["valid"][t] > 0.5
+                    reward = parts[idx] @ weights_t[role]
+                    b["gone"][t] = (next_flags[idx, 4] > 0.5).float()
                     done = done_all[idx]
-                    episode_return[role][valid] += reward[valid]
-                    discounted[role] = np.where(valid, discounted[role] * gamma + reward, discounted[role])
-                    learner.ret_rms.update(discounted[role][valid])
-                    scaled = reward / np.sqrt(learner.ret_rms.var + 1e-8)
-                    bootstrap = valid & trunc_all[idx]
-                    scaled[bootstrap] += gamma * b["val"][t].cpu().numpy()[bootstrap]
-                    b["rew"][t] = T((scaled * valid).astype(np.float32))
-                    b["done"][t] = T(done.astype(np.float32))
-                    for k in np.nonzero(done)[0]:
-                        if valid[k]:
-                            finished[role].append(episode_return[role][k])
-                        episode_return[role][k] = 0.0
-                        discounted[role][k] = 0.0
+                    episode_return[role] += torch.where(valid, reward, 0.0)
+                    discounted[role] = torch.where(valid, discounted[role] * gamma + reward, discounted[role])
+                    learner.ret_rms.update(discounted[role], valid)
+                    scaled = reward / torch.sqrt(learner.ret_rms.var + 1e-8).float()
+                    scaled = scaled + torch.where(valid & trunc_all[idx], gamma * b["val"][t], 0.0)
+                    b["rew"][t] = scaled * valid.float()
+                    b["done"][t] = done.float()
+                    ended_here = done & valid
+                    finished[role].extend(episode_return[role][ended_here].tolist())
+                    episode_return[role] = torch.where(done, 0.0, episode_return[role])
+                    discounted[role] = torch.where(done, 0.0, discounted[role])
                     new_active = next_flags[idx, 1] > 0.5
-                    learner.obs_rms.update(next_obs[idx][new_active, :dims[role]].astype(np.float64))
-                    learner.priv_rms.update(next_priv[idx][new_active].astype(np.float64))
-                for slot in slots["runner"][done_all[slots["runner"]]]:
-                    m = env.match_of[slot]
-                    wrecked, survived = parts[slot, 2] > 0.5, parts[slot, 7] > 0.5
-                    if wrecked or survived:
-                        runner_ctrl, cop_ctrl = controllers[m]
-                        if runner_ctrl == League.CURRENT and cop_ctrl == League.CURRENT:
-                            outcomes["current"].append(float(wrecked))
-                        elif runner_ctrl != League.CURRENT:
-                            outcomes["vs_past_runner"].append(float(wrecked))
-                            league.record(runner_ctrl, wrecked)
-                        else:
-                            outcomes["vs_past_cops"].append(float(survived))
-                            league.record(cop_ctrl, survived)
-                    controllers[m] = league.pick()
+                    learner.obs_rms.update(next_obs[idx, :dims[role]], new_active)
+                    learner.priv_rms.update(next_priv[idx], new_active)
+                runner_rows = slots_t["runner"]
+                ended = done_all[runner_rows]
+                if bool(ended.any()):
+                    ended_rows = torch.nonzero(ended).squeeze(1)
+                    wrecked_all = (parts[runner_rows[ended_rows], 2] > 0.5).tolist()
+                    survived_all = (parts[runner_rows[ended_rows], 7] > 0.5).tolist()
+                    for k, wrecked, survived in zip(ended_rows.tolist(), wrecked_all, survived_all):
+                        m = int(match_of["runner"][k])
+                        if wrecked or survived:
+                            runner_ctrl, cop_ctrl = controllers[m]
+                            if runner_ctrl == League.CURRENT and cop_ctrl == League.CURRENT:
+                                outcomes["current"].append(float(wrecked))
+                            elif runner_ctrl != League.CURRENT:
+                                outcomes["vs_past_runner"].append(float(wrecked))
+                                league.record(int(runner_ctrl), wrecked)
+                            else:
+                                outcomes["vs_past_cops"].append(float(survived))
+                                league.record(int(cop_ctrl), survived)
+                        controllers[m] = league.pick()
+                    controllers_t = torch.as_tensor(controllers, device=DEVICE)
+                    past = {role: sorted(set(controllers[:, 0 if role == "runner" else 1].tolist()) - {League.CURRENT}) for role in ROLES}
                 raw_obs, raw_priv, flags = next_obs, next_priv, next_flags
 
             # Advantages (GAE), skipping slots that were idle or played by a past version.
             active = flags[:, 1] > 0.5
             for role in ROLES:
-                learner, b, idx = learners[role], bufs[role], slots[role]
-                valid_last = T((active[idx] & (controller_of(role) == League.CURRENT)).astype(np.float32))
+                learner, b, idx = learners[role], bufs[role], slots_t[role]
+                valid_last = (active[idx] & (controller_of(role) == League.CURRENT)).float()
                 gamma = learner.gamma
                 with torch.no_grad():
-                    o_n = T(learner.obs_rms.normalize(raw_obs[idx, :dims[role]]))
-                    p_n = T(learner.priv_rms.normalize(raw_priv[idx]))
+                    o_n = learner.obs_rms.normalize(raw_obs[idx, :dims[role]])
+                    p_n = learner.priv_rms.normalize(raw_priv[idx])
                     last_value = learner.value(o_n, p_n)
                 if role == "cop":
-                    share_team_future(b, match_of["cop"], last_value, valid_last, gamma)
+                    share_team_future(b, match_t["cop"], M, last_value, valid_last, gamma)
                 adv = torch.zeros_like(b["rew"])
                 running = torch.zeros(len(idx), device=DEVICE)
                 for t in reversed(range(steps)):
@@ -934,6 +967,7 @@ def run_exam(env, learners, dims, slots, panel, raw_obs, raw_priv, flags, second
     """Plays this line's current cops against every runner on the panel and its current runner against
     every cop on the panel, spreading chases evenly, for `seconds`. Brains act as in the game (sampled).
     Chases already running when the exam starts are not counted."""
+    raw_obs, raw_priv, flags = (a.cpu().numpy() if torch.is_tensor(a) else a for a in (raw_obs, raw_priv, flags))
     tests = [("cop", name, opp) for name, opp in panel["runner"]] + [("runner", name, opp) for name, opp in panel["cop"]]
     wins, games, pending = np.zeros(len(tests)), np.zeros(len(tests)), np.zeros(len(tests))
     assign = [-1] * env.num_matches
@@ -946,7 +980,7 @@ def run_exam(env, learners, dims, slots, panel, raw_obs, raw_priv, flags, second
             o_raw = raw_obs[idx, :dims[role]]
             learner = learners[role]
             with torch.no_grad():
-                mine = learner.actor.evaluate(T(learner.obs_rms.normalize(o_raw)))[0].cpu().numpy()
+                mine = learner.actor.evaluate(learner.obs_rms.normalize(T(o_raw)))[0].cpu().numpy()
             out = mine.copy()
             for row, slot in enumerate(idx):
                 test = assign[env.match_of[slot]]
@@ -957,7 +991,7 @@ def run_exam(env, learners, dims, slots, panel, raw_obs, raw_priv, flags, second
                     out[row] = 0.0
                     out[row, -1] = -1.0  # the arena drives this slot with its scripted autopilot
                 else:
-                    out[row] = opponent.act(o_raw[row:row + 1])[0]
+                    out[row] = opponent.act(T(o_raw[row:row + 1]))[0].cpu().numpy()
             actions[idx] = to_game(out, learner.actor.n_gauss)
         raw_obs, raw_priv, parts, next_flags, _ = env.step(actions)
         for slot in slots["runner"][next_flags[slots["runner"], 0] > 0.5]:
@@ -984,25 +1018,20 @@ def run_exam(env, learners, dims, slots, panel, raw_obs, raw_priv, flags, second
     return result
 
 
-def share_team_future(b, match_of_slot, last_value, valid_last, gamma):
+def share_team_future(b, match_of_slot, matches, last_value, valid_last, gamma):
     """A cop that wrecks (say, blocking the runner) leaves before the chase is decided, so on its own it
     never sees the team's later result. Give its last step the team's expected future instead of nothing:
     gamma times the average value of its teammates still in that chase one step later (the
     "posthumous credit" problem from Unity's MA-POCA). Its own wreck penalty still applies."""
     count = b["rew"].shape[0]
-    matches = int(match_of_slot.max()) + 1
     for t in range(count):
-        gone = (b["gone"][t] * b["valid"][t]).cpu().numpy() > 0.5
-        if not gone.any():
-            continue
-        values = (last_value if t == count - 1 else b["val"][t + 1]).cpu().numpy()
-        alive = (valid_last if t == count - 1 else b["valid"][t + 1]).cpu().numpy() > 0.5
-        alive = alive & ~gone
-        totals = np.bincount(match_of_slot, weights=values * alive, minlength=matches)
-        counts = np.bincount(match_of_slot, weights=alive.astype(np.float64), minlength=matches)
-        team = np.where(counts > 0, totals / np.maximum(counts, 1), 0.0)
-        bonus = np.where(gone, gamma * team[match_of_slot], 0.0)
-        b["rew"][t] += torch.from_numpy(bonus.astype(np.float32)).to(b["rew"].device)
+        gone = (b["gone"][t] * b["valid"][t]) > 0.5
+        values = last_value if t == count - 1 else b["val"][t + 1]
+        alive = (((valid_last if t == count - 1 else b["valid"][t + 1]) > 0.5) & ~gone).float()
+        totals = torch.zeros(matches, device=values.device).index_add(0, match_of_slot, values * alive)
+        counts = torch.zeros(matches, device=values.device).index_add(0, match_of_slot, alive)
+        team = torch.where(counts > 0, totals / counts.clamp(min=1.0), 0.0)
+        b["rew"][t] += torch.where(gone, gamma * team[match_of_slot], 0.0)
 
 
 def train_side(learner, b, args, train_actor=True):
