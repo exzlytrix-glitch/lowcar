@@ -10,6 +10,13 @@ const RECYCLE_DISTANCE: float = 420.0
 ## Catch-up boost starts building at CATCH_UP_START metres behind and is full by CATCH_UP_FULL.
 const CATCH_UP_START: float = 25.0
 const CATCH_UP_FULL: float = 85.0
+## Cop health when cops can be wrecked (the same as in chase training, scripts/ai/chase_match.gd).
+const COP_HEALTH: float = 60.0
+## A wrecked cop stays on the road this long before it is cleared away.
+const WRECK_SECONDS: float = 6.0
+
+## A cop was wrecked (only when cops_take_damage is on).
+signal cop_wrecked(cop: LabVehicle)
 
 ## Minute-zero cop top speed (m/s); escalation multiplies it. Your cruise is 32 m/s (115 km/h).
 var base_top_speed: float = 34.0
@@ -17,6 +24,8 @@ var base_top_speed: float = 34.0
 var catch_up_boost: float = 1.3
 
 var active: bool = false
+## Cops take damage and wreck like in training (the game turns this on; the lab keeps them unbreakable).
+var cops_take_damage: bool = false
 ## Off when cops were only added by hand (P): they chase, but nothing spawns or escalates.
 var auto_spawn: bool = false
 var elapsed: float = 0.0
@@ -60,16 +69,31 @@ func toggle() -> void:
 		start()
 
 
-func start() -> void:
+## spawn_first: start with two cops behind you; off when cops were already placed (spawn_cop).
+func start(spawn_first: bool = true) -> void:
 	if graph == null:
 		return
+	if not active:
+		intel.reset(player)
 	active = true
 	auto_spawn = true
-	intel.reset(player)
+	elapsed = 0.0
 	_rng.randomize()
-	for index: int in 2:
-		_spawn(true)
+	if spawn_first:
+		for index: int in 2:
+			_spawn(true)
 	_spawn_clock = 0.5
+
+
+## A cop placed by the caller (the game's breakout scene puts the first one down the street).
+func spawn_cop(point: Vector2, dir: Vector2, start_speed: float) -> LabVehicle:
+	if graph == null or not is_instance_valid(player):
+		return null
+	if not active:
+		intel.reset(player)
+	active = true
+	_add_cop(point, dir, start_speed)
+	return cops.back()
 
 
 func stop() -> void:
@@ -265,6 +289,11 @@ func _add_cop(point: Vector2, dir: Vector2, start_speed: float) -> void:
 	cop.velocity = Vector3(dir.x, 0.0, dir.y) * start_speed
 	cop.reset_physics_interpolation()
 	cop.controls_enabled = true
+	if cops_take_damage:
+		cop.max_health = COP_HEALTH
+		cop.health = COP_HEALTH
+		cop.takes_damage = true
+		cop.destroyed.connect(_on_cop_destroyed.bind(cop))
 	cops.append(cop)
 	_drivers[cop] = driver
 
@@ -353,6 +382,30 @@ func _update_intel(step: float) -> void:
 
 func _thousands(value: int) -> String:
 	return "%.1fM" % (value / 1.0e6) if value >= 1000000 else "%dk" % (value / 1000)
+
+
+## A wrecked cop drops out of the chase at once (as in training) and its wreck coasts to a stop, then
+## is cleared away.
+func _on_cop_destroyed(cop: LabVehicle) -> void:
+	if not cops.has(cop):
+		return
+	cops.erase(cop)
+	var driver: Node = _drivers.get(cop)
+	_drivers.erase(cop)
+	release_attack(driver)
+	if is_instance_valid(driver):
+		driver.queue_free()
+	cop.controls_enabled = false
+	cop.remove_from_group("police")
+	var presentation: Node = cop.get_node_or_null("Presentation")
+	if presentation != null and presentation.has_method("silence"):
+		presentation.silence()
+	if presentation != null and presentation.has_method("play_explosion"):
+		presentation.play_explosion()
+	cop_wrecked.emit(cop)
+	get_tree().create_timer(WRECK_SECONDS, false).timeout.connect(func() -> void:
+		if is_instance_valid(cop):
+			cop.queue_free())
 
 
 func _remove(cop: LabVehicle) -> void:

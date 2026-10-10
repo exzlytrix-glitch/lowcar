@@ -31,6 +31,9 @@ var world := WorldGen.new()
 ## Cell → {"node", "pairs", "keys", "fresh", "blocks", "footprints", "styles", "polygon"}.
 var cells: Dictionary = {}
 var last_build_ms: float = 0.0
+## Ground kept free of buildings (polygons, world metres): the hideout garage's lot. Set before cells
+## there are built.
+var clear_areas: Array[PackedVector2Array] = []
 
 static var _buildings_ready: bool = false
 var _worker := WorldGen.new()
@@ -277,14 +280,12 @@ func _run_task(cell: Vector2i) -> void:
 func _make_cell(cell: Vector2i) -> Dictionary:
 	var started: int = Time.get_ticks_usec()
 	var roads: Dictionary = _roads(cell)
-	var cell_settings := settings.duplicate() as CityGenSettings
-	cell_settings.city_seed = hash([settings.city_seed, cell.x, cell.y]) & 0x7fffffff
-	cell_settings.city_radius = WorldGen.CELL
-	cell_settings.ring_road = false
+	var cell_settings: CityGenSettings = _cell_settings(cell)
 	var road_graph: RoadGraph = roads["graph"]
 	var blocks: Array[CityBlocks.Block] = CityBlocks.build(road_graph, _worker, cell_settings)
 	var builder := CellBuilder.new()
 	builder.name = "Cell_%d_%d" % [cell.x, cell.y]
+	builder.clear_areas = clear_areas
 	builder.owned = roads["owned"]
 	builder.trim_extra = _trim_extra(cell, roads)
 	builder.build(cell_settings, road_graph, _worker, blocks)
@@ -298,6 +299,22 @@ func _make_cell(cell: Vector2i) -> Dictionary:
 	return {"cell": cell, "roads": roads, "node": builder, "pieces": solid + rest, "blocks": blocks,
 		"footprints": builder.footprints, "styles": builder.footprint_styles,
 		"ms": (Time.get_ticks_usec() - started) / 1000.0}
+
+
+func _cell_settings(cell: Vector2i) -> CityGenSettings:
+	var cell_settings := settings.duplicate() as CityGenSettings
+	cell_settings.city_seed = hash([settings.city_seed, cell.x, cell.y]) & 0x7fffffff
+	cell_settings.city_radius = WorldGen.CELL
+	cell_settings.ring_road = false
+	return cell_settings
+
+
+## A cell's roads and blocks worked out here on the main thread, exactly as its build will make them
+## (to choose where things go before the cell is built). Don't call while cells are building nearby.
+func plan_cell(cell: Vector2i) -> Dictionary:
+	var roads: Dictionary = world.cell_roads(cell.x, cell.y)
+	var blocks: Array[CityBlocks.Block] = CityBlocks.build(roads["graph"], world, _cell_settings(cell))
+	return {"graph": roads["graph"], "blocks": blocks, "polygon": roads["polygon"]}
 
 
 func _roads(cell: Vector2i) -> Dictionary:

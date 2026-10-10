@@ -58,6 +58,12 @@ func _ready() -> void:
 	_say("Breaking: police in pursuit of a red muscle car")
 
 
+## A caption from outside (the game's score events: wrecked cops, near misses).
+func announce(text: String) -> void:
+	_say(text)
+	_clock = CAPTION_SECONDS
+
+
 func wrecked(seconds: int) -> void:
 	_say("SUSPECT VEHICLE DOWN after %d:%02d — a new pursuit is already underway" % [seconds / 60, seconds % 60])
 	_clock = CAPTION_SECONDS + 2.0

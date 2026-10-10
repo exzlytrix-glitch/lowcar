@@ -9,11 +9,35 @@ extends CityBuilder
 var owned := PackedByteArray()
 ## Node → [extra roads meeting there from neighbouring cells, the widest of them].
 var trim_extra: Dictionary = {}
+## Buildings touching these polygons are left out (WorldStreamer.clear_areas).
+var clear_areas: Array[PackedVector2Array] = []
 
 
 func build(config: CityGenSettings, road_graph: RoadGraph, road_generator: RoadGenerator, city_blocks: Array[CityBlocks.Block]) -> void:
 	super.build(config, road_graph, road_generator, city_blocks)
+	_clear_areas()
 	_merge_bodies()
+
+
+func _clear_areas() -> void:
+	if clear_areas.is_empty():
+		return
+	for tile_root: Node in get_children():
+		for child: Node in tile_root.get_children():
+			var building := child as Node3D
+			if building == null or not building.has_meta("local_bounds"):
+				continue
+			var bounds: AABB = building.get_meta("local_bounds")
+			var outline := PackedVector2Array()
+			for corner: Vector3 in [bounds.position, Vector3(bounds.end.x, 0.0, bounds.position.z), bounds.end, Vector3(bounds.position.x, 0.0, bounds.end.z)]:
+				var at: Vector3 = building.transform * Vector3(corner.x, 0.0, corner.z)
+				outline.append(Vector2(at.x, at.z))
+			for area: PackedVector2Array in clear_areas:
+				if not Geometry2D.intersect_polygons(outline, area).is_empty():
+					tile_root.remove_child(building)
+					building.free()
+					building_count -= 1
+					break
 
 
 func _build_land() -> void:
