@@ -41,7 +41,10 @@ import torch
 import torch.nn as nn
 from torch.distributions import Bernoulli, Categorical, Normal
 
-from chase_env import ChaseWorlds
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from chase_env import ChaseWorlds  # noqa: E402
 
 ROLES = ("cop", "runner")
 # Weights for the reward parts each slot reports (meanings at the top of scripts/ai/chase_match.gd).
@@ -79,8 +82,14 @@ ROUTE_PRIOR = 2.5
 
 def parse_args():
     p = argparse.ArgumentParser()
-    p.add_argument("--godot", required=True)
-    p.add_argument("--project", required=True)
+    p.add_argument("--godot", default="", help="Godot binary (training in the real game)")
+    p.add_argument("--project", default=".")
+    p.add_argument("--gpu-world", default="", help="train in the GPU copy of the chase (training/gpu_world) using "
+                                                   "this folder of exported cities instead of Godot")
+    p.add_argument("--gpu-matches", type=int, default=2048, help="chases running at once in the GPU world")
+    p.add_argument("--gpu-cities", type=int, default=0, help="load at most this many exported cities (0 = all)")
+    p.add_argument("--device", default="cpu", help="where the networks run: cpu or cuda")
+    p.add_argument("--steps-force", type=int, default=0, help="decisions per slot per update, overriding the genome")
     p.add_argument("--out", required=True)
     p.add_argument("--line", default="0", help="name of this training line (parallel jobs)")
     p.add_argument("--runner-style", default="balanced", choices=sorted(RUNNER_STYLES))
@@ -127,6 +136,14 @@ def parse_args():
     p.add_argument("--seed", type=int, default=1)
     p.add_argument("--threads", type=int, default=1)
     return p.parse_args()
+
+
+DEVICE = torch.device("cpu")
+
+
+def T(array):
+    """numpy -> tensor on the training device."""
+    return torch.from_numpy(np.ascontiguousarray(array)).to(DEVICE)
 
 
 def layer_init(layer, std=np.sqrt(2), bias=0.0):
@@ -309,8 +326,8 @@ class Learner:
 
     def __init__(self, role, obs_dim, priv_dim, act_dim, args):
         self.role, self.obs_dim, self.priv_dim, self.act_dim = role, obs_dim, priv_dim, act_dim
-        self.actor = Actor(obs_dim, HEADS[role], args.actor_hidden)
-        self.critic = Critic(obs_dim + priv_dim, args.critic_hidden)
+        self.actor = Actor(obs_dim, HEADS[role], args.actor_hidden).to(DEVICE)
+        self.critic = Critic(obs_dim + priv_dim, args.critic_hidden).to(DEVICE)
         self.optimizer = torch.optim.Adam(list(self.actor.parameters()) + list(self.critic.parameters()),
                                           lr=args.lr, eps=1e-5)
         self.obs_rms, self.priv_rms, self.ret_rms = RunningMeanStd((obs_dim,)), RunningMeanStd((priv_dim,)), RunningMeanStd(())
@@ -354,6 +371,7 @@ class Learner:
             with torch.no_grad():
                 for key, value in critic.items():
                     target = dict(self.critic.named_parameters())[key]
+                    value = value.to(target.device)
                     if key == "net.0.weight":
                         target.zero_()
                         target[:, :old_obs] = value[:, :old_obs]
@@ -391,7 +409,7 @@ class Snapshot:
             transplant(self.actor, data["actor"], self.role)
             mean = np.concatenate([mean, np.zeros(obs_dim - len(mean))])
             var = np.concatenate([var, np.ones(obs_dim - len(var))])
-        self.actor.eval()
+        self.actor.to(DEVICE).eval()
         self.rms = RunningMeanStd((obs_dim,))
         self.rms.mean, self.rms.var = mean, var
         self.data = data
@@ -401,7 +419,7 @@ class Snapshot:
 
     @torch.no_grad()
     def act(self, raw_obs):
-        return self.actor.evaluate(torch.from_numpy(self.rms.normalize(raw_obs)))[0].numpy()
+        return self.actor.evaluate(T(self.rms.normalize(raw_obs)))[0].cpu().numpy()
 
 
 def transplant(actor, old, role):
@@ -412,37 +430,41 @@ def transplant(actor, old, role):
     choices start at their default (no boost, route option 0 about half the time).
     `old` is an actor state dict (keys net.0.weight ... logstd) or a list of (w, b) layers."""
     if isinstance(old, dict):
-        layers = [(old[f"net.{k}.weight"].detach().numpy(), old[f"net.{k}.bias"].detach().numpy()) for k in (0, 2, 4)]
-        logstd = old["logstd"].detach().numpy().reshape(-1) if "logstd" in old else None
+        layers = [(old[f"net.{k}.weight"].detach().cpu().numpy(), old[f"net.{k}.bias"].detach().cpu().numpy()) for k in (0, 2, 4)]
+        logstd = old["logstd"].detach().cpu().numpy().reshape(-1) if "logstd" in old else None
     else:
         layers, logstd = old, None
     (w0, b0), (w1, b1), (w2, b2) = layers
     hidden, old_in = w0.shape
     spread = np.exp(logstd) if logstd is not None else np.full(w2.shape[0], 0.6)
     net = actor.net
+    dev = net[0].weight.device
+
+    def tt(array):
+        return torch.as_tensor(np.asarray(array, np.float32), device=dev)
     with torch.no_grad():
         net[0].weight[hidden:, :].mul_(0.5)
         net[0].weight[:hidden, :] = 0.0
-        net[0].weight[:hidden, :old_in] = torch.from_numpy(w0)
-        net[0].bias[:hidden] = torch.from_numpy(b0)
+        net[0].weight[:hidden, :old_in] = tt(w0)
+        net[0].bias[:hidden] = tt(b0)
         net[2].weight[hidden:, :].mul_(0.5)
         net[2].weight[:hidden, :] = 0.0
-        net[2].weight[:hidden, :hidden] = torch.from_numpy(w1)
-        net[2].bias[:hidden] = torch.from_numpy(b1)
+        net[2].weight[:hidden, :hidden] = tt(w1)
+        net[2].bias[:hidden] = tt(b1)
         weight, bias = net[4].weight, net[4].bias
         if w2.shape[0] == weight.shape[0]:
             # Already has today's outputs (only the senses grew): copy them as they are.
             weight.zero_()
-            weight[:, :hidden] = torch.from_numpy(w2)
-            bias.copy_(torch.from_numpy(b2))
+            weight[:, :hidden] = tt(w2)
+            bias.copy_(tt(b2))
             if logstd is not None:
-                actor.logstd[0, :] = torch.from_numpy(logstd[:actor.logstd.shape[1]])
+                actor.logstd[0, :] = tt(logstd[:actor.logstd.shape[1]])
             return
         weight.zero_()
         bias.zero_()
 
         def put(row, source, scale=1.0, shift=0.0):
-            weight[row, :hidden] = torch.from_numpy(w2[source] * scale)
+            weight[row, :hidden] = tt(w2[source] * scale)
             bias[row] = float(b2[source] * scale + shift)
 
         put(0, 0)
@@ -463,7 +485,7 @@ def transplant(actor, old, role):
                 else:
                     bias[row] = -1.5
             bias[8] = ROUTE_PRIOR
-        actor.logstd[0, :] = torch.from_numpy(logstd[:2]) if logstd is not None else -1.0
+        actor.logstd[0, :] = tt(logstd[:2]) if logstd is not None else -1.0
 
 
 def warm_start(learner, path):
@@ -474,7 +496,7 @@ def warm_start(learner, path):
         layers = [(np.array(l["w"], np.float32), np.array(l["b"], np.float32)) for l in data["layers"]]
         mean, var = np.array(data["obs_mean"]), np.array(data["obs_std"]) ** 2
     else:
-        state = torch.load(path, weights_only=False)
+        state = torch.load(path, weights_only=False, map_location="cpu")
         brain = state["brain"]
         layers = [(brain[f"actor_mean.{k}.weight"].numpy(), brain[f"actor_mean.{k}.bias"].numpy()) for k in (0, 2, 4)]
         mean, var = np.array(state["obs_rms"]["mean"]), np.array(state["obs_rms"]["var"])
@@ -489,8 +511,8 @@ def export_brain(path, learner, meta):
     linear = [m for m in learner.actor.net if isinstance(m, nn.Linear)]
     layers = []
     for index, layer in enumerate(linear):
-        layers.append({"w": layer.weight.detach().numpy().astype(float).round(6).tolist(),
-                       "b": layer.bias.detach().numpy().astype(float).round(6).tolist(),
+        layers.append({"w": layer.weight.detach().cpu().numpy().astype(float).round(6).tolist(),
+                       "b": layer.bias.detach().cpu().numpy().astype(float).round(6).tolist(),
                        "act": "tanh" if index < len(linear) - 1 else "none"})
     data = dict(meta)
     data.update({"stage": "chase", "role": learner.role, "obs_dim": learner.obs_dim, "act_dim": learner.act_dim,
@@ -554,9 +576,10 @@ class League:
 
 
 def main():
-    global ROUTE_PRIOR
+    global ROUTE_PRIOR, DEVICE
     args = parse_args()
     ROUTE_PRIOR = args.route_prior
+    DEVICE = torch.device(args.device)
     budget = args.hours * 3600 + args.minutes * 60
     if budget <= 0 and not args.export_only:
         raise SystemExit("give --hours or --minutes")
@@ -569,8 +592,14 @@ def main():
         export_only(args)
         return
 
-    env = ChaseWorlds(args.godot, args.project, procs=args.procs, matches=args.matches, seed=args.seed,
-                      city_steps=args.city_steps, radius=args.radius, log_dir=os.path.join(args.out, "logs"))
+    if args.gpu_world:
+        from gpu_world.chase import GpuChase
+        env = GpuChase(args.gpu_world, matches=args.gpu_matches, device=args.device, seed=args.seed,
+                       city_limit=args.gpu_cities or None)
+        print(f"GPU world: {env.num_matches} chases at once in {env.cities.count} cities on {args.device}")
+    else:
+        env = ChaseWorlds(args.godot, args.project, procs=args.procs, matches=args.matches, seed=args.seed,
+                          city_steps=args.city_steps, radius=args.radius, log_dir=os.path.join(args.out, "logs"))
     S, A, M = env.num_slots, env.act_dim, env.num_matches
     dims = {"cop": env.cop_obs, "runner": env.runner_obs}
     slots = {"cop": np.nonzero(~env.is_runner)[0], "runner": np.nonzero(env.is_runner)[0]}
@@ -579,7 +608,7 @@ def main():
     league = League(args, rng)
     updates, prior_seconds, warmup_left = 0, 0.0, 0
     if args.resume and os.path.exists(args.resume):
-        state = torch.load(args.resume, weights_only=False)
+        state = torch.load(args.resume, weights_only=False, map_location="cpu")
         for role in ROLES:
             learners[role].load(state["learners"][role])
         updates, prior_seconds = state["updates"], state.get("trained_seconds", 0.0)
@@ -593,7 +622,7 @@ def main():
                    [os.path.join(args.out, "league", "*.pt")]:
         for path in sorted(glob.glob(pattern), key=os.path.getmtime):
             try:
-                data = torch.load(path, weights_only=False)
+                data = torch.load(path, weights_only=False, map_location="cpu")
             except Exception as error:  # a damaged file should not stop training
                 print(f"skipping snapshot {path}: {error}")
                 continue
@@ -612,17 +641,17 @@ def main():
     print(f"settings: {json.dumps(genome)}")
     exam_panel = load_exam_panel(args, dims, league)
 
-    T, lam = int(genome.get("steps", args.steps)), args.gae_lambda
+    steps, lam = args.steps_force or int(genome.get("steps", args.steps)), args.gae_lambda
     bufs = {}
     for role in ROLES:
         n, d = len(slots[role]), dims[role]
-        bufs[role] = {"obs": torch.zeros((T, n, d)), "priv": torch.zeros((T, n, env.priv_dim)),
-                      "act": torch.zeros((T, n, A)), "nav": torch.zeros((T, n)), "gone": torch.zeros((T, n)),
-                      "logp": torch.zeros((T, n)), "val": torch.zeros((T, n)),
-                      "rew": torch.zeros((T, n)), "done": torch.zeros((T, n)), "valid": torch.zeros((T, n))}
+        z = lambda *shape: torch.zeros(shape, device=DEVICE)
+        bufs[role] = {"obs": z(steps, n, d), "priv": z(steps, n, env.priv_dim), "act": z(steps, n, A), "nav": z(steps, n),
+                      "gone": z(steps, n), "logp": z(steps, n), "val": z(steps, n), "rew": z(steps, n),
+                      "done": z(steps, n), "valid": z(steps, n)}
 
     raw_obs, raw_priv, _, flags, _ = env.reset()
-    controllers = [league.pick() for _ in range(M)]  # per chase: (runner, cops)
+    controllers = np.array([league.pick() for _ in range(M)], dtype=np.int64).reshape(M, 2)  # per chase: (runner, cops)
     discounted = {role: np.zeros(len(slots[role])) for role in ROLES}
     episode_return = {role: np.zeros(len(slots[role])) for role in ROLES}
     finished = {role: deque(maxlen=300) for role in ROLES}
@@ -652,8 +681,7 @@ def main():
     last_save = last_snapshot = time.time()
 
     def controller_of(role):
-        side = 0 if role == "runner" else 1
-        return np.array([controllers[m][side] for m in match_of[role]])
+        return controllers[match_of[role], 0 if role == "runner" else 1]
 
     def save(final=False):
         trained = prior_seconds + time.time() - started
@@ -692,7 +720,7 @@ def main():
             fade = max(0.0, 1.0 - learners["cop"].steps / max(args.approach_fade_steps, 1.0))
             weights = {role: learners[role].weights.copy() for role in ROLES}
             weights["cop"][APPROACH_PART] *= fade
-            for t in range(T):
+            for t in range(steps):
                 actions = np.zeros((S, A), np.float32)
                 active = flags[:, 1] > 0.5
                 for role in ROLES:
@@ -700,19 +728,19 @@ def main():
                     o_raw = raw_obs[idx, :dims[role]]
                     ctrl = controller_of(role)
                     valid = active[idx] & (ctrl == League.CURRENT)
-                    o_n = torch.from_numpy(learner.obs_rms.normalize(o_raw))
-                    p_n = torch.from_numpy(learner.priv_rms.normalize(raw_priv[idx]))
-                    nav = torch.from_numpy(flags[idx, 3].astype(np.float32))
+                    o_n = T(learner.obs_rms.normalize(o_raw))
+                    p_n = T(learner.priv_rms.normalize(raw_priv[idx]))
+                    nav = T(flags[idx, 3].astype(np.float32))
                     with torch.no_grad():
                         act, logp, _ = learner.actor.evaluate(o_n, None, nav)
                         b["logp"][t] = logp
                         b["val"][t] = learner.value(o_n, p_n)
-                    act_np = act.numpy().copy()
+                    act_np = act.cpu().numpy().copy()
                     for snap_index in np.unique(ctrl[active[idx] & (ctrl != League.CURRENT)]):
                         rows = np.nonzero(active[idx] & (ctrl == snap_index))[0]
                         act_np[rows] = league.by_uid[snap_index].act(o_raw[rows])
                     b["obs"][t], b["priv"][t], b["act"][t], b["nav"][t] = o_n, p_n, act, nav
-                    b["valid"][t] = torch.from_numpy(valid.astype(np.float32))
+                    b["valid"][t] = T(valid.astype(np.float32))
                     actions[idx] = to_game(act_np, learner.actor.n_gauss)
                 next_obs, next_priv, parts, next_flags, stats = env.step(actions)
                 stats_sum += stats
@@ -721,18 +749,18 @@ def main():
                 for role in ROLES:
                     learner, b, idx = learners[role], bufs[role], slots[role]
                     gamma = learner.gamma
-                    valid = b["valid"][t].numpy() > 0.5
+                    valid = b["valid"][t].cpu().numpy() > 0.5
                     reward = parts[idx].astype(np.float64) @ weights[role]
-                    b["gone"][t] = torch.from_numpy((next_flags[idx, 4] > 0.5).astype(np.float32))
+                    b["gone"][t] = T((next_flags[idx, 4] > 0.5).astype(np.float32))
                     done = done_all[idx]
                     episode_return[role][valid] += reward[valid]
                     discounted[role] = np.where(valid, discounted[role] * gamma + reward, discounted[role])
                     learner.ret_rms.update(discounted[role][valid])
                     scaled = reward / np.sqrt(learner.ret_rms.var + 1e-8)
                     bootstrap = valid & trunc_all[idx]
-                    scaled[bootstrap] += gamma * b["val"][t].numpy()[bootstrap]
-                    b["rew"][t] = torch.from_numpy((scaled * valid).astype(np.float32))
-                    b["done"][t] = torch.from_numpy(done.astype(np.float32))
+                    scaled[bootstrap] += gamma * b["val"][t].cpu().numpy()[bootstrap]
+                    b["rew"][t] = T((scaled * valid).astype(np.float32))
+                    b["done"][t] = T(done.astype(np.float32))
                     for k in np.nonzero(done)[0]:
                         if valid[k]:
                             finished[role].append(episode_return[role][k])
@@ -761,18 +789,18 @@ def main():
             active = flags[:, 1] > 0.5
             for role in ROLES:
                 learner, b, idx = learners[role], bufs[role], slots[role]
-                valid_last = torch.from_numpy((active[idx] & (controller_of(role) == League.CURRENT)).astype(np.float32))
+                valid_last = T((active[idx] & (controller_of(role) == League.CURRENT)).astype(np.float32))
                 gamma = learner.gamma
                 with torch.no_grad():
-                    o_n = torch.from_numpy(learner.obs_rms.normalize(raw_obs[idx, :dims[role]]))
-                    p_n = torch.from_numpy(learner.priv_rms.normalize(raw_priv[idx]))
+                    o_n = T(learner.obs_rms.normalize(raw_obs[idx, :dims[role]]))
+                    p_n = T(learner.priv_rms.normalize(raw_priv[idx]))
                     last_value = learner.value(o_n, p_n)
                 if role == "cop":
                     share_team_future(b, match_of["cop"], last_value, valid_last, gamma)
                 adv = torch.zeros_like(b["rew"])
-                running = torch.zeros(len(idx))
-                for t in reversed(range(T)):
-                    next_value, next_valid = (last_value, valid_last) if t == T - 1 else (b["val"][t + 1], b["valid"][t + 1])
+                running = torch.zeros(len(idx), device=DEVICE)
+                for t in reversed(range(steps)):
+                    next_value, next_valid = (last_value, valid_last) if t == steps - 1 else (b["val"][t + 1], b["valid"][t + 1])
                     nonterminal = (1.0 - b["done"][t]) * next_valid
                     delta = b["rew"][t] + gamma * next_value * nonterminal - b["val"][t]
                     running = (delta + gamma * lam * nonterminal * running) * b["valid"][t]
@@ -830,7 +858,7 @@ def main():
             print(" ".join(f"{k}={v}" for k, v in row.items()), flush=True)
             if time.time() - last_snapshot > args.snapshot_minutes * 60:
                 snapshot()
-                league.forget_unused([uid for pair in controllers for uid in pair])
+                league.forget_unused(controllers.reshape(-1).tolist())
                 last_snapshot = time.time()
             if time.time() - last_save > args.save_minutes * 60:
                 save()
@@ -856,7 +884,7 @@ GAME_PRIV, GAME_ACT = 12, 5
 
 
 def export_only(args):
-    state = torch.load(args.resume, weights_only=False)
+    state = torch.load(args.resume, weights_only=False, map_location="cpu")
     for role in ROLES:
         learner = Learner(role, GAME_DIMS[role], GAME_PRIV, GAME_ACT, args)
         learner.load(state["learners"][role])
@@ -878,7 +906,7 @@ def load_exam_panel(args, dims, league):
     files = sorted(glob.glob(os.path.join(args.exam_dir, "*.pt"))) if args.exam_dir else []
     if files:
         for path in files:
-            data = torch.load(path, weights_only=False)
+            data = torch.load(path, weights_only=False, map_location="cpu")
             if data["obs_dim"] <= dims[data["role"]]:
                 name = os.path.splitext(os.path.basename(path))[0]
                 panel[data["role"]].append((name, Snapshot(data, dims[data["role"]], imported=True)))
@@ -907,7 +935,7 @@ def run_exam(env, learners, dims, slots, panel, raw_obs, raw_priv, flags, second
             o_raw = raw_obs[idx, :dims[role]]
             learner = learners[role]
             with torch.no_grad():
-                mine = learner.actor.evaluate(torch.from_numpy(learner.obs_rms.normalize(o_raw)))[0].numpy()
+                mine = learner.actor.evaluate(T(learner.obs_rms.normalize(o_raw)))[0].cpu().numpy()
             out = mine.copy()
             for row, slot in enumerate(idx):
                 test = assign[env.match_of[slot]]
@@ -950,20 +978,20 @@ def share_team_future(b, match_of_slot, last_value, valid_last, gamma):
     never sees the team's later result. Give its last step the team's expected future instead of nothing:
     gamma times the average value of its teammates still in that chase one step later (the
     "posthumous credit" problem from Unity's MA-POCA). Its own wreck penalty still applies."""
-    T = b["rew"].shape[0]
+    count = b["rew"].shape[0]
     matches = int(match_of_slot.max()) + 1
-    for t in range(T):
-        gone = (b["gone"][t] * b["valid"][t]).numpy() > 0.5
+    for t in range(count):
+        gone = (b["gone"][t] * b["valid"][t]).cpu().numpy() > 0.5
         if not gone.any():
             continue
-        values = (last_value if t == T - 1 else b["val"][t + 1]).numpy()
-        alive = (valid_last if t == T - 1 else b["valid"][t + 1]).numpy() > 0.5
+        values = (last_value if t == count - 1 else b["val"][t + 1]).cpu().numpy()
+        alive = (valid_last if t == count - 1 else b["valid"][t + 1]).cpu().numpy() > 0.5
         alive = alive & ~gone
         totals = np.bincount(match_of_slot, weights=values * alive, minlength=matches)
         counts = np.bincount(match_of_slot, weights=alive.astype(np.float64), minlength=matches)
         team = np.where(counts > 0, totals / np.maximum(counts, 1), 0.0)
         bonus = np.where(gone, gamma * team[match_of_slot], 0.0)
-        b["rew"][t] += torch.from_numpy(bonus.astype(np.float32))
+        b["rew"][t] += torch.from_numpy(bonus.astype(np.float32)).to(b["rew"].device)
 
 
 def train_side(learner, b, args, train_actor=True):
@@ -977,11 +1005,11 @@ def train_side(learner, b, args, train_actor=True):
     nav = b["nav"].reshape(-1)[mask]
     adv_all, ret, val_old = b["adv"].reshape(-1)[mask], b["ret"].reshape(-1)[mask], b["val"].reshape(-1)[mask]
     value_in = learner.value_input(obs, priv)
-    learner.value_norm.update(ret.numpy(), learner.critic.net[4])
-    target = torch.from_numpy(learner.value_norm.norm(ret.numpy()).astype(np.float32))
+    learner.value_norm.update(ret.cpu().numpy(), learner.critic.net[4])
+    target = torch.from_numpy(learner.value_norm.norm(ret.cpu().numpy()).astype(np.float32)).to(ret.device)
     pieces = max(1, min(args.minibatches, count // 64))
     for _ in range(args.epochs):
-        for idx in torch.randperm(count).tensor_split(pieces):
+        for idx in torch.randperm(count, device=obs.device).tensor_split(pieces):
             # Plain squared error on normalised targets: value clipping hurt in every setting Andrychowicz et
             # al. ("What Matters in On-Policy RL") tried; value normalisation helped in the MAPPO paper.
             v_loss = 0.5 * ((learner.critic(value_in[idx]) - target[idx]) ** 2).mean()
