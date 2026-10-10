@@ -24,6 +24,9 @@ const GATE_USE: float = 0.72
 const DISTRICT_SIZE: float = 1500.0
 
 var world_seed: int = 1
+## Added to every position before reading the district noise: a piece moved to the origin for training
+## (training_city) keeps the districts of where its cells really are.
+var offset := Vector2.ZERO
 var _districts := FastNoiseLite.new()
 var _angles := FastNoiseLite.new()
 var _wobble := FastNoiseLite.new()
@@ -50,6 +53,7 @@ func setup(config: CityGenSettings) -> void:
 # --- what is where ------------------------------------------------------------
 
 func style_at(at: Vector2) -> int:
+	at += offset
 	var value: float = (_districts.get_noise_2d(at.x, at.y) + 1.0) * 0.5
 	var weights := PackedFloat32Array([settings.old_town_weight, settings.grid_weight, settings.residential_weight,
 		settings.industrial_weight])
@@ -65,10 +69,12 @@ func style_at(at: Vector2) -> int:
 
 
 func district_index(at: Vector2) -> int:
+	at += offset
 	return int(fposmod((_districts.get_noise_2d(at.x, at.y) + 1.0) * 104729.0, 100000.0))
 
 
 func grid_angle(at: Vector2) -> float:
+	at += offset
 	return fposmod((_angles.get_noise_2d(at.x, at.y) + 1.0) * 3571.0, 1.0) * PI * 0.5
 
 
@@ -257,11 +263,16 @@ func _branch_dir(base: float, side: int, style: int, at: Vector2) -> float:
 ## The cells within `radius` of cell (ci, cj) stitched into one road graph (main-road points shared by
 ## neighbours become the same junction). Sets `boundary` to the window's outline for the city builder.
 func window(ci: int, cj: int, radius: int) -> RoadGraph:
+	return cells_window(Rect2i(ci - radius, cj - radius, radius * 2 + 1, radius * 2 + 1))
+
+
+## The cells in `area` (cell coordinates) stitched into one road graph, as window().
+func cells_window(area: Rect2i) -> RoadGraph:
 	var merged := RoadGraph.new()
 	var shared: Dictionary = {}
 	var seen_edges: Dictionary = {}
-	for j: int in range(cj - radius, cj + radius + 1):
-		for i: int in range(ci - radius, ci + radius + 1):
+	for j: int in range(area.position.y, area.end.y):
+		for i: int in range(area.position.x, area.end.x):
 			var cell: Dictionary = cell_roads(i, j)
 			var local: RoadGraph = cell["graph"]
 			var keys: Array[String] = cell["keys"]
@@ -284,10 +295,34 @@ func window(ci: int, cj: int, radius: int) -> RoadGraph:
 				seen_edges[pair] = true
 				merged.add_edge(a, b, local.edge_kind[id], local.edge_width[id], local.edge_style[id])
 	graph = merged
-	var low := Vector2((ci - radius) * CELL, (cj - radius) * CELL)
-	var high := Vector2((ci + radius + 1) * CELL, (cj + radius + 1) * CELL)
+	var low := Vector2(area.position) * CELL
+	var high := Vector2(area.end) * CELL
 	boundary = PackedVector2Array([low, Vector2(high.x, low.y), high, Vector2(low.x, high.y)])
 	return merged
+
+
+## A piece of the infinite city for training (the chase arena, the GPU world export): `cells` × `cells`
+## cells from a random place, moved so the piece is centred on the origin like a round city. 2 × 2 cells
+## (960 m) is about the size of the round training cities.
+func training_city(cells: int, rng: RandomNumberGenerator) -> RoadGraph:
+	var start := Vector2i(rng.randi_range(-20, 20), rng.randi_range(-20, 20))
+	var piece: RoadGraph = cells_window(Rect2i(start, Vector2i(cells, cells)))
+	var shift: Vector2 = (Vector2(start) + Vector2.ONE * cells * 0.5) * CELL
+	var moved := RoadGraph.new()
+	for node: int in piece.node_count():
+		moved.add_node(piece.positions[node] - shift)
+	for id: int in piece.alive_edges():
+		moved.add_edge(piece.edge_a[id], piece.edge_b[id], piece.edge_kind[id], piece.edge_width[id], piece.edge_style[id])
+	graph = moved
+	offset = shift
+	var half: float = cells * 0.5 * CELL
+	boundary = PackedVector2Array([Vector2(-half, -half), Vector2(half, -half), Vector2(half, half), Vector2(-half, half)])
+	return moved
+
+
+## How far from the centre a training piece's roads can reach: its outer main roads are jittered and bend.
+static func training_extent(cells: int) -> float:
+	return cells * 0.5 * CELL + JITTER * CELL + 60.0
 
 
 # --- randomness that only depends on the place ------------------------------------------

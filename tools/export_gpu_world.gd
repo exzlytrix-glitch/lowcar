@@ -7,7 +7,8 @@ extends SceneTree
 ## Cities are generated exactly like the chase arena's (same settings, radius), from seeds base+k.
 ##
 ## godot --headless --path . --script res://tools/export_gpu_world.gd -- --out=DIR --cities=8 --seed=1000
-##   [--radius=450] [--cell=1.0] [--first=0]
+##   [--radius=450] [--cell=1.0] [--first=0] [--world]
+## --world: pieces of the game's endless city (WorldGen 2 × 2 cells, as the arena's --world-cities).
 
 var out_dir: String = "user://gpu_world"
 var cities: int = 8
@@ -15,6 +16,7 @@ var first: int = 0
 var base_seed: int = 1000
 var radius: float = 450.0
 var cell: float = 1.0
+var world_cities: bool = false
 
 
 func _initialize() -> void:
@@ -33,6 +35,8 @@ func _initialize() -> void:
 				radius = float(value)
 			"--cell":
 				cell = float(value)
+			"--world":
+				world_cities = true
 	DirAccess.make_dir_recursive_absolute(out_dir)
 	call_deferred("run")
 
@@ -51,7 +55,22 @@ func _export_city(k: int) -> void:
 	settings.city_seed = base_seed + k
 	settings.city_radius = radius
 	var generator := RoadGenerator.new()
-	var graph: RoadGraph = generator.generate(settings)
+	var graph: RoadGraph
+	var half: float = radius
+	var extent: float = radius + 80.0
+	if world_cities:
+		var world_gen := WorldGen.new()
+		world_gen.setup(settings)
+		var rng := RandomNumberGenerator.new()
+		rng.seed = settings.city_seed
+		graph = world_gen.training_city(2, rng)
+		generator = world_gen
+		half = WorldGen.CELL
+		extent = WorldGen.training_extent(2)
+		settings.city_radius = extent * 1.42
+		settings.ring_road = false
+	else:
+		graph = generator.generate(settings)
 	var blocks: Array[CityBlocks.Block] = CityBlocks.build(graph, generator, settings)
 	var world := Node3D.new()
 	root.add_child(world)
@@ -61,7 +80,6 @@ func _export_city(k: int) -> void:
 	city.build(settings, graph, generator, blocks)
 	await physics_frame
 	await physics_frame
-	var extent: float = radius + 80.0
 	var size: int = int(ceil(extent * 2.0 / cell))
 	var space: PhysicsDirectSpaceState3D = world.get_world_3d().direct_space_state
 	var query := PhysicsPointQueryParameters3D.new()
@@ -83,7 +101,7 @@ func _export_city(k: int) -> void:
 	var edges: Array = []
 	for id: int in graph.alive_edges():
 		edges.append([graph.edge_a[id], graph.edge_b[id], snappedf(graph.edge_width[id], 0.01)])
-	_write_json(out_dir.path_join("city_%d.json" % k), {"seed": settings.city_seed, "radius": radius,
+	_write_json(out_dir.path_join("city_%d.json" % k), {"seed": settings.city_seed, "radius": half,
 		"extent": extent, "cell": cell, "size": size, "nodes": nodes, "edges": edges,
 		"buildings": city.building_count})
 	world.queue_free()

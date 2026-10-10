@@ -8,7 +8,8 @@
 #   bash training/gpu_pretrain.sh HOURS [CHASES] [CITIES] [OUT] [WORLD]
 # Only OUT should be somewhere that gets saved (Kaggle saves /kaggle/working); keep WORLD and the
 # downloaded Godot in a scratch folder (/kaggle/tmp) so the saved output is just the brains.
-# Environment: GODOT=path (skip the download), DEVICE=cuda|cpu, STEPS=64
+# Environment: GODOT=path (skip the download), DEVICE=cuda|cpu, STEPS=64,
+#   WORLD_CITIES=1 (cities are pieces of the game's endless city instead of round ones)
 set -euo pipefail
 HOURS=${1:-10}
 CHASES=${2:-12288}
@@ -17,6 +18,8 @@ OUT=${4:-/kaggle/working/out}
 WORLD=${5:-/kaggle/tmp/world}
 DEVICE=${DEVICE:-cuda}
 STEPS=${STEPS:-64}
+WORLD_FLAG=""
+[ "${WORLD_CITIES:-0}" = "1" ] && WORLD_FLAG="--world"
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
 GODOT_URL=https://github.com/godotengine/godot/releases/download/4.7-stable/Godot_v4.7-stable_linux.x86_64.zip
 
@@ -45,7 +48,7 @@ if [ ! -f "$WORLD/city_$((CITIES - 1)).solid" ]; then
     FIRST=$(( i * PER ))
     COUNT=$(( CITIES - FIRST < PER ? CITIES - FIRST : PER ))
     [ "$COUNT" -gt 0 ] && "$GODOT" --headless --path "$ROOT" --script res://tools/export_gpu_world.gd -- \
-      --out="$WORLD" --cities="$COUNT" --first="$FIRST" --seed=50000 > "$WORLD/export_$i.log" 2>&1 &
+      --out="$WORLD" --cities="$COUNT" --first="$FIRST" --seed=50000 $WORLD_FLAG > "$WORLD/export_$i.log" 2>&1 &
   done
   wait
   grep -h "GPU_WORLD" "$WORLD"/export_*.log | tail -3

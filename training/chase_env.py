@@ -13,7 +13,7 @@ import numpy as np
 
 class ChaseWorlds:
     def __init__(self, godot, project, procs=3, matches=6, seed=1, repeat=6, city_steps=3000,
-                 radius=450.0, log_dir=None, connect_timeout=600):
+                 radius=450.0, log_dir=None, connect_timeout=600, world_cities=False):
         self.procs = []
         self.socks = []
         servers = []
@@ -28,6 +28,8 @@ class ChaseWorlds:
                     "res://scenes/training/chase_arena.tscn", "--",
                     f"--port={port}", f"--matches={matches}", f"--seed={seed * 1000 + index}",
                     f"--repeat={repeat}", f"--city-steps={city_steps}", f"--radius={radius}"]
+            if world_cities:
+                args.append("--world-cities")
             log = subprocess.DEVNULL
             if log_dir:
                 os.makedirs(log_dir, exist_ok=True)

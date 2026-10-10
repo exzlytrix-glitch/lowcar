@@ -114,6 +114,8 @@ def parse_args():
     p.add_argument("--critic-hidden", type=int, default=256)
     p.add_argument("--city-steps", type=int, default=3000)
     p.add_argument("--radius", type=float, default=450.0)
+    p.add_argument("--world-cities", action="store_true",
+                   help="train in pieces of the game's endless city (WorldGen) instead of round cities")
     p.add_argument("--past-share", type=float, default=0.2,
                    help="share of chases where one side is a past version (each side)")
     p.add_argument("--pool-size", type=int, default=40)
@@ -613,7 +615,8 @@ def main():
         print(f"GPU world: {env.num_matches} chases at once in {env.cities.count} cities on {args.device}")
     else:
         env = ChaseWorlds(args.godot, args.project, procs=args.procs, matches=args.matches, seed=args.seed,
-                          city_steps=args.city_steps, radius=args.radius, log_dir=os.path.join(args.out, "logs"))
+                          city_steps=args.city_steps, radius=args.radius, log_dir=os.path.join(args.out, "logs"),
+                          world_cities=args.world_cities)
     S, A, M = env.num_slots, env.act_dim, env.num_matches
     dims = {"cop": env.cop_obs, "runner": env.runner_obs}
     slots = {"cop": np.nonzero(~env.is_runner)[0], "runner": np.nonzero(env.is_runner)[0]}

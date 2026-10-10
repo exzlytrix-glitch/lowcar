@@ -3,7 +3,7 @@ extends Node3D
 ## Several chases (scripts/ai/chase_match.gd) run at once in one random city, each on its own
 ## collision layer. The city is swapped every few minutes so nobody memorises streets.
 ##
-## Args after "--": --port=N --matches=6 --seed=1 --repeat=6 --city-steps=3000 --radius=450
+## Args after "--": --port=N --matches=6 --seed=1 --repeat=6 --city-steps=3000 --radius=450 [--world-cities]
 ## --selftest=STEPS drives every slot with simple scripted driving (no Python) and prints a report.
 ## --eval=STEPS does the same with trained brains driving exactly as in the game (their best guess, no
 ## randomness): --cop-brain=PATH --runner-brain=PATH, default resources/ai/chase_*_brain.json.
@@ -20,6 +20,9 @@ var seed_value: int = 1
 var repeat: int = 6
 var city_steps: int = 3000
 var radius: float = 450.0
+## --world-cities: train in pieces of the game's endless city (WorldGen, 2 × 2 cells, 960 m) instead of
+## round cities of `radius`.
+var world_cities: bool = false
 var selftest: int = 0
 var cop_brain_path: String = "res://resources/ai/chase_cop_brain.json"
 var runner_brain_path: String = "res://resources/ai/chase_runner_brain.json"
@@ -54,6 +57,8 @@ func _ready() -> void:
 				city_steps = int(value)
 			"--radius":
 				radius = float(value)
+			"--world-cities":
+				world_cities = true
 			"--selftest":
 				selftest = int(value)
 			"--eval":
@@ -176,7 +181,16 @@ func _build_city() -> void:
 	settings.city_seed = _rng.randi_range(1, 999999)
 	settings.city_radius = radius
 	var generator := RoadGenerator.new()
-	var graph: RoadGraph = generator.generate(settings)
+	var graph: RoadGraph
+	if world_cities:
+		var world := WorldGen.new()
+		world.setup(settings)
+		graph = world.training_city(2, _rng)
+		generator = world
+		settings.city_radius = WorldGen.training_extent(2) * 1.42
+		settings.ring_road = false
+	else:
+		graph = generator.generate(settings)
 	var blocks: Array[CityBlocks.Block] = CityBlocks.build(graph, generator, settings)
 	_city = CityBuilder.new()
 	_city.name = "City"

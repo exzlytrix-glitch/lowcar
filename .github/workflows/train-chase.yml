@@ -49,6 +49,10 @@ on:
         description: Chases per training world
         default: "6"
         type: string
+      world_cities:
+        description: Train in pieces of the game's endless city instead of round cities (true/false)
+        default: "false"
+        type: string
 
 permissions:
   contents: read
@@ -147,6 +151,7 @@ jobs:
           fi
           [ -d prev/league ] && ARGS="$ARGS --league-in prev/league"
           [ -d prev/exam ] && ARGS="$ARGS --exam-dir prev/exam"
+          [ "${{ inputs.world_cities }}" = "true" ] && ARGS="$ARGS --world-cities"
           echo "line $LINE, $STYLE runner: $ARGS"
           python training/train_chase.py --godot godot --project . --out out --line "$LINE" \
             --runner-style "$STYLE" --hours "$HOURS" --procs "$PROCS" --matches "$MATCHES" \
@@ -219,4 +224,4 @@ jobs:
           gh workflow run train-chase.yml --repo "$GITHUB_REPOSITORY" --ref "$GITHUB_REF_NAME" \
             -f resume_run_id=${{ github.run_id }} -f round=$(( ${{ inputs.round }} + 1 )) \
             -f rounds=$(( ${{ inputs.rounds }} - 1 )) -f lines=${{ inputs.lines }} -f hours=${{ inputs.hours }} \
-            -f procs=${{ inputs.procs }} -f matches=${{ inputs.matches }}
+            -f procs=${{ inputs.procs }} -f matches=${{ inputs.matches }} -f world_cities=${{ inputs.world_cities }}
