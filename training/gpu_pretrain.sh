@@ -6,20 +6,22 @@
 # continues in the real game with the GitHub chase training (it carries over like any checkpoint).
 #
 #   bash training/gpu_pretrain.sh HOURS [CHASES] [CITIES] [OUT] [WORLD]
+# Only OUT should be somewhere that gets saved (Kaggle saves /kaggle/working); keep WORLD and the
+# downloaded Godot in a scratch folder (/kaggle/tmp) so the saved output is just the brains.
 # Environment: GODOT=path (skip the download), DEVICE=cuda|cpu, STEPS=64
 set -euo pipefail
 HOURS=${1:-10}
-CHASES=${2:-4096}
+CHASES=${2:-12288}
 CITIES=${3:-96}
 OUT=${4:-/kaggle/working/out}
-WORLD=${5:-/kaggle/working/world}
+WORLD=${5:-/kaggle/tmp/world}
 DEVICE=${DEVICE:-cuda}
 STEPS=${STEPS:-64}
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
 GODOT_URL=https://github.com/godotengine/godot/releases/download/4.7-stable/Godot_v4.7-stable_linux.x86_64.zip
 
 if [ -z "${GODOT:-}" ]; then
-  GODOT="$(dirname "$OUT")/godot/godot"
+  GODOT="$(dirname "$WORLD")/godot/godot"
   if [ ! -x "$GODOT" ]; then
     mkdir -p "$(dirname "$GODOT")"
     curl -fsSL -o /tmp/godot.zip "$GODOT_URL"

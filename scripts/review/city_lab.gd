@@ -92,6 +92,8 @@ var _watch: bool = false
 var _overhead_camera: Camera3D
 var _camera_before_overhead: Camera3D
 var _overhead_on_load: bool = false
+## --brain: cops use the learned chase brain from the start (otherwise B switches).
+var _brain_on_load: bool = false
 ## --show: --watch with the lab text hidden and a TV-news style overlay instead (LabBroadcast).
 var _show: bool = false
 var _broadcast: LabBroadcast
@@ -111,6 +113,8 @@ func _ready() -> void:
 			_watch = true
 		elif argument == "--overhead":
 			_overhead_on_load = true
+		elif argument == "--brain":
+			_brain_on_load = true
 		elif argument == "--show":
 			_start_chase_on_load = true
 			_watch = true
@@ -149,8 +153,9 @@ func _ready() -> void:
 	await regenerate()
 	if _start_chase_on_load:
 		chase.start()
-	if _watch:
+	if _watch or _brain_on_load:
 		chase.set_brain(true)
+	if _watch:
 		_toggle_ai_runner()
 	if _overhead_on_load:
 		_toggle_overhead()

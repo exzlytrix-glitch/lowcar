@@ -155,32 +155,26 @@ class Roads:
     def exits(self, city, node, came_from):
         """RoadNav.exits: up to MAX_DEGREE roads leaving `node` except the one from `came_from`, sorted
         left to right. Returns turn (radians, negative = left), far junction, length, first neighbour
-        and a validity mask, each (N, MAX_DEGREE)."""
+        and a validity mask, each (N, MAX_DEGREE). All neighbours are followed at once."""
+        n = city.shape[0]
         p = self.node_xy(city, node)
         q = self.node_xy(city, came_from)
         ix, iz = p[:, 0] - q[:, 0], p[:, 1] - q[:, 1]
         il = torch.sqrt(ix ** 2 + iz ** 2).clamp(min=1e-6)
-        ix, iz = ix / il, iz / il
-        n = city.shape[0]
-        turns = torch.full((n, MAX_DEGREE), 9.0, device=self.device, dtype=self.dtype)
-        ends = torch.zeros((n, MAX_DEGREE), device=self.device, dtype=torch.long)
-        lengths = torch.zeros((n, MAX_DEGREE), device=self.device, dtype=self.dtype)
-        firsts = torch.zeros((n, MAX_DEGREE), device=self.device, dtype=torch.long)
-        valid = torch.zeros((n, MAX_DEGREE), device=self.device, dtype=torch.bool)
-        for k in range(MAX_DEGREE):
-            nb = self.neighbor(city, node, k)
-            ok = (nb >= 0) & (nb != came_from)
-            r = self.node_xy(city, nb)
-            ox, oz = r[:, 0] - p[:, 0], r[:, 1] - p[:, 1]
-            seg = torch.sqrt(ox ** 2 + oz ** 2).clamp(min=1e-6)
-            ox, oz = ox / seg, oz / seg
-            turn = torch.atan2(ix * oz - iz * ox, ix * ox + iz * oz)
-            end, _, length = self.through_bends(city, nb, node, seg)
-            turns[:, k] = torch.where(ok, turn, turns[:, k])
-            ends[:, k] = torch.where(ok, end, ends[:, k])
-            lengths[:, k] = torch.where(ok, length, lengths[:, k])
-            firsts[:, k] = torch.where(ok, nb, firsts[:, k])
-            valid[:, k] = ok
+        ix, iz = (ix / il)[:, None], (iz / il)[:, None]
+        nb = self.neighbors.reshape(-1, MAX_DEGREE)[city * self.max_nodes + node.clamp(min=0)]
+        valid = (nb >= 0) & (nb != came_from[:, None])
+        cities = city[:, None].expand(n, MAX_DEGREE).reshape(-1)
+        r = self.node_xy(cities, nb.reshape(-1)).reshape(n, MAX_DEGREE, 2)
+        ox, oz = r[:, :, 0] - p[:, None, 0], r[:, :, 1] - p[:, None, 1]
+        seg = torch.sqrt(ox ** 2 + oz ** 2).clamp(min=1e-6)
+        ox, oz = ox / seg, oz / seg
+        turns = torch.where(valid, torch.atan2(ix * oz - iz * ox, ix * ox + iz * oz), 9.0)
+        end, _, length = self.through_bends(cities, nb.reshape(-1).clamp(min=0),
+                                            node[:, None].expand(n, MAX_DEGREE).reshape(-1), seg.reshape(-1))
+        ends = torch.where(valid, end.reshape(n, MAX_DEGREE), 0)
+        lengths = torch.where(valid, length.reshape(n, MAX_DEGREE), 0.0)
+        firsts = torch.where(valid, nb, 0)
         order = turns.argsort(1)
         gather = lambda t: t.gather(1, order)
         return gather(turns), gather(ends), gather(lengths), gather(firsts), gather(valid)

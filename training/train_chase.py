@@ -51,7 +51,7 @@ ROLES = ("cop", "runner")
 WEIGHTS = {
     # runner damage (team), runner wrecked (team), metres closed (fades out), own wall damage,
     # own damage from car hits, own wreck, damage it dealt to the runner, damage it dealt to other cops
-    "cop": [0.05, 3.0, 0.02, -0.01, -0.004, -1.0, 0.02, -0.02],
+    "cop": [0.05, 3.0, 0.02, -0.015, -0.004, -1.25, 0.02, -0.02],
     # alive, damage taken, wrecked, damage dealt to cops, cops wrecked, speed, wall damage, survived
     "runner": [0.02, -0.05, -3.0, 0.01, 0.4, 0.0, 0.0, 0.0],
 }
@@ -132,6 +132,8 @@ def parse_args():
                    help="just write the game brains from --resume (carried over to the current format) and stop")
     p.add_argument("--init", default="", help="driving-school brain (cop_brain.json or checkpoint.pt) to start both from")
     p.add_argument("--critic-warmup", type=int, default=6, help="updates that train only critics after --init")
+    p.add_argument("--warmup-on-resume", action="store_true",
+                   help="also warm the critics up after --resume (moving a GPU-trained brain into the real game)")
     p.add_argument("--league-in", default="", help="folder of snapshots from earlier rounds / other lines")
     p.add_argument("--seed", type=int, default=1)
     p.add_argument("--threads", type=int, default=1)
@@ -613,6 +615,8 @@ def main():
             learners[role].load(state["learners"][role])
         updates, prior_seconds = state["updates"], state.get("trained_seconds", 0.0)
         print(f"resumed from {args.resume}: {updates} updates, {prior_seconds / 3600:.2f} h trained")
+        if args.warmup_on_resume:
+            warmup_left = args.critic_warmup
     elif args.init:
         for role in ROLES:
             warm_start(learners[role], args.init)
@@ -662,7 +666,7 @@ def main():
                "cop_wrecks_min", "cop_on_cop_min", "cops_per_chase", "known_pct", "cop_return", "runner_return",
                "approach_hint", "cop_bursts_min", "burst_hits", "runner_boosts_min", "runner_charging_pct",
                "boost_rams", "cop_drift_pct", "runner_drift_pct", "cop_handbrake_pct", "runner_handbrake_pct",
-               "cop_reverse_pct", "runner_standoff_dmg_min"] + [f"cop_route_{name}" for name in COP_ROUTES] + \
+               "cop_reverse_pct", "runner_standoff_dmg_min", "sim_s", "learn_s", "other_s"] + [f"cop_route_{name}" for name in COP_ROUTES] + \
               [f"runner_route_{name}" for name in RUNNER_ROUTES]
     if os.path.exists(csv_path):
         with open(csv_path, newline="") as handle:
@@ -716,6 +720,7 @@ def main():
     try:
         while time.time() - started < budget - exam_seconds:
             update_start = time.time()
+            env_seconds = 0.0
             stats_sum = np.zeros(env.stats_dim)
             fade = max(0.0, 1.0 - learners["cop"].steps / max(args.approach_fade_steps, 1.0))
             weights = {role: learners[role].weights.copy() for role in ROLES}
@@ -742,7 +747,9 @@ def main():
                     b["obs"][t], b["priv"][t], b["act"][t], b["nav"][t] = o_n, p_n, act, nav
                     b["valid"][t] = T(valid.astype(np.float32))
                     actions[idx] = to_game(act_np, learner.actor.n_gauss)
+                env_started = time.time()
                 next_obs, next_priv, parts, next_flags, stats = env.step(actions)
+                env_seconds += time.time() - env_started
                 stats_sum += stats
                 done_all = next_flags[:, 0] > 0.5
                 trunc_all = next_flags[:, 2] > 0.5
@@ -808,8 +815,10 @@ def main():
                 b["adv"] = adv
                 b["ret"] = adv + b["val"]
 
+            learn_started = time.time()
             for role in ROLES:
                 train_side(learners[role], bufs[role], args, train_actor=warmup_left <= 0)
+            learn_seconds = time.time() - learn_started
             warmup_left -= 1
             updates += 1
 
@@ -836,6 +845,8 @@ def main():
                    "cop_return": round(float(np.mean(finished["cop"])), 3) if finished["cop"] else 0.0,
                    "runner_return": round(float(np.mean(finished["runner"])), 3) if finished["runner"] else 0.0,
                    "approach_hint": round(fade, 3),
+                   "sim_s": round(env_seconds, 2), "learn_s": round(learn_seconds, 2),
+                   "other_s": round(time.time() - update_start - env_seconds - learn_seconds, 2),
                    "cop_bursts_min": round(s[16] / cop_min, 2), "burst_hits": int(s[24]),
                    "runner_boosts_min": round(s[17] / runner_min, 2),
                    "runner_charging_pct": round(s[18] / max(s[10], 1) * 100, 1), "boost_rams": int(s[25]),
@@ -1004,7 +1015,6 @@ def train_side(learner, b, args, train_actor=True):
     act, logp_old = b["act"].reshape(-1, a)[mask], b["logp"].reshape(-1)[mask]
     nav = b["nav"].reshape(-1)[mask]
     adv_all, ret, val_old = b["adv"].reshape(-1)[mask], b["ret"].reshape(-1)[mask], b["val"].reshape(-1)[mask]
-    value_in = learner.value_input(obs, priv)
     learner.value_norm.update(ret.cpu().numpy(), learner.critic.net[4])
     target = torch.from_numpy(learner.value_norm.norm(ret.cpu().numpy()).astype(np.float32)).to(ret.device)
     pieces = max(1, min(args.minibatches, count // 64))
@@ -1012,7 +1022,7 @@ def train_side(learner, b, args, train_actor=True):
         for idx in torch.randperm(count, device=obs.device).tensor_split(pieces):
             # Plain squared error on normalised targets: value clipping hurt in every setting Andrychowicz et
             # al. ("What Matters in On-Policy RL") tried; value normalisation helped in the MAPPO paper.
-            v_loss = 0.5 * ((learner.critic(value_in[idx]) - target[idx]) ** 2).mean()
+            v_loss = 0.5 * ((learner.critic(learner.value_input(obs[idx], priv[idx])) - target[idx]) ** 2).mean()
             loss = args.vf * v_loss
             if train_actor:
                 _, new_logp, entropy = learner.actor.evaluate(obs[idx], act[idx], nav[idx])

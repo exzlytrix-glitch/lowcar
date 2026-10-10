@@ -155,50 +155,44 @@ class GpuChase:
         self.charge_left = torch.where(mask, 0.0, self.charge_left)
         self.accum = torch.where(mask[:, None], 0.0, self.accum)
 
-    def _random_road_spot(self, city, min_length=12.0, t_range=(0.25, 0.75)):
-        """RoadNav.random_road_spot for each entry of `city`: point on a random road and its direction."""
+    def _random_road_spot(self, city, min_length=12.0, t_range=(0.25, 0.75), tries=20):
+        """RoadNav.random_road_spot for each entry of `city`: point on a random road and its direction
+        (all tries at once, the first road long enough wins)."""
         n = city.shape[0]
-        count = self.roads.edge_count[city]
-        x = torch.zeros(n, device=self.device)
-        z, dx, dz = torch.zeros_like(x), torch.zeros_like(x), torch.ones_like(x)
-        found = torch.zeros(n, dtype=torch.bool, device=self.device)
-        for _ in range(20):
-            e = (self._rand(n) * count).long().clamp(max=count - 1)
-            a, b = self.roads.edge_nodes(city, e)
-            pa, pb = self.roads.node_xy(city, a), self.roads.node_xy(city, b)
-            seg = pb - pa
-            length = torch.linalg.norm(seg, dim=1)
-            ok = (length >= min_length) & ~found
-            t = t_range[0] + self._rand(n) * (t_range[1] - t_range[0])
-            p = pa + seg * t[:, None]
-            d = seg / length.clamp(min=1e-3)[:, None]
-            flip = self._rand(n) < 0.5
-            d = torch.where(flip[:, None], -d, d)
-            x, z = torch.where(ok, p[:, 0], x), torch.where(ok, p[:, 1], z)
-            dx, dz = torch.where(ok, d[:, 0], dx), torch.where(ok, d[:, 1], dz)
-            found |= ok
-        return x, z, dx, dz
+        count = self.roads.edge_count[city][:, None]
+        e = (self._rand(n, tries) * count).long().clamp(max=count - 1)
+        c = city[:, None].expand(n, tries).reshape(-1)
+        a, b = self.roads.edge_nodes(c, e.reshape(-1))
+        pa, pb = self.roads.node_xy(c, a).reshape(n, tries, 2), self.roads.node_xy(c, b).reshape(n, tries, 2)
+        seg = pb - pa
+        length = torch.linalg.norm(seg, dim=2)
+        ok = length >= min_length
+        first = ok.float().argmax(1)
+        rows = torch.arange(n, device=self.device)
+        pa, seg, length = pa[rows, first], seg[rows, first], length[rows, first]
+        t = t_range[0] + self._rand(n) * (t_range[1] - t_range[0])
+        p = pa + seg * t[:, None]
+        d = seg / length.clamp(min=1e-3)[:, None]
+        d = torch.where((self._rand(n) < 0.5)[:, None], -d, d)
+        return p[:, 0], p[:, 1], d[:, 0], d[:, 1]
 
-    def _pick_goals(self, runners):
-        """A random junction more than 300 m away for each runner slot index in `runners`."""
-        if runners.numel() == 0:
-            return
-        city = self.cars.city[runners]
-        here = torch.stack([self.cars.x[runners], self.cars.z[runners]], 1)
-        goal = here.clone()
-        done = torch.zeros(len(runners), dtype=torch.bool, device=self.device)
-        for _ in range(12):
-            node = (self._rand(len(runners)) * self.roads.node_count[city]).long()
-            p = self.roads.node_xy(city, node)
-            take = ~done
-            goal = torch.where(take[:, None], p, goal)
-            done |= take & (torch.linalg.norm(p - here, dim=1) > 300.0)
-        self.goal[runners] = goal
+    def _pick_goals(self, mask):
+        """A random junction more than 300 m away for each chase's runner where `mask` (12 tries at once;
+        like the game, the last try is kept when none is far enough)."""
+        rows = torch.arange(self.M, device=self.device) * SLOTS
+        city = self.city_of_match
+        here = torch.stack([self.cars.x[rows], self.cars.z[rows]], 1)
+        node = (self._rand(self.M, 12) * self.roads.node_count[city][:, None]).long()
+        p = self.roads.node_xy(city[:, None].expand(-1, 12).reshape(-1), node.reshape(-1)).reshape(self.M, 12, 2)
+        far = torch.linalg.norm(p - here[:, None, :], dim=2) > 300.0
+        pick = torch.where(far.any(1), far.float().argmax(1), 11)
+        goal = p[torch.arange(self.M, device=self.device), pick]
+        self.goal[rows] = torch.where(mask[:, None], goal, self.goal[rows])
 
     # --- chase lifecycle (ChaseMatch.restart / _spawn_cop / _reinforce) ------------------------
 
     def _restart(self, matches):
-        if not bool(matches.any()):
+        if not bool(matches.any()):  # one check per decision; most decisions start no new chase
             return
         dev = self.device
         m = matches
@@ -217,22 +211,17 @@ class GpuChase:
         self._park(slots_of & (self.slot > 0))
         self.respawn_wait = torch.where(slots_of, 0.0, self.respawn_wait)
         runner = slots_of & (self.slot == 0)
-        idx = torch.nonzero(runner).squeeze(1)
-        x, z, dx, dz = self._random_road_spot(self.cars.city[idx])
-        speed = torch.where(self._rand(len(idx)) < self.c["runner_standing_start"], 0.0, 15.0 + self._rand(len(idx)) * 15.0)
-        full = lambda v: torch.zeros(self.N, device=dev).index_put((idx,), v)
-        self._place(runner, full(x), full(z), full(dx), full(dz), full(speed))
+        x, z, dx, dz = self._random_road_spot(self.city_of_match)
+        speed = torch.where(self._rand(self.M) < self.c["runner_standing_start"], 0.0, 15.0 + self._rand(self.M) * 15.0)
+        spread = lambda v: torch.zeros(self.N, device=dev).index_copy(0, torch.arange(self.M, device=dev) * SLOTS, v)
+        self._place(runner, spread(x), spread(z), spread(dx), spread(dz), spread(speed))
         self.active = self.active | runner
-        self._pick_goals(idx)
-        rm = idx // SLOTS
-        self._refresh_intel(torch.zeros(self.M, dtype=torch.bool, device=dev).index_fill(0, rm, True))
+        self._pick_goals(m)
+        self._refresh_intel(m)
         # first cops: one behind, the rest behind or ahead
         for count in range(COPS):
-            want = m & (self.target_cops > count)
-            if not bool(want.any()):
-                break
             behind = (count == 0) | (self._rand(self.M) < 0.3)
-            self._spawn(want, behind)
+            self._spawn(m & (self.target_cops > count), behind)
         self.accum = torch.where(slots_of[:, None], 0.0, self.accum)
 
     def _free_slot(self):
@@ -244,65 +233,58 @@ class GpuChase:
         return torch.where(has, torch.arange(self.M, device=self.device) * SLOTS + first, -1)
 
     def _spawn(self, want, behind):
-        """Spawns one cop in each chase where `want`, out of sight like the lab chase."""
+        """Spawns one cop in each chase where `want`, out of sight like the lab chase. All candidate spots
+        are drawn at once; the first that fits wins (the first 32 also have to be behind / ahead)."""
+        dev, M, K = self.device, self.M, SPAWN_TRIES
         slot = self._free_slot()
         want = want & (slot >= 0)
-        if not bool(want.any()):
-            return
-        dev = self.device
-        mi = torch.nonzero(want).squeeze(1)
-        s = slot[mi]
-        r = mi * SLOTS
-        city = self.city_of_match[mi]
+        rows = torch.arange(M, device=dev)
+        r = rows * SLOTS
+        city = self.city_of_match
         here = torch.stack([self.cars.x[r], self.cars.z[r]], 1)
         hx, hz = self._forward(self.cars.yaw[r])
-        near = torch.where(behind[mi], 40.0, 110.0)
-        far = torch.where(behind[mi], 110.0, 280.0)
-        k = len(mi)
-        cops = torch.stack([self.cars.x, self.cars.z], 1).reshape(self.M, SLOTS, 2)[mi, 1:]
-        cop_active = self.active.reshape(self.M, SLOTS)[mi, 1:]
-        best_ok = torch.zeros(k, dtype=torch.bool, device=dev)
-        bx, bz, bdx, bdz, bspeed, bdist = (torch.zeros(k, device=dev) for _ in range(6))
-        count = self.roads.edge_count[city]
-        for attempt in range(SPAWN_TRIES):
-            e = (self._rand(k) * count).long().clamp(max=count - 1)
-            a, b = self.roads.edge_nodes(city, e)
-            pa, pb = self.roads.node_xy(city, a), self.roads.node_xy(city, b)
-            p = pa + (pb - pa) * (0.2 + self._rand(k) * 0.6)[:, None]
-            off = p - here
-            dist = torch.linalg.norm(off, dim=1)
-            side = (hx * off[:, 0] + hz * off[:, 1]) / dist.clamp(min=1e-3)
-            ok = (dist >= near) & (dist <= far)
-            if attempt < 32:
-                ok &= torch.where(behind[mi], side <= -0.3, side >= 0.1)
-            crowded = ((torch.linalg.norm(cops - p[:, None, :], dim=2) < 25.0) & cop_active).any(1)
-            ok &= ~crowded & ~best_ok
-            d = (pb - pa) / torch.linalg.norm(pb - pa, dim=1).clamp(min=1e-3)[:, None]
-            along = (d[:, 0] * hx + d[:, 1] * hz)
-            parallel = along.abs() > 0.5
-            d = torch.where((parallel & (along < 0.0))[:, None], -d, d)
-            line = here + torch.stack([hx, hz], 1) * dist[:, None] - p
-            toward = (d * line).sum(1)
-            d = torch.where((~parallel & (toward < 0.0))[:, None], -d, d)
-            speed = torch.where(parallel, 22.0, 12.0)
-            bx, bz = torch.where(ok, p[:, 0], bx), torch.where(ok, p[:, 1], bz)
-            bdx, bdz = torch.where(ok, d[:, 0], bdx), torch.where(ok, d[:, 1], bdz)
-            bspeed, bdist = torch.where(ok, speed, bspeed), torch.where(ok, dist, bdist)
-            best_ok |= ok
-        s, bx, bz, bdx, bdz, bspeed, bdist = (t[best_ok] for t in (s, bx, bz, bdx, bdz, bspeed, bdist))
-        if s.numel() == 0:
-            return
-        bspeed = torch.where(self._rand(len(s)) < self.c["cop_parked_start"], 0.0, bspeed)
-        mask = torch.zeros(self.N, dtype=torch.bool, device=dev).index_fill(0, s, True)
-        full = lambda v: torch.zeros(self.N, device=dev).index_put((s,), v)
-        self._place(mask, full(bx), full(bz), full(bdx), full(bdz), full(bspeed))
+        near = torch.where(behind, 40.0, 110.0)
+        far = torch.where(behind, 110.0, 280.0)
+        count = self.roads.edge_count[city][:, None]
+        e = (self._rand(M, K) * count).long().clamp(max=count - 1)
+        c = city[:, None].expand(M, K).reshape(-1)
+        a, b = self.roads.edge_nodes(c, e.reshape(-1))
+        pa, pb = self.roads.node_xy(c, a).reshape(M, K, 2), self.roads.node_xy(c, b).reshape(M, K, 2)
+        p = pa + (pb - pa) * (0.2 + self._rand(M, K) * 0.6)[:, :, None]
+        off = p - here[:, None, :]
+        dist = torch.linalg.norm(off, dim=2)
+        side = (hx[:, None] * off[:, :, 0] + hz[:, None] * off[:, :, 1]) / dist.clamp(min=1e-3)
+        ok = (dist >= near[:, None]) & (dist <= far[:, None])
+        facing = torch.where(behind[:, None], side <= -0.3, side >= 0.1)
+        ok = ok & (facing | (torch.arange(K, device=dev) >= 32)[None, :])
+        cops = torch.stack([self.cars.x, self.cars.z], 1).reshape(M, SLOTS, 2)[:, 1:]
+        cop_active = self.active.reshape(M, SLOTS)[:, 1:]
+        crowded = ((torch.linalg.norm(cops[:, None, :, :] - p[:, :, None, :], dim=3) < 25.0) & cop_active[:, None, :]).any(2)
+        ok = ok & ~crowded
+        first = ok.float().argmax(1)
+        final = want & ok.any(1)
+        p, pa, pb, dist = p[rows, first], pa[rows, first], pb[rows, first], dist[rows, first]
+        d = (pb - pa) / torch.linalg.norm(pb - pa, dim=1).clamp(min=1e-3)[:, None]
+        along = d[:, 0] * hx + d[:, 1] * hz
+        parallel = along.abs() > 0.5
+        d = torch.where((parallel & (along < 0.0))[:, None], -d, d)
+        line = here + torch.stack([hx, hz], 1) * dist[:, None] - p
+        d = torch.where((~parallel & ((d * line).sum(1) < 0.0))[:, None], -d, d)
+        speed = torch.where(parallel, 22.0, 12.0)
+        speed = torch.where(self._rand(M) < self.c["cop_parked_start"], 0.0, speed)
+        # write into the chosen slots (chases without a spawn write nothing: their target index is the
+        # runner row, which a spawn never uses, and the mask there stays False)
+        target = torch.where(final, slot, r)
+        mask = torch.zeros(self.N, dtype=torch.bool, device=dev).index_put((target,), final, accumulate=True)
+        full = lambda v: torch.zeros(self.N, device=dev).index_put((target,), torch.where(final, v, 0.0), accumulate=True)
+        self._place(mask, full(p[:, 0]), full(p[:, 1]), full(d[:, 0]), full(d[:, 1]), full(speed))
         self.cars.max_speed = torch.where(mask, self._m(self._cop_top_speed()), self.cars.max_speed)
         self.active = self.active | mask
         minute = self._m(self.minute)
         self.burst_cooldown = torch.where(mask, 4.5 + (2.0 - 4.5) * (minute / 12.0).clamp(0.0, 1.0), self.burst_cooldown)
         lo, hi = self.c["cop_delay_frames"]
         self.delay = torch.where(mask, (lo + self._rand(self.N) * (hi - lo + 1)).long().clamp(max=hi), self.delay)
-        self.last_gap = torch.where(mask, full(bdist), self.last_gap)
+        self.last_gap = torch.where(mask, full(dist), self.last_gap)
         self.burst_seen = torch.where(mask, self.burst_count, self.burst_seen)
 
     def _reinforce(self, running):
@@ -358,20 +340,18 @@ class GpuChase:
         self.frame += 1
         # delayed orders arrive
         due = (self.orders_due >= 0) & (self.orders_due <= self.frame)
-        if bool(due.any()):
-            last = torch.where(due, torch.arange(3, device=self.device)[None, :], -1).max(1).values
-            has = last >= 0
-            pick = self.orders.gather(1, last.clamp(min=0)[:, None, None].expand(-1, 1, 5)).squeeze(1)
-            self.command[:, :3] = torch.where(has[:, None], pick[:, :3], self.command[:, :3])
-            fire = (due & (self.orders[:, :, 4] > 0.5)).any(1)
-            self._try_fire(fire)
-            self.orders_due = torch.where(due, -1, self.orders_due)
+        last = torch.where(due, torch.arange(3, device=self.device)[None, :], -1).max(1).values
+        has = last >= 0
+        pick = self.orders.gather(1, last.clamp(min=0)[:, None, None].expand(-1, 1, 5)).squeeze(1)
+        self.command[:, :3] = torch.where(has[:, None], pick[:, :3], self.command[:, :3])
+        self._try_fire((due & (self.orders[:, :, 4] > 0.5)).any(1))
+        self.orders_due = torch.where(due, -1, self.orders_due)
         # standoff rule
         self._standoff()
         enabled = self.active
         wall, before = car.step(self.command[:, 0], self.command[:, 1], self.command[:, 2] > 0.5, self.command[:, 3] > 0.5,
                                 enabled, self.cities, self.dt)
-        self.stats[17] += float((car.boost_fired * (self.slot == 0) * enabled).sum())
+        self.stats[17] += (car.boost_fired * (self.slot == 0) * enabled).sum()
         both = self.active[self.pairs[:, 0]] & self.active[self.pairs[:, 1]]
         _, per_pair = car.crashes(self.pairs, before, self.frame, mask=both)
         self._credit(wall, self.pairs, per_pair)
@@ -387,9 +367,9 @@ class GpuChase:
         cw = torch.where(cop, wall, 0.0)
         acc[:, 3] += cw
         team = rw.reshape(self.M, SLOTS)[:, 0]
-        st[3] += float(rw.sum())
-        st[5] += float(rw.sum())
-        st[6] += float(cw.sum())
+        st[3] += rw.sum()
+        st[5] += rw.sum()
+        st[6] += cw.sum()
         if pairs.numel():
             a, b = pairs[:, 0], pairs[:, 1]
             ha, hb = per_pair[:, 0], per_pair[:, 1]
@@ -399,22 +379,22 @@ class GpuChase:
             acc[:, 1].index_add_(0, a, rd)
             acc[:, 6].index_add_(0, b, rd)
             team = team.index_add(0, a // SLOTS, rd)
-            st[3] += float(rd.sum())
-            st[4] += float(rd.sum())
-            st[15] += float((rd > 0).sum())
-            st[24] += float(((rd > 0) & (self.burst_left[b] > 0.0)).sum())
+            st[3] += rd.sum()
+            st[4] += rd.sum()
+            st[15] += (rd > 0).sum()
+            st[24] += ((rd > 0) & (self.burst_left[b] > 0.0)).sum()
             # cop (b) hit by runner (a): the cop's damage from car hits, the runner's damage dealt to cops
             cd = torch.where(with_runner, hb, 0.0)
             acc[:, 4].index_add_(0, b, cd)
             acc[:, 3].index_add_(0, a, cd)
-            st[25] += float(((cd > 0) & (self.cars.boost_phase[a] == BOOSTING)).sum())
+            st[25] += ((cd > 0) & (self.cars.boost_phase[a] == BOOSTING)).sum()
             # cop-cop: each one's damage is friendly fire dealt by the other
             fa, fb = torch.where(with_runner, 0.0, ha), torch.where(with_runner, 0.0, hb)
             acc[:, 4].index_add_(0, a, fa)
             acc[:, 4].index_add_(0, b, fb)
             acc[:, 7].index_add_(0, b, fa)
             acc[:, 7].index_add_(0, a, fb)
-            st[8] += float((fa + fb).sum())
+            st[8] += (fa + fb).sum()
         acc[:, 0] += torch.where(cop, self._m(team), 0.0)
 
     def _standoff(self):
@@ -427,8 +407,6 @@ class GpuChase:
         stand = (speed < self.c["standoff_speed"]) & near.any(1) & self.active[::SLOTS]
         self.standoff_for = torch.where(stand, self.standoff_for + self.dt, 0.0)
         hurt = stand & (self.standoff_for >= self.c["standoff_grace"])
-        if not bool(hurt.any()):
-            return
         r = torch.arange(self.M, device=self.device) * SLOTS
         damage = torch.where(hurt, torch.minimum(torch.full_like(speed, self.c["standoff_damage"] * self.dt), car.health[r]), 0.0)
         car.health[r] = (car.health[r] - damage).clamp(min=0.0)
@@ -438,8 +416,8 @@ class GpuChase:
         self.accum[:, 6] += credit
         cops = (self.slot > 0) & self.active
         self.accum[:, 0] += torch.where(cops, self._m(damage), 0.0)
-        self.stats[3] += float(damage.sum())
-        self.stats[26] += float(damage.sum())
+        self.stats[3] += damage.sum()
+        self.stats[26] += damage.sum()
 
     def _try_fire(self, fire):
         ok = fire & (self.burst_left <= 0.0) & (self.burst_wait <= 0.0)
@@ -493,14 +471,14 @@ class GpuChase:
         self.orders = torch.where(put[:, :, None], order[:, None, :], self.orders)
         # stats
         st = self.stats
-        st[18] += float((runner & (car.boost_phase == CHARGING)).sum())
-        st[20] += float((runner & (car.drifting > 0.5)).sum())
-        st[22] += float((runner & handbrake).sum())
-        st[16] += float(torch.where(cop, self.burst_count - self.burst_seen, 0).sum())
+        st[18] += (runner & (car.boost_phase == CHARGING)).sum()
+        st[20] += (runner & (car.drifting > 0.5)).sum()
+        st[22] += (runner & handbrake).sum()
+        st[16] += torch.where(cop, self.burst_count - self.burst_seen, 0).sum()
         self.burst_seen = self.burst_count.clone()
-        st[19] += float((cop & (car.drifting > 0.5)).sum())
-        st[21] += float((cop & handbrake).sum())
-        st[23] += float((cop & (car.fwd < -1.0)).sum())
+        st[19] += (cop & (car.drifting > 0.5)).sum()
+        st[21] += (cop & handbrake).sum()
+        st[23] += (cop & (car.fwd < -1.0)).sum()
         # cop top speed: difficulty, catch-up when behind, burst
         rx, rz = self._m(car.x[::SLOTS]), self._m(car.z[::SLOTS])
         hx, hz = self._forward(self._m(car.yaw[::SLOTS]))
@@ -536,7 +514,7 @@ class GpuChase:
             parts[:, 5] += wrecked.float()
             runner_rows = torch.arange(self.M, device=dev) * SLOTS
             parts[runner_rows, 4] += wrecked.reshape(self.M, SLOTS).sum(1).float()
-            self.stats[7] += float(wrecked.sum())
+            self.stats[7] += wrecked.sum()
             flags[:, 4] = wrecked.float()
             flags[:, 0] = gone.float()
             self._park(gone)
@@ -544,29 +522,29 @@ class GpuChase:
             r = runner_rows
             speed = torch.sqrt(car.vx[r] ** 2 + car.vz[r] ** 2)
             parts[r, 5] = speed
-            self.stats[9] += float(speed.sum())
-            self.stats[10] += self.M
+            self.stats[9] += speed.sum()
+            self.stats[10] += float(self.M)
             dead = car.health[r] <= 0.0
             parts[r, 2] += dead.float()
             cops_now = (self.slot > 0) & self.active
             parts[:, 1] += torch.where(cops_now, self._m(dead).float(), 0.0)
-            self.stats[1] += float(dead.sum())
+            self.stats[1] += dead.sum()
             alive = ~dead
             parts[r, 0] += alive.float()
             timeout = alive & ~self.abort & (self.elapsed >= self.c["match_seconds"])
             parts[r, 7] += timeout.float()
-            self.stats[2] += float(timeout.sum())
+            self.stats[2] += timeout.sum()
             ended = dead | (alive & self.abort) | timeout
             truncated = alive & (self.abort | timeout)
-            self.stats[0] += float(ended.sum())
-            self.stats[13] += float(self.elapsed[ended].sum())
+            self.stats[0] += ended.sum()
+            self.stats[13] += torch.where(ended, self.elapsed, 0.0).sum()
             end_slots = self._m(ended) & self.active
             flags[:, 0] = torch.where(end_slots, 1.0, flags[:, 0])
             flags[:, 2] = torch.where(end_slots, self._m(truncated).float(), 0.0)
             self._restart(ended)
             self._reinforce(~ended)
         self._update_intel(dt)
-        self.stats[12] += float(self.known.sum())
+        self.stats[12] += self.known.sum()
         obs, priv = self._observe(dt)
         flags[:, 1] = self.active.float()
         flags[:, 3] = (self.active & self.nav_open).float()
@@ -597,7 +575,7 @@ class GpuChase:
         # navigation ticks (ChaseNav.tick) and the runner's GPS / finished escape routes
         rr = torch.arange(M, device=dev) * SLOTS
         reached_goal = runner & (torch.linalg.norm(here - self.goal, dim=1) < 40.0)
-        self._pick_goals(torch.nonzero(reached_goal).squeeze(1))
+        self._pick_goals(reached_goal[::SLOTS])
         done_escape = runner & (self.option != 0) & (torch.linalg.norm(here - self.frozen, dim=1) < 25.0)
         self.option = torch.where(done_escape, 0, self.option)
         self.nav_open = self.nav_countdown <= 0
@@ -617,7 +595,7 @@ class GpuChase:
         current = torch.where(((self.slot == 0) & (self.option != 0))[:, None], self.frozen, current)
         # road distances to every option, only when choosing
         measure = act & self.nav_open
-        if bool(measure.any()):
+        if True:
             for k in range(OPTIONS):
                 back = (self.slot == 0) & (k == 4)
                 length = R.route_length(city, car.x, car.z, torch.where(back, -hx, hx), torch.where(back, -hz, hz),
@@ -789,8 +767,8 @@ class GpuChase:
                              boost_state[self.match_index], pending], 1)
         priv = torch.where((self.slot == 0)[:, None], rpriv, cpriv)
         priv = torch.where(act[:, None], priv, 0.0)
-        self.stats[11] += float(cops_n[::SLOTS].sum())
-        self.stats[14] += float((torch.where(act & (self.slot > 0), torch.sqrt(car.vx ** 2 + car.vz ** 2), 0.0)).sum())
+        self.stats[11] += cops_n[::SLOTS].sum()
+        self.stats[14] += torch.where(act & (self.slot > 0), torch.sqrt(car.vx ** 2 + car.vz ** 2), 0.0).sum()
         return out, priv
 
     def _burst_readiness(self):

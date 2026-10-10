@@ -33,6 +33,10 @@ on:
         description: First round only, start both sides from this driving-school run's brain (optional)
         default: ""
         type: string
+      seed_checkpoint:
+        description: First round only, start every line from this checkpoint in the repo (e.g. a GPU-pretrained one)
+        default: ""
+        type: string
       round:
         description: Round number (set automatically when chaining)
         default: "1"
@@ -134,6 +138,8 @@ jobs:
             ARGS="$ARGS --resume $SOURCE/checkpoint.pt"
             [ -f "$SOURCE/genome.json" ] && ARGS="$ARGS --genome $SOURCE/genome.json"
             cp "$SOURCE/progress.csv" out/ 2>/dev/null || true
+          elif [ -n "${{ inputs.seed_checkpoint }}" ] && [ -f "${{ inputs.seed_checkpoint }}" ]; then
+            ARGS="$ARGS --resume ${{ inputs.seed_checkpoint }} --warmup-on-resume --critic-warmup 10"
           elif [ -f school/cop_brain.json ]; then
             ARGS="$ARGS --init school/cop_brain.json"
           else
