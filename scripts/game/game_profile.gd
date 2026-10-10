@@ -4,6 +4,8 @@ extends RefCounted
 ## the garage upgrades bought with them.
 
 const PATH: String = "user://profile.json"
+## Autoplay, captures and tests keep their own save, so they never touch the player's.
+const TEST_PATH: String = "user://profile_test.json"
 ## Garage upgrades: id, name, what a level does, and the price of each level.
 const UPGRADES: Array[Dictionary] = [
 	{"id": "armor", "name": "Armor plating", "info": "+15 max health a level", "costs": [400, 900, 1800, 3500]},
@@ -17,13 +19,15 @@ var best_seconds: float = 0.0
 var best_wrecks: int = 0
 var runs: int = 0
 var levels: Dictionary = {}
+var path: String = PATH
 
 
-static func load_profile() -> GameProfile:
+static func load_profile(from: String = PATH) -> GameProfile:
 	var profile := GameProfile.new()
-	if not FileAccess.file_exists(PATH):
+	profile.path = from
+	if not FileAccess.file_exists(from):
 		return profile
-	var data: Variant = JSON.parse_string(FileAccess.get_file_as_string(PATH))
+	var data: Variant = JSON.parse_string(FileAccess.get_file_as_string(from))
 	if data is Dictionary:
 		profile.bank = int(data.get("bank", 0))
 		profile.best_points = int(data.get("best_points", 0))
@@ -38,7 +42,7 @@ static func load_profile() -> GameProfile:
 
 
 func save() -> void:
-	var file := FileAccess.open(PATH, FileAccess.WRITE)
+	var file := FileAccess.open(path, FileAccess.WRITE)
 	if file == null:
 		return
 	file.store_string(JSON.stringify({"bank": bank, "best_points": best_points, "best_seconds": best_seconds,

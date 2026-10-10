@@ -23,6 +23,9 @@ class Track:
 		return origins.size()
 
 
+## The replay viewer was closed (the game puts its own screens back).
+signal replay_closed
+
 var chase: LabChase
 var player: LabVehicle
 var map: CityMapView
@@ -61,6 +64,15 @@ func toggle_recording() -> void:
 		return
 	recording = false
 	open_replay()
+
+
+## Ends a recording without opening the replay (the game: watching stops the chase, so it waits).
+func stop_recording() -> void:
+	recording = false
+
+
+func has_recording() -> bool:
+	return player_track != null and not cop_tracks.is_empty()
 
 
 func recorded_seconds() -> float:
@@ -110,6 +122,7 @@ func close_replay() -> void:
 	map.show_player_marker = true
 	player.visible = true
 	player.controls_enabled = true
+	replay_closed.emit()
 
 
 func _physics_process(_delta: float) -> void:

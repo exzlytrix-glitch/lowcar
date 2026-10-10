@@ -18,6 +18,7 @@ var _headline: Label
 var _subline: Label
 var _record: Label
 var _bank: Label
+var _hint: Label
 var _ready_for_input: bool = false
 
 
@@ -61,11 +62,12 @@ func _ready() -> void:
 	inner.add_child(_record)
 	_bank = NewsStyle.label("", 18, NewsStyle.CREAM, false)
 	inner.add_child(_bank)
-	inner.add_child(NewsStyle.label("Enter: back to the hideout", 16, NewsStyle.DIM, false))
+	_hint = NewsStyle.label("Enter: back to the hideout", 16, NewsStyle.DIM, false)
+	inner.add_child(_hint)
 	visible = false
 
 
-func show_report(score: RunScore, record: bool, bank: int) -> void:
+func show_report(score: RunScore, record: bool, bank: int, can_replay: bool = false) -> void:
 	visible = true
 	_ready_for_input = false
 	_headline.text = HEADLINES[randi() % HEADLINES.size()] % NewsStyle.clock(score.seconds)
@@ -82,6 +84,7 @@ func show_report(score: RunScore, record: bool, bank: int) -> void:
 	_row("TOTAL CHAOS", score.total(), true)
 	_record.text = "★  NEW RECORD  ★" if record else ""
 	_bank.text = "Chaos bank: %s  ·  spend it on upgrades in the garage" % NewsStyle.points(bank)
+	_hint.text = "Enter: back to the hideout" + ("  ·  2: watch your recording of the chase" if can_replay else "")
 	_card.scale = Vector2.ONE * 0.9
 	_card.pivot_offset = _card.size * 0.5
 	create_tween().tween_property(_card, "scale", Vector2.ONE, 0.25).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)

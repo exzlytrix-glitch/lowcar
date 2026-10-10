@@ -12,6 +12,10 @@ const FOLDER: String = "res://training/drives"
 var player: LabVehicle
 var chase: LabChase
 var settings_source: Callable
+## Which city the drive was in: "round" (RoadGenerator, rebuilt from "city") or "endless" (WorldGen).
+var world_kind: String = "round"
+## Where drives are saved (tests use their own folder, never the training data).
+var folder: String = FOLDER
 var recording: bool = false
 var last_saved: String = ""
 var _frames: Array = []
@@ -81,9 +85,9 @@ func _physics_process(_delta: float) -> void:
 
 
 func _save() -> String:
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(FOLDER))
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(folder))
 	var stamp: String = Time.get_datetime_string_from_system().replace(":", "-").replace("T", "_")
-	var path: String = "%s/drive_%s_seed%d.json" % [FOLDER, stamp, _started_seed]
+	var path: String = "%s/drive_%s_seed%d.json" % [folder, stamp, _started_seed]
 	var data: Dictionary = {
 		"version": 1,
 		"rate": RATE,
@@ -92,6 +96,7 @@ func _save() -> String:
 		"wrecked": _wrecked,
 		"chase_minute_at_end": snappedf(chase.minute(), 0.01),
 		"city": _settings,
+		"world": world_kind,
 		"frames": _frames,
 		"cop_layout": ["cop", "x", "z", "yaw", "speed"],
 		"cop_frames": _cop_frames,

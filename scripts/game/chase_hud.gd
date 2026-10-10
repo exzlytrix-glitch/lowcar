@@ -9,6 +9,8 @@ const CALLOUT_SECONDS: float = 1.6
 var player: LabVehicle
 var chase: LabChase
 var score: RunScore
+## Status line the game fills in (AI driving, recording, training drive).
+var badges: String = ""
 var _time: Label
 var _chaos: Label
 var _status: Label
@@ -19,6 +21,7 @@ var _boost_bar: ProgressBar
 var _boost_fill := StyleBoxFlat.new()
 var _boost_label: Label
 var _callouts: VBoxContainer
+var _badges: Label
 
 
 func _ready() -> void:
@@ -33,6 +36,7 @@ func _ready() -> void:
 	panel.offset_left = -300
 	panel.offset_right = -24
 	panel.offset_top = 20
+	panel.grow_horizontal = Control.GROW_DIRECTION_BEGIN
 	root.add_child(panel)
 	var column := VBoxContainer.new()
 	column.add_theme_constant_override("separation", 2)
@@ -47,6 +51,20 @@ func _ready() -> void:
 	_status = NewsStyle.label("", 17, NewsStyle.CREAM, false)
 	_status.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	column.add_child(_status)
+	_badges = NewsStyle.label("", 16, Color("#FF7A6B"), false)
+	_badges.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	column.add_child(_badges)
+	var keys := NewsStyle.label("K AI drives · V overhead · M map · 1 record · J training drive · Esc pause", 14, NewsStyle.CREAM)
+	keys.anchor_left = 1.0
+	keys.anchor_right = 1.0
+	keys.anchor_top = 1.0
+	keys.anchor_bottom = 1.0
+	keys.offset_left = -700
+	keys.offset_right = -24
+	keys.offset_top = -118
+	keys.offset_bottom = -96
+	keys.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	root.add_child(keys)
 	var gauges := VBoxContainer.new()
 	gauges.anchor_top = 1.0
 	gauges.anchor_bottom = 1.0
@@ -93,6 +111,8 @@ func _process(_delta: float) -> void:
 		return
 	_time.text = NewsStyle.clock(score.seconds)
 	_chaos.text = NewsStyle.points(score.total())
+	_badges.text = badges
+	_badges.visible = not badges.is_empty()
 	_status.text = "%d in pursuit  ·  %d wrecked\n%d near miss%s" % [chase.cops.size(), score.cops_wrecked,
 		score.near_misses, "" if score.near_misses == 1 else "es"]
 	var share: float = player.health / maxf(player.max_health, 1.0)
