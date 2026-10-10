@@ -59,6 +59,11 @@ var _deferred: Array[Proposal] = []
 var _ring_nodes := PackedInt32Array()
 var _segments: int = 0
 var _min_angle: float = 0.6
+## Roads that side streets may only join at existing junctions (never split): the infinite world's
+## main roads between cells, so every cell meets its neighbours at the same points.
+var locked: Dictionary = {}
+## How far a street that runs into a locked road may bend to reach one of its junctions.
+var gate_reach: float = 34.0
 
 
 func generate(config: CityGenSettings) -> RoadGraph:
@@ -302,7 +307,7 @@ func _try(p: Proposal) -> void:
 		return
 	var last: bool = false
 	var b: Vector2 = a + forward * length
-	if b.length() > boundary_radius(b.angle()):
+	if _outside(b):
 		if settings.ring_road:
 			return
 		length = _distance_to_city_edge(a, forward, length)
@@ -311,7 +316,7 @@ func _try(p: Proposal) -> void:
 		last = true
 		b = a + forward * length
 	var near: int = graph.nearest_node(b, settings.snap_radius, p.node)
-	if near >= 0 and _join_node(p, a, near, true):
+	if near >= 0 and _join_node(p, a, near, not _locked_node(near)):
 		return
 	if _crowded(p, a, b):
 		return
@@ -325,6 +330,8 @@ func _try(p: Proposal) -> void:
 func _join_crossing(p: Proposal, a: Vector2, hit: Dictionary, allow_through: bool) -> bool:
 	var edge: int = hit["edge"]
 	var point: Vector2 = hit["point"]
+	if locked.has(edge):
+		return _join_locked(p, a, edge, point)
 	var ea: int = graph.edge_a[edge]
 	var eb: int = graph.edge_b[edge]
 	var crossed_kind: int = graph.edge_kind[edge]
@@ -360,6 +367,21 @@ func _join_crossing(p: Proposal, a: Vector2, hit: Dictionary, allow_through: boo
 		if rng.randf() < through:
 			_pass_through(p, end, travelled)
 	return true
+
+
+## A street ran into a locked road: meet it at the nearest of its junctions if that is close and
+## reachable, otherwise stop here (the street becomes a dead end, tidied up later).
+func _join_locked(p: Proposal, a: Vector2, edge: int, point: Vector2) -> bool:
+	var best: int = -1
+	var best_distance: float = gate_reach
+	for end: int in [graph.edge_a[edge], graph.edge_b[edge]]:
+		var distance: float = graph.positions[end].distance_to(point)
+		if distance < best_distance:
+			best_distance = distance
+			best = end
+	if best < 0:
+		return false
+	return _join_node(p, a, best, false)
 
 
 func _join_node(p: Proposal, a: Vector2, near: int, allow_through: bool) -> bool:
@@ -522,13 +544,25 @@ func _crowded(p: Proposal, a: Vector2, b: Vector2) -> bool:
 	return false
 
 
+## Whether a point lies outside the area being built (the city edge here; a cell in the infinite world).
+func _outside(point: Vector2) -> bool:
+	return point.length() > boundary_radius(point.angle())
+
+
+func _locked_node(node: int) -> bool:
+	for id: int in graph.node_edges[node]:
+		if locked.has(id):
+			return true
+	return false
+
+
 func _distance_to_city_edge(a: Vector2, forward: Vector2, length: float) -> float:
 	var low: float = 0.0
 	var high: float = length
 	for step: int in 14:
 		var middle: float = (low + high) * 0.5
 		var point: Vector2 = a + forward * middle
-		if point.length() <= boundary_radius(point.angle()):
+		if not _outside(point):
 			low = middle
 		else:
 			high = middle
@@ -604,6 +638,8 @@ func _merge_straight_nodes() -> void:
 			continue
 		var first: int = graph.node_edges[node][0]
 		var second: int = graph.node_edges[node][1]
+		if locked.has(first) or locked.has(second):
+			continue
 		if graph.edge_kind[first] != graph.edge_kind[second] or not is_equal_approx(graph.edge_width[first], graph.edge_width[second]):
 			continue
 		var a: int = graph.other(first, node)

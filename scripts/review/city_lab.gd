@@ -97,6 +97,10 @@ var _brain_on_load: bool = false
 ## --show: --watch with the lab text hidden and a TV-news style overlay instead (LabBroadcast).
 var _show: bool = false
 var _broadcast: LabBroadcast
+## --world or I: drive the endless city (WorldStreamer builds it around the car) instead of the round one.
+var infinite: bool = false
+var streamer: WorldStreamer
+var _map_stale: bool = false
 
 
 func _ready() -> void:
@@ -121,6 +125,8 @@ func _ready() -> void:
 			_show = true
 		elif argument.begins_with("--seed="):
 			settings.city_seed = int(argument.trim_prefix("--seed="))
+		elif argument == "--world":
+			infinite = true
 	chase = LabChase.new()
 	chase.name = "Chase"
 	add_child(chase)
@@ -176,6 +182,9 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	_follow_overhead(delta)
+	if streamer != null and not _busy:
+		var going := Vector2(player.velocity.x, player.velocity.z)
+		streamer.update(Vector2(player.global_position.x, player.global_position.z), going if going.length() > 3.0 else Vector2.ZERO)
 	_hud_clock -= delta
 	if _hud_clock > 0.0 or _hud == null:
 		return
@@ -202,8 +211,8 @@ func _process(delta: float) -> void:
 		chase_line += "\n● TRAINING DRIVE %d:%02d  ·  drive like you normally would and escape  ·  J to save" % [int(drives.seconds()) / 60, int(drives.seconds()) % 60]
 	else:
 		chase_line += "\nJ: training drive (cops learn from your driving)  ·  saved so far: %d" % _saved_drive_count()
-	_hud.text = "CITY LAB  ·  seed %d  ·  %s\n%d km/h  ·  %d fps  ·  %s%s\n%s\nWASD drive · Shift boost · Ctrl + steer drift%s\nM map · V overhead · T tune · R back on road · G regenerate · N new seed · P cop behind · C clear cops" % [
-		settings.city_seed, stats, int(speed), Engine.get_frames_per_second(), district, drift, chase_line,
+	_hud.text = "CITY LAB  ·  %s %d  ·  %s\n%d km/h  ·  %d fps  ·  %s%s\n%s\nWASD drive · Shift boost · Ctrl + steer drift%s\nM map · V overhead · T tune · R back on road · G regenerate · N new seed · P cop behind · C clear cops" % [
+		"endless city (I: round city)  ·  seed" if infinite else "round city (I: infinite world)  ·  seed", settings.city_seed, stats, int(speed), Engine.get_frames_per_second(), district, drift, chase_line,
 		" · Space jump" if jump_enabled else ""]
 	_health_bar.value = player.health
 	_health_fill.bg_color = Color("#7BC67E") if player.health > 60.0 else (Color("#F2C46B") if player.health > 30.0 else Color("#E2574C"))
@@ -227,6 +236,8 @@ func _unhandled_input(event: InputEvent) -> void:
 			recorder.open_replay()
 		KEY_M:
 			_map.visible = not _map.visible
+			if _map.visible and _map_stale:
+				_refresh_streamed_map()
 		KEY_T:
 			_panel.visible = not _panel.visible
 		KEY_R:
@@ -254,6 +265,9 @@ func _unhandled_input(event: InputEvent) -> void:
 			_toggle_ai_runner()
 		KEY_V:
 			_toggle_overhead()
+		KEY_I:
+			infinite = not infinite
+			regenerate()
 		KEY_C:
 			_clear_police()
 			chase.stop()
@@ -277,6 +291,15 @@ func regenerate() -> void:
 	if city != null:
 		remove_child(city)
 		city.queue_free()
+		city = null
+	if streamer != null:
+		streamer.clear()
+		remove_child(streamer)
+		streamer.queue_free()
+		streamer = null
+	if infinite:
+		_start_streamed_world()
+		return
 	var started: int = Time.get_ticks_msec()
 	generator = RoadGenerator.new()
 	graph = generator.generate(settings)
@@ -304,6 +327,50 @@ func regenerate() -> void:
 	_busy = false
 
 
+## The endless city: build the cells around the start, then the streamer keeps building as you drive.
+func _start_streamed_world() -> void:
+	var started: int = Time.get_ticks_msec()
+	streamer = WorldStreamer.new()
+	streamer.name = "World"
+	add_child(streamer)
+	streamer.setup(settings)
+	streamer.cells_changed.connect(_on_cells_changed)
+	generator = streamer.world
+	var road: PackedVector2Array = streamer.world.link(0, 0, true)["points"]
+	streamer.load_around(road[road.size() / 2])
+	graph = streamer.graph
+	blocks = []
+	_on_cells_changed()
+	print("CITY_LAB seed=%d endless city: %d cells in %d ms" % [settings.city_seed, streamer.cells.size(),
+		Time.get_ticks_msec() - started])
+	_refresh_streamed_map()
+	chase.setup(graph, player, streamer.nav)
+	_apply_view()
+	_place_at_start()
+	_overlay.visible = false
+	player.controls_enabled = true
+	_busy = false
+
+
+func _on_cells_changed() -> void:
+	var buildings: int = 0
+	for cell: Vector2i in streamer.cells:
+		buildings += (streamer.cells[cell]["node"] as CellBuilder).building_count
+	stats = "%d cells loaded · %d buildings · %d junctions · last cell %.0f ms" % [streamer.cells.size(), buildings,
+		streamer.nav.astar.get_point_count(), streamer.last_build_ms]
+	_map_stale = true
+	if _map.visible:
+		_refresh_streamed_map()
+
+
+func _refresh_streamed_map() -> void:
+	_map_stale = false
+	streamer.world.boundary = streamer.outline()
+	_map.set_city(graph, generator, streamer.all_blocks(), streamer.all_footprints(), streamer.all_footprint_styles(),
+		streamer.load_distance)
+	_map.fit(Vector2(player.global_position.x, player.global_position.z))
+
+
 func _new_seed() -> void:
 	settings.city_seed = randi_range(1, 999999)
 	_seed_box.set_value_no_signal(settings.city_seed)
@@ -322,8 +389,14 @@ func _apply_view() -> void:
 	environment.fog_depth_curve = 1.4
 
 
-## Start on the arterial nearest the centre, pointing along it.
+## Start on the arterial nearest the centre, pointing along it (in the infinite world: halfway along
+## the main road east of the origin, the furthest point from its junctions).
 func _place_at_start() -> void:
+	if generator is WorldGen:
+		var road: PackedVector2Array = (generator as WorldGen).link(0, 0, true)["points"]
+		var half: int = road.size() / 2
+		_place_on_road(road[half], road[half + 1] - road[half])
+		return
 	var best: int = -1
 	var best_distance: float = INF
 	for id: int in graph.alive_edges():

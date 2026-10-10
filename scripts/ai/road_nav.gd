@@ -11,6 +11,7 @@ var _junction_key: Array = []
 var _junction_answer: Dictionary = {}
 var _exits_key := Vector2i(-1, -1)
 var _exits_answer: Array = []
+var _ids_stale: bool = false
 
 
 func _init(road_graph: RoadGraph) -> void:
@@ -21,6 +22,33 @@ func _init(road_graph: RoadGraph) -> void:
 	for id: int in graph.alive_edges():
 		astar.connect_points(graph.edge_a[id], graph.edge_b[id])
 	_ids = astar.get_point_ids()
+
+
+## The streamed city (WorldStreamer) adds a road to the graph: route over it too.
+func add_edge(id: int) -> void:
+	for node: int in [graph.edge_a[id], graph.edge_b[id]]:
+		if not astar.has_point(node):
+			astar.add_point(node, graph.positions[node])
+	astar.connect_points(graph.edge_a[id], graph.edge_b[id])
+	_changed()
+
+
+## After graph.remove_edge(id): stop routing over it, and drop junctions left with no roads.
+func remove_edge(id: int) -> void:
+	var a: int = graph.edge_a[id]
+	var b: int = graph.edge_b[id]
+	if astar.has_point(a) and astar.has_point(b) and not graph.connected(a, b):
+		astar.disconnect_points(a, b)
+	for node: int in [a, b]:
+		if graph.degree(node) == 0 and astar.has_point(node):
+			astar.remove_point(node)
+	_changed()
+
+
+func _changed() -> void:
+	_ids_stale = true
+	_junction_key = []
+	_exits_key = Vector2i(-1, -1)
 
 
 ## Closest junction to a point on the roads, preferring the end of the road that lies ahead.
@@ -49,6 +77,9 @@ func route(from: Vector2, heading: Vector2, to: Vector2) -> PackedVector2Array:
 
 
 func random_node(rng: RandomNumberGenerator) -> int:
+	if _ids_stale:
+		_ids = astar.get_point_ids()
+		_ids_stale = false
 	return _ids[rng.randi() % _ids.size()] if not _ids.is_empty() else -1
 
 

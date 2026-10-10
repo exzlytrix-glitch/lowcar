@@ -63,9 +63,9 @@ func set_city(graph: RoadGraph, generator: RoadGenerator, blocks: Array[CityBloc
 	fit()
 
 
-func fit() -> void:
+func fit(center: Vector2 = Vector2.ZERO) -> void:
 	var area: Vector2 = size if minf(size.x, size.y) > 0.0 else get_viewport_rect().size
-	_center = Vector2.ZERO
+	_center = center
 	_zoom = minf(area.x, area.y) / (_radius * 2.5)
 
 

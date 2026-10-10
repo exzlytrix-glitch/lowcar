@@ -43,18 +43,14 @@ var _spawn_clock: float = 0.0
 var _rng := RandomNumberGenerator.new()
 
 
-func setup(road_graph: RoadGraph, car: LabVehicle) -> void:
+## road_nav: the streamed city's navigation (kept up to date as cells load), or null to build one.
+func setup(road_graph: RoadGraph, car: LabVehicle, road_nav: RoadNav = null) -> void:
 	stop()
 	graph = road_graph
 	player = car
 	elapsed = 0.0
-	nav = RoadNav.new(graph)
-	astar.clear()
-	for node: int in graph.node_count():
-		if graph.degree(node) > 0:
-			astar.add_point(node, graph.positions[node])
-	for id: int in graph.alive_edges():
-		astar.connect_points(graph.edge_a[id], graph.edge_b[id])
+	nav = road_nav if road_nav != null else RoadNav.new(graph)
+	astar = nav.astar
 
 
 func toggle() -> void:
