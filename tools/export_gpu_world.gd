@@ -125,6 +125,7 @@ func _cars() -> Dictionary:
 		"car_damage_threshold": LabVehicle.CAR_DAMAGE_THRESHOLD, "pair_cooldown_frames": LabVehicle.PAIR_COOLDOWN_FRAMES,
 		"chamfer": 0.3}
 	data["chase"] = {"match_seconds": ChaseMatch.MATCH_SECONDS, "base_top_speed": ChaseMatch.BASE_TOP_SPEED,
+		"start_minute_max": ChaseMatch.START_MINUTE_MAX, "reinforce_chance": ChaseMatch.REINFORCE_CHANCE,
 		"catch_up_start": ChaseMatch.CATCH_UP_START, "catch_up_full": ChaseMatch.CATCH_UP_FULL,
 		"catch_up_boost": ChaseMatch.CATCH_UP_BOOST, "recycle_distance": ChaseMatch.RECYCLE_DISTANCE,
 		"runner_standing_start": ChaseMatch.RUNNER_STANDING_START, "cop_parked_start": ChaseMatch.COP_PARKED_START,

@@ -51,7 +51,9 @@ ROLES = ("cop", "runner")
 WEIGHTS = {
     # runner damage (team), runner wrecked (team), metres closed (fades out), own wall damage,
     # own damage from car hits, own wreck, damage it dealt to the runner, damage it dealt to other cops
-    "cop": [0.05, 3.0, 0.02, -0.015, -0.004, -1.25, 0.02, -0.02],
+    # Runner damage doubled (0.05 -> 0.1): with wrecks rare, the crash penalties outweighed attacking,
+    # and cops learned to follow safely instead of to win.
+    "cop": [0.1, 3.0, 0.02, -0.015, -0.004, -1.25, 0.02, -0.02],
     # alive, damage taken, wrecked, damage dealt to cops, cops wrecked, speed, wall damage, survived
     "runner": [0.02, -0.05, -3.0, 0.01, 0.4, 0.0, 0.0, 0.0],
 }
@@ -1084,7 +1086,7 @@ def write_summary(args, history, final, league):
             f"| Cops wreck the runner (current vs current) | {first['kill_rate']} | {last['kill_rate']} |",
             f"| Cops wreck past runners | {first['kill_vs_past']} | {last['kill_vs_past']} |",
             f"| Runner survives past cops | {first['survive_vs_past']} | {last['survive_vs_past']} |",
-            f"| Average chase length (s, max 120) | {first['match_s']} | {last['match_s']} |",
+            f"| Average chase length (s) | {first['match_s']} | {last['match_s']} |",
             f"| Runner speed (km/h) | {first['runner_kmh']} | {last['runner_kmh']} |",
             f"| Runner damage from cops per minute | {first['runner_dmg_cops_min']} | {last['runner_dmg_cops_min']} |",
             f"| Runner damage from walls per minute | {first['runner_dmg_walls_min']} | {last['runner_dmg_walls_min']} |",

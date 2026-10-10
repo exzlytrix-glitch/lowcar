@@ -56,7 +56,8 @@ fi
 
 START="--init $ROOT/resources/ai/cop_brain.json"
 if [ -f "$ROOT/training/seeds/chase_seed.pt" ]; then
-  START="--resume $ROOT/training/seeds/chase_seed.pt"
+  # The critics learn the current rewards for a few updates before the brains change.
+  START="--resume $ROOT/training/seeds/chase_seed.pt --warmup-on-resume --critic-warmup 10"
 fi
 mkdir -p "$OUT"
 echo "== training $HOURS h on $DEVICE with $CHASES chases at once ($START)"

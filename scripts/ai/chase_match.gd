@@ -5,7 +5,9 @@ extends RefCounted
 ## city, but each has its own collision layer, so they drive through each other. A match ends when the
 ## runner explodes (cops win) or after MATCH_SECONDS (the runner survived). Cops join during a match
 ## (reinforcements) and leave when wrecked or left far behind, so squads change size mid-chase.
-## Difficulty is a chase minute drawn per match: it sets cop top speed and burst recharge as in the lab.
+## Difficulty is a chase minute: drawn when a match starts, then it runs on in real time like the game's
+## escalation, and it sets cop top speed and burst recharge as in the lab. Reinforcements keep arriving,
+## so long chases get harder and the cops can actually finish a runner that drives well.
 ##
 ## Slot 0 is the runner, slots 1-5 the cops. Every decision each slot reports its view, raw reward
 ## parts for what happened since its last action (training/train_chase.py weighs them), and flags
@@ -35,7 +37,13 @@ const STATS_DIM: int = 27
 ## 20 runner decisions drifting  21 cop decisions on the handbrake  22 runner decisions on the handbrake
 ## 23 cop decisions reversing  24 damaging cop hits made during a burst  25 damaging runner hits on cops while boosting
 ## 26 runner damage from standoffs (StandoffRule)
-const MATCH_SECONDS: float = 120.0
+## Four minutes: in two, cops could almost never wear down a runner that drives well, so they learned
+## to avoid crashing instead of to win.
+const MATCH_SECONDS: float = 240.0
+## The chase minute a match starts at is drawn up to this; it then advances one minute per minute.
+const START_MINUTE_MAX: float = 12.0
+## Chance that each reinforcement check (every 20-40 s) adds a cop to the squad, up to 5.
+const REINFORCE_CHANCE: float = 0.75
 const RUNNER_TUNING: String = "res://resources/vehicles/red_muscle_car.tres"
 const POLICE_TUNING: String = "res://resources/vehicles/patrol_car.tres"
 const RUNNER_HEALTH: float = 100.0
@@ -134,7 +142,7 @@ func set_nav(road_nav: RoadNav) -> void:
 func restart() -> void:
 	abort = false
 	elapsed = 0.0
-	minute = rng.randf_range(0.0, 15.0)
+	minute = rng.randf_range(0.0, START_MINUTE_MAX)
 	target_cops = _squad_size()
 	_reinforce_clock = rng.randf_range(20.0, 40.0)
 	for slot: int in range(1, SLOTS):
@@ -160,6 +168,7 @@ func restart() -> void:
 func decide(dt: float) -> void:
 	_dt = dt
 	elapsed += dt
+	minute += dt / 60.0
 	parts = _accum.duplicate()
 	_accum.fill(0.0)
 	flags.fill(0.0)
@@ -360,7 +369,7 @@ func _reinforce(dt: float) -> void:
 	_reinforce_clock -= dt
 	if _reinforce_clock <= 0.0:
 		_reinforce_clock = rng.randf_range(20.0, 40.0)
-		if rng.randf() < 0.5:
+		if rng.randf() < REINFORCE_CHANCE:
 			target_cops = mini(target_cops + 1, MAX_COPS)
 	if active_cop_count() >= target_cops:
 		return

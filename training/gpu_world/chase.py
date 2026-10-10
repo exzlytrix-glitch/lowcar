@@ -201,7 +201,7 @@ class GpuChase:
         m = matches
         self.abort = self.abort & ~m
         self.elapsed = torch.where(m, 0.0, self.elapsed)
-        self.minute = torch.where(m, self._rand(self.M) * 15.0, self.minute)
+        self.minute = torch.where(m, self._rand(self.M) * self.c.get("start_minute_max", 15.0), self.minute)
         odds = torch.tensor(self.c["squad_odds"], device=dev)
         squad = torch.searchsorted(odds.cumsum(0), self._rand(self.M)).clamp(max=COPS - 1) + 1
         self.target_cops = torch.where(m, squad, self.target_cops)
@@ -294,7 +294,7 @@ class GpuChase:
         self.reinforce_clock = torch.where(running, self.reinforce_clock - 0.1, self.reinforce_clock)
         tick = running & (self.reinforce_clock <= 0.0)
         self.reinforce_clock = torch.where(tick, 20.0 + self._rand(self.M) * 20.0, self.reinforce_clock)
-        grow = tick & (self._rand(self.M) < 0.5)
+        grow = tick & (self._rand(self.M) < self.c.get("reinforce_chance", 0.5))
         self.target_cops = torch.where(grow, (self.target_cops + 1).clamp(max=COPS), self.target_cops)
         cops = self.active.reshape(self.M, SLOTS)[:, 1:].sum(1)
         slot = self._free_slot()
@@ -501,6 +501,8 @@ class GpuChase:
         dev = self.device
         if not first:
             self.elapsed = self.elapsed + dt
+            if "start_minute_max" in self.c:  # exports from before the chase minute ran on lack this
+                self.minute = self.minute + dt / 60.0
         parts = self.accum.clone()
         self.accum.zero_()
         flags = torch.zeros(self.N, FLAG_DIM, device=dev)
