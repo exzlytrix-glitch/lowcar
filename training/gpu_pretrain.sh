@@ -62,6 +62,8 @@ fi
 # Past runners of varied strength and style for the cops to spar with (training/seeds/league).
 [ -d "$ROOT/training/seeds/league" ] && START="$START --league-in $ROOT/training/seeds/league"
 mkdir -p "$OUT"
+# Less memory lost to fragmentation (the T4 has 15 GB and the endless-city runs filled it).
+export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 echo "== training $HOURS h on $DEVICE with $CHASES chases at once ($START)"
 python3 "$ROOT/training/train_chase.py" --gpu-world "$WORLD" --gpu-matches "$CHASES" --device "$DEVICE" \
   --steps-force "$STEPS" --hours "$HOURS" --out "$OUT" --line gpu --threads 4 --snapshot-minutes 30 $START

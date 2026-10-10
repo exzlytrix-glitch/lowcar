@@ -630,6 +630,10 @@ def main():
         env = GpuChase(args.gpu_world, matches=args.gpu_matches, device=args.device, seed=args.seed,
                        city_limit=args.gpu_cities or None, torch_out=True)
         print(f"GPU world: {env.num_matches} chases at once in {env.cities.count} cities on {args.device}")
+        if DEVICE.type == "cuda":
+            print(f"GPU memory after building the world: {torch.cuda.memory_allocated() / 2**30:.2f} GB "
+                  f"(cities {env.cities.sdf.numel() * 5 * 4 / 2**30:.2f} GB, road tables "
+                  f"{(env.roads.next_hop.numel() * env.roads.next_hop.element_size() + env.roads.dist.numel() * env.roads.dist.element_size()) / 2**30:.2f} GB)")
     else:
         env = ChaseWorlds(args.godot, args.project, procs=args.procs, matches=args.matches, seed=args.seed,
                           city_steps=args.city_steps, radius=args.radius, log_dir=os.path.join(args.out, "logs"),

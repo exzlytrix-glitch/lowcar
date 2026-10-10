@@ -79,7 +79,9 @@ class Roads:
         self.neighbors = t(neighbors)
         self.edge_a, self.edge_b, self.edge_len = t(edge_a), t(edge_b), t(edge_len, dtype)
         self.edge_count, self.node_count = t(edge_count), t(node_count)
-        self.next_hop = t(next_hop.astype(np.int64))
+        # 16-bit on the GPU (every junction index fits): with every pair of junctions in every city this
+        # table is the biggest thing in memory, and the endless-city pieces have ~3x the junctions.
+        self.next_hop = t(next_hop)
         self.dist = t(dist, dtype)
         self.lookup = t(lookup.astype(np.int64))
         self.lookup_side, self.extent = side, extent
@@ -122,7 +124,7 @@ class Roads:
 
     def hop(self, city, a, b):
         nn = self.max_nodes
-        return self.next_hop.reshape(-1)[city * nn * nn + a.clamp(min=0) * nn + b.clamp(min=0)]
+        return self.next_hop.reshape(-1)[city * nn * nn + a.clamp(min=0) * nn + b.clamp(min=0)].long()
 
     # --- junctions ---------------------------------------------------------------------------
 
