@@ -2,8 +2,8 @@ class_name ChaseBrainDriver
 extends Node
 ## Drives a lab cop with a brain from chase training (training/train_chase.py) through ChaseAgent, the
 ## same plumbing training uses: senses, the team's shared knowledge of you (ChaseIntel, kept by
-## LabChase), its navigation choice and its burst. Decides 10 times a second; a burst fired near you
-## shows the "!" warning.
+## LabChase), its navigation choice and its burst. Decides 10 times a second with a 100-250 ms reaction
+## delay like in training; a burst fired near you shows the "!" warning.
 
 const DECISION_FRAMES: int = 6
 const WARNING_RANGE: float = 45.0
@@ -23,6 +23,7 @@ func _ready() -> void:
 	_rng.randomize()
 	agent.setup(car, false, chase.nav, CopSenses.CAR_MASK, _rng)
 	agent.reset()
+	agent.delay_frames = _rng.randi_range(ChaseMatch.COP_DELAY_FRAMES.x, ChaseMatch.COP_DELAY_FRAMES.y)
 	# Spread the cops' decisions over the six frames so no single frame runs them all.
 	_frame = int(car.get_instance_id() % DECISION_FRAMES)
 	_warning = Label3D.new()
@@ -45,17 +46,20 @@ func _physics_process(delta: float) -> void:
 	if not chase.active or not is_instance_valid(target) or not car.controls_enabled:
 		car.set_driver_command(0.0, 0.0, true)
 		return
+	agent.physics_tick()
 	_frame += 1
 	if _frame % DECISION_FRAMES != 0:
 		return
 	var team: Array = []
+	var team_options: Dictionary = {}
 	for cop: LabVehicle in chase.cops:
 		if cop != car and is_instance_valid(cop):
 			team.append(cop)
+			team_options[cop] = chase.route_option(cop)
 	var cars: Array = team.duplicate()
 	cars.append(target)
 	var obs: PackedFloat32Array = agent.observe_cop(DECISION_FRAMES * delta, cars, chase.intel, chase.sees(car), target,
-		team, team.size() + 1)
+		team, team.size() + 1, team_options)
 	agent.burst.cooldown = CopBurst.cooldown_at(chase.minute())
 	agent.apply(net.decide(obs, _rng), 0)
 	mode = "burst" if agent.burst.active() else "brain"

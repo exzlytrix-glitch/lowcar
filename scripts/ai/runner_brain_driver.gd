@@ -30,6 +30,7 @@ func _physics_process(delta: float) -> void:
 		_ready_to_drive = true
 		_frame = -1
 	_frame += 1
+	agent.physics_tick()
 	if _frame % DECISION_FRAMES != 0:
 		agent.reapply()
 		return

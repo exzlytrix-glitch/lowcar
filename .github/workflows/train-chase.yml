@@ -1,7 +1,8 @@
 # Self-play chase training: learned cops vs a learned runner (training/train_chase.py).
-# One round = several training lines in parallel (one job each, up to ~5 h), then a merge job that
-# keeps the strong lines, restarts the weakest from copies of the best, pools every line's past
-# versions into the league, and picks the best cop and runner brains (artifact "chase-round").
+# One round = several training lines in parallel (one job each, up to ~5 h, ending with an exam against
+# fixed opponents), then a merge job that ranks cops and runners on the exam, replaces the weakest
+# quarter of each side with nudged copies of the strongest (population-based training), pools every
+# line's past versions into the league, and picks the best cop and runner brains (artifact "chase-round").
 # With rounds > 1 the merge job starts the next round itself, continuing from this one.
 #
 # First round:  gh workflow run train-chase.yml -f school_run_id=<driving-school run id>
@@ -17,7 +18,7 @@ on:
         default: "12"
         type: string
       hours:
-        description: Hours each line trains per round (keep under 5.3)
+        description: Hours each line trains per round, exam included (keep under 5.3)
         default: "5.2"
         type: string
       rounds:
@@ -125,19 +126,21 @@ jobs:
           mkdir -p out
           STYLES=(balanced aggressive speedy careful)
           STYLE=${STYLES[$((LINE % 4))]}
-          ARGS=""
+          ARGS="--exam-minutes 12"
           if [ -d prev/lines ]; then
             COUNT=$(ls -d prev/lines/line_* | wc -l)
             SOURCE="prev/lines/line_$LINE"
             [ -d "$SOURCE" ] || SOURCE="prev/lines/line_$((LINE % COUNT))"
-            ARGS="--resume $SOURCE/checkpoint.pt"
+            ARGS="$ARGS --resume $SOURCE/checkpoint.pt"
+            [ -f "$SOURCE/genome.json" ] && ARGS="$ARGS --genome $SOURCE/genome.json"
             cp "$SOURCE/progress.csv" out/ 2>/dev/null || true
           elif [ -f school/cop_brain.json ]; then
-            ARGS="--init school/cop_brain.json"
+            ARGS="$ARGS --init school/cop_brain.json"
           else
-            ARGS="--init resources/ai/cop_brain.json"
+            ARGS="$ARGS --init resources/ai/cop_brain.json"
           fi
           [ -d prev/league ] && ARGS="$ARGS --league-in prev/league"
+          [ -d prev/exam ] && ARGS="$ARGS --exam-dir prev/exam"
           echo "line $LINE, $STYLE runner: $ARGS"
           python training/train_chase.py --godot godot --project . --out out --line "$LINE" \
             --runner-style "$STYLE" --hours "$HOURS" --procs "$PROCS" --matches "$MATCHES" \
@@ -164,6 +167,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install merge packages
+        run: |
+          pip install --quiet numpy
+          pip install --quiet torch --index-url https://download.pytorch.org/whl/cpu
+
       - name: Fetch previous round
         if: inputs.resume_run_id != ''
         uses: actions/download-artifact@v4
@@ -183,7 +195,7 @@ jobs:
         run: |
           PREV=""
           [ -d prev ] && PREV="--prev prev"
-          python3 training/league_merge.py --lines lines --out round --round "${{ inputs.round }}" $PREV
+          python training/league_merge.py --lines lines --out round --round "${{ inputs.round }}" $PREV
           cat round/summary.md >> "$GITHUB_STEP_SUMMARY"
 
       - name: Save round

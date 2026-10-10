@@ -91,7 +91,7 @@ def parse_args():
     p.add_argument("--steps", type=int, default=256, help="decisions per slot per update")
     p.add_argument("--lr", type=float, default=2.5e-4)
     p.add_argument("--epochs", type=int, default=4)
-    p.add_argument("--minibatches", type=int, default=8)
+    p.add_argument("--minibatches", type=int, default=4)
     p.add_argument("--gamma", type=float, default=0.99)
     p.add_argument("--gae-lambda", type=float, default=0.95)
     p.add_argument("--clip", type=float, default=0.2)
@@ -113,6 +113,10 @@ def parse_args():
                    help="cop decisions over which the closing-in hint fades to zero")
     p.add_argument("--save-minutes", type=float, default=10.0)
     p.add_argument("--resume", default="")
+    p.add_argument("--genome", default="", help="this line's settings (genome.json from the last merge); "
+                                                 "missing = the line's starting settings")
+    p.add_argument("--exam-dir", default="", help="fixed opponents for the end-of-run exam (from the last merge)")
+    p.add_argument("--exam-minutes", type=float, default=0.0, help="minutes at the end spent on the exam")
     p.add_argument("--route-prior", type=float, default=ROUTE_PRIOR,
                    help="starting preference for route option 0 and no boost in new or carried-over brains")
     p.add_argument("--export-only", action="store_true",
@@ -238,6 +242,68 @@ class RunningMeanStd:
         self.count = state["count"]
 
 
+# Per-line settings ("genome") that population-based training tunes: the merge copies strong lines over
+# weak ones and nudges these by x0.8 / x1.2 (DeepMind's Capture the Flag and soccer agents did the same).
+# Per side: learning rate, gamma (how far ahead it plans: 0.99 is ~10 s at 10 decisions/s, 0.995 ~20 s),
+# exploration bonus for on/off and pick outputs. Shared: decisions per slot per update (batch size).
+DEFAULT_SIDE = {"lr": 2.5e-4, "gamma": 0.995, "ent_discrete": 0.005}
+DEFAULT_STEPS = 768
+
+
+def initial_genome(line):
+    """Line 0 gets the recommended defaults, other lines a spread around them."""
+    if str(line) == "0" or not str(line).isdigit():
+        return {"cop": dict(DEFAULT_SIDE), "runner": dict(DEFAULT_SIDE), "steps": DEFAULT_STEPS}
+    pick = np.random.default_rng(1000 + int(line))
+
+    def side():
+        return {"lr": float(2.5e-4 * pick.choice([0.6, 0.8, 1.0, 1.25])),
+                "gamma": float(pick.choice([0.99, 0.993, 0.995, 0.997])),
+                "ent_discrete": float(0.005 * pick.choice([0.6, 1.0, 1.5]))}
+
+    return {"cop": side(), "runner": side(), "steps": int(pick.choice([512, 768, 1024]))}
+
+
+class ValueNorm:
+    """Running mean and spread of the critic's targets; the critic predicts normalised values. When the
+    statistics move, the critic's last layer is rescaled so its predictions stay the same (PopArt), so
+    reward scales that drift (the closing-in hint fading out) do not upset it."""
+
+    def __init__(self):
+        self.mean, self.var, self.count = 0.0, 1.0, 1e-4
+
+    def std(self):
+        return float(np.sqrt(self.var + 1e-8))
+
+    def update(self, targets, layer):
+        x = np.asarray(targets, np.float64)
+        if len(x) == 0:
+            return
+        old_mean, old_std = self.mean, self.std()
+        batch_mean, batch_var, batch_count = x.mean(), x.var(), len(x)
+        delta = batch_mean - self.mean
+        total = self.count + batch_count
+        self.mean += delta * batch_count / total
+        self.var = (self.var * self.count + batch_var * batch_count + delta ** 2 * self.count * batch_count / total) / total
+        self.count = total
+        new_std = self.std()
+        with torch.no_grad():
+            layer.weight.mul_(old_std / new_std)
+            layer.bias.mul_(old_std).add_(old_mean - self.mean).div_(new_std)
+
+    def denorm(self, value):
+        return value * self.std() + self.mean
+
+    def norm(self, value):
+        return (value - self.mean) / self.std()
+
+    def state(self):
+        return {"mean": self.mean, "var": self.var, "count": self.count}
+
+    def load(self, state):
+        self.mean, self.var, self.count = state["mean"], state["var"], state["count"]
+
+
 class Learner:
     """Everything one side learns with: actor, critic, optimiser and the input/return scaling."""
 
@@ -248,6 +314,8 @@ class Learner:
         self.optimizer = torch.optim.Adam(list(self.actor.parameters()) + list(self.critic.parameters()),
                                           lr=args.lr, eps=1e-5)
         self.obs_rms, self.priv_rms, self.ret_rms = RunningMeanStd((obs_dim,)), RunningMeanStd((priv_dim,)), RunningMeanStd(())
+        self.value_norm = ValueNorm()
+        self.gamma, self.ent_discrete = args.gamma, args.ent_discrete
         self.weights = np.array(WEIGHTS[role], np.float64)
         if role == "runner":
             for part, weight in RUNNER_STYLES[args.runner_style].items():
@@ -257,10 +325,19 @@ class Learner:
     def value_input(self, obs_n, priv_n):
         return torch.cat([obs_n, priv_n], dim=-1)
 
+    def value(self, obs_n, priv_n):
+        return self.value_norm.denorm(self.critic(self.value_input(obs_n, priv_n)))
+
+    def use_genome(self, side):
+        for group in self.optimizer.param_groups:
+            group["lr"] = side["lr"]
+        self.gamma, self.ent_discrete = side["gamma"], side["ent_discrete"]
+
     def state(self):
         return {"actor": self.actor.state_dict(), "critic": self.critic.state_dict(),
                 "optimizer": self.optimizer.state_dict(), "obs_rms": self.obs_rms.state(),
-                "priv_rms": self.priv_rms.state(), "ret_rms": self.ret_rms.state(), "steps": self.steps}
+                "priv_rms": self.priv_rms.state(), "ret_rms": self.ret_rms.state(), "steps": self.steps,
+                "value_norm": self.value_norm.state()}
 
     def load(self, state):
         """Loads a checkpoint; one from before the current senses/outputs is carried over (upgrade())."""
@@ -290,6 +367,8 @@ class Learner:
         self.priv_rms.load(state["priv_rms"])
         self.ret_rms.load(state["ret_rms"])
         self.steps = state["steps"]
+        if "value_norm" in state:
+            self.value_norm.load(state["value_norm"])
 
     def snapshot_data(self, name):
         return {"role": self.role, "name": name, "obs_dim": self.obs_dim, "act_dim": self.act_dim,
@@ -351,6 +430,14 @@ def transplant(actor, old, role):
         net[2].weight[:hidden, :hidden] = torch.from_numpy(w1)
         net[2].bias[:hidden] = torch.from_numpy(b1)
         weight, bias = net[4].weight, net[4].bias
+        if w2.shape[0] == weight.shape[0]:
+            # Already has today's outputs (only the senses grew): copy them as they are.
+            weight.zero_()
+            weight[:, :hidden] = torch.from_numpy(w2)
+            bias.copy_(torch.from_numpy(b2))
+            if logstd is not None:
+                actor.logstd[0, :] = torch.from_numpy(logstd[:actor.logstd.shape[1]])
+            return
         weight.zero_()
         bias.zero_()
 
@@ -514,13 +601,23 @@ def main():
                 league.add(Snapshot(data, dims[data["role"]],
                                     imported=not path.startswith(os.path.join(args.out, "league"))))
     print(f"league: {len(league.pool['cop'])} past cop versions, {len(league.pool['runner'])} past runners")
+    genome = initial_genome(args.line)
+    if args.genome and os.path.exists(args.genome):
+        with open(args.genome) as handle:
+            genome = json.load(handle)
+    for role in ROLES:
+        learners[role].use_genome(genome[role])
+    with open(os.path.join(args.out, "genome.json"), "w") as handle:
+        json.dump(genome, handle, indent=1)
+    print(f"settings: {json.dumps(genome)}")
+    exam_panel = load_exam_panel(args, dims, league)
 
-    T, gamma, lam = args.steps, args.gamma, args.gae_lambda
+    T, lam = int(genome.get("steps", args.steps)), args.gae_lambda
     bufs = {}
     for role in ROLES:
         n, d = len(slots[role]), dims[role]
         bufs[role] = {"obs": torch.zeros((T, n, d)), "priv": torch.zeros((T, n, env.priv_dim)),
-                      "act": torch.zeros((T, n, A)), "nav": torch.zeros((T, n)),
+                      "act": torch.zeros((T, n, A)), "nav": torch.zeros((T, n)), "gone": torch.zeros((T, n)),
                       "logp": torch.zeros((T, n)), "val": torch.zeros((T, n)),
                       "rew": torch.zeros((T, n)), "done": torch.zeros((T, n)), "valid": torch.zeros((T, n))}
 
@@ -570,6 +667,8 @@ def main():
                   "trained_hours": round(trained / 3600, 3)}
         for key in ("kill_rate", "kill_vs_past", "survive_vs_past", "cop_return", "runner_return"):
             scores[key] = float(np.mean([row[key] for row in recent])) if recent else 0.0
+        if exam:
+            scores["exam_cop"], scores["exam_runner"] = exam["cop_score"], exam["runner_score"]
         with open(os.path.join(args.out, "scores.json"), "w") as handle:
             json.dump(scores, handle, indent=1)
         write_summary(args, history, final, league)
@@ -584,8 +683,10 @@ def main():
         for path in own[:-24]:
             os.remove(path)
 
+    exam_seconds = args.exam_minutes * 60 if exam_panel else 0.0
+    exam = None
     try:
-        while time.time() - started < budget:
+        while time.time() - started < budget - exam_seconds:
             update_start = time.time()
             stats_sum = np.zeros(env.stats_dim)
             fade = max(0.0, 1.0 - learners["cop"].steps / max(args.approach_fade_steps, 1.0))
@@ -605,7 +706,7 @@ def main():
                     with torch.no_grad():
                         act, logp, _ = learner.actor.evaluate(o_n, None, nav)
                         b["logp"][t] = logp
-                        b["val"][t] = learner.critic(learner.value_input(o_n, p_n))
+                        b["val"][t] = learner.value(o_n, p_n)
                     act_np = act.numpy().copy()
                     for snap_index in np.unique(ctrl[active[idx] & (ctrl != League.CURRENT)]):
                         rows = np.nonzero(active[idx] & (ctrl == snap_index))[0]
@@ -619,8 +720,10 @@ def main():
                 trunc_all = next_flags[:, 2] > 0.5
                 for role in ROLES:
                     learner, b, idx = learners[role], bufs[role], slots[role]
+                    gamma = learner.gamma
                     valid = b["valid"][t].numpy() > 0.5
                     reward = parts[idx].astype(np.float64) @ weights[role]
+                    b["gone"][t] = torch.from_numpy((next_flags[idx, 4] > 0.5).astype(np.float32))
                     done = done_all[idx]
                     episode_return[role][valid] += reward[valid]
                     discounted[role] = np.where(valid, discounted[role] * gamma + reward, discounted[role])
@@ -659,10 +762,13 @@ def main():
             for role in ROLES:
                 learner, b, idx = learners[role], bufs[role], slots[role]
                 valid_last = torch.from_numpy((active[idx] & (controller_of(role) == League.CURRENT)).astype(np.float32))
+                gamma = learner.gamma
                 with torch.no_grad():
                     o_n = torch.from_numpy(learner.obs_rms.normalize(raw_obs[idx, :dims[role]]))
                     p_n = torch.from_numpy(learner.priv_rms.normalize(raw_priv[idx]))
-                    last_value = learner.critic(learner.value_input(o_n, p_n))
+                    last_value = learner.value(o_n, p_n)
+                if role == "cop":
+                    share_team_future(b, match_of["cop"], last_value, valid_last, gamma)
                 adv = torch.zeros_like(b["rew"])
                 running = torch.zeros(len(idx))
                 for t in reversed(range(T)):
@@ -728,6 +834,13 @@ def main():
             if time.time() - last_save > args.save_minutes * 60:
                 save()
                 last_save = time.time()
+        if exam_panel:
+            save()
+            exam = run_exam(env, learners, dims, slots, exam_panel, raw_obs, raw_priv, flags,
+                            budget - (time.time() - started))
+            with open(os.path.join(args.out, "exam.json"), "w") as handle:
+                json.dump(exam, handle, indent=1)
+            print(f"exam: cops {exam['cop_score']:.2f}, runner {exam['runner_score']:.2f}")
     finally:
         if updates > 0:
             snapshot()
@@ -737,7 +850,7 @@ def main():
 
 
 # Sizes the arena reports in its hello (scripts/ai/chase_senses.gd, chase_match.gd); only used by --export-only.
-GAME_DIMS = {"cop": 154, "runner": 165}
+GAME_DIMS = {"cop": 176, "runner": 165}
 GAME_PRIV, GAME_ACT = 12, 5
 
 
@@ -751,6 +864,107 @@ def export_only(args):
     print(f"wrote cop_brain.json and runner_brain.json to {args.out}")
 
 
+SCRIPTED = "scripted"
+
+
+def load_exam_panel(args, dims, league):
+    """The fixed opponents every line is examined against this round: the scripted autopilot (never
+    changes, so it shows progress across rounds) plus the past versions the last merge chose (or, before
+    any merge made a panel, the newest imported league versions, which every line shares)."""
+    if args.exam_minutes <= 0:
+        return None
+    panel = {"cop": [(SCRIPTED, None)], "runner": [(SCRIPTED, None)]}
+    files = sorted(glob.glob(os.path.join(args.exam_dir, "*.pt"))) if args.exam_dir else []
+    if files:
+        for path in files:
+            data = torch.load(path, weights_only=False)
+            if data["obs_dim"] <= dims[data["role"]]:
+                name = os.path.splitext(os.path.basename(path))[0]
+                panel[data["role"]].append((name, Snapshot(data, dims[data["role"]], imported=True)))
+    else:
+        for role in ROLES:
+            imported = [s for s in league.pool[role] if s.imported]
+            for snap in imported[-2:]:
+                panel[role].append((snap.name, snap))
+    print("exam panel: " + "; ".join(f"{role}: " + ", ".join(n for n, _ in panel[role]) for role in ROLES))
+    return panel
+
+
+def run_exam(env, learners, dims, slots, panel, raw_obs, raw_priv, flags, seconds):
+    """Plays this line's current cops against every runner on the panel and its current runner against
+    every cop on the panel, spreading chases evenly, for `seconds`. Brains act as in the game (sampled).
+    Chases already running when the exam starts are not counted."""
+    tests = [("cop", name, opp) for name, opp in panel["runner"]] + [("runner", name, opp) for name, opp in panel["cop"]]
+    wins, games, pending = np.zeros(len(tests)), np.zeros(len(tests)), np.zeros(len(tests))
+    assign = [-1] * env.num_matches
+    started = time.time()
+    while time.time() - started < seconds:
+        actions = np.zeros((env.num_slots, env.act_dim), np.float32)
+        active = flags[:, 1] > 0.5
+        for role in ROLES:
+            idx = slots[role]
+            o_raw = raw_obs[idx, :dims[role]]
+            learner = learners[role]
+            with torch.no_grad():
+                mine = learner.actor.evaluate(torch.from_numpy(learner.obs_rms.normalize(o_raw)))[0].numpy()
+            out = mine.copy()
+            for row, slot in enumerate(idx):
+                test = assign[env.match_of[slot]]
+                if test < 0 or tests[test][0] == role or not active[slot]:
+                    continue
+                opponent = tests[test][2]
+                if opponent is None:
+                    out[row] = 0.0
+                    out[row, -1] = -1.0  # the arena drives this slot with its scripted autopilot
+                else:
+                    out[row] = opponent.act(o_raw[row:row + 1])[0]
+            actions[idx] = to_game(out, learner.actor.n_gauss)
+        raw_obs, raw_priv, parts, next_flags, _ = env.step(actions)
+        for slot in slots["runner"][next_flags[slots["runner"], 0] > 0.5]:
+            m = env.match_of[slot]
+            test = assign[m]
+            wrecked, survived = parts[slot, 2] > 0.5, parts[slot, 7] > 0.5
+            if test >= 0:
+                pending[test] -= 1
+                if wrecked or survived:
+                    games[test] += 1
+                    wins[test] += float(wrecked if tests[test][0] == "cop" else survived)
+            choice = int(np.argmin(games + pending))
+            assign[m] = choice
+            pending[choice] += 1
+        flags = next_flags
+    result = {"cop": {}, "runner": {}, "minutes": round((time.time() - started) / 60, 1)}
+    for k, (role, name, _) in enumerate(tests):
+        result[role][name] = {"wins": int(wins[k]), "games": int(games[k])}
+    for role in ROLES:
+        rates = [v["wins"] / v["games"] for v in result[role].values() if v["games"] > 0]
+        result[f"{role}_score"] = float(np.mean(rates)) if rates else 0.0
+        scripted = result[role].get(SCRIPTED, {"wins": 0, "games": 0})
+        result[f"{role}_vs_scripted"] = scripted["wins"] / scripted["games"] if scripted["games"] else 0.0
+    return result
+
+
+def share_team_future(b, match_of_slot, last_value, valid_last, gamma):
+    """A cop that wrecks (say, blocking the runner) leaves before the chase is decided, so on its own it
+    never sees the team's later result. Give its last step the team's expected future instead of nothing:
+    gamma times the average value of its teammates still in that chase one step later (the
+    "posthumous credit" problem from Unity's MA-POCA). Its own wreck penalty still applies."""
+    T = b["rew"].shape[0]
+    matches = int(match_of_slot.max()) + 1
+    for t in range(T):
+        gone = (b["gone"][t] * b["valid"][t]).numpy() > 0.5
+        if not gone.any():
+            continue
+        values = (last_value if t == T - 1 else b["val"][t + 1]).numpy()
+        alive = (valid_last if t == T - 1 else b["valid"][t + 1]).numpy() > 0.5
+        alive = alive & ~gone
+        totals = np.bincount(match_of_slot, weights=values * alive, minlength=matches)
+        counts = np.bincount(match_of_slot, weights=alive.astype(np.float64), minlength=matches)
+        team = np.where(counts > 0, totals / np.maximum(counts, 1), 0.0)
+        bonus = np.where(gone, gamma * team[match_of_slot], 0.0)
+        b["rew"][t] += torch.from_numpy(bonus.astype(np.float32))
+
+
 def train_side(learner, b, args, train_actor=True):
     mask = b["valid"].reshape(-1) > 0.5
     count = int(mask.sum().item())
@@ -762,12 +976,14 @@ def train_side(learner, b, args, train_actor=True):
     nav = b["nav"].reshape(-1)[mask]
     adv_all, ret, val_old = b["adv"].reshape(-1)[mask], b["ret"].reshape(-1)[mask], b["val"].reshape(-1)[mask]
     value_in = learner.value_input(obs, priv)
+    learner.value_norm.update(ret.numpy(), learner.critic.net[4])
+    target = torch.from_numpy(learner.value_norm.norm(ret.numpy()).astype(np.float32))
     pieces = max(1, min(args.minibatches, count // 64))
     for _ in range(args.epochs):
         for idx in torch.randperm(count).tensor_split(pieces):
-            new_value = learner.critic(value_in[idx])
-            clipped = val_old[idx] + (new_value - val_old[idx]).clamp(-args.clip, args.clip)
-            v_loss = 0.5 * torch.max((new_value - ret[idx]) ** 2, (clipped - ret[idx]) ** 2).mean()
+            # Plain squared error on normalised targets: value clipping hurt in every setting Andrychowicz et
+            # al. ("What Matters in On-Policy RL") tried; value normalisation helped in the MAPPO paper.
+            v_loss = 0.5 * ((learner.critic(value_in[idx]) - target[idx]) ** 2).mean()
             loss = args.vf * v_loss
             if train_actor:
                 _, new_logp, entropy = learner.actor.evaluate(obs[idx], act[idx], nav[idx])
@@ -775,7 +991,7 @@ def train_side(learner, b, args, train_actor=True):
                 adv = adv_all[idx]
                 adv = (adv - adv.mean()) / (adv.std() + 1e-8)
                 pg_loss = torch.max(-adv * ratio, -adv * ratio.clamp(1 - args.clip, 1 + args.clip)).mean()
-                loss = loss + pg_loss - args.ent * entropy[0].mean() - args.ent_discrete * entropy[1].mean()
+                loss = loss + pg_loss - args.ent * entropy[0].mean() - learner.ent_discrete * entropy[1].mean()
             learner.optimizer.zero_grad()
             loss.backward()
             nn.utils.clip_grad_norm_(list(learner.actor.parameters()) + list(learner.critic.parameters()), args.max_grad)

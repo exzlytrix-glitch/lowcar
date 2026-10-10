@@ -333,6 +333,14 @@ func bursting(cop: LabVehicle) -> bool:
 	return false
 
 
+## The navigation option a learned cop is following (0 for scripted cops).
+func route_option(cop: LabVehicle) -> int:
+	var driver: Node = _drivers.get(cop)
+	if driver is ChaseBrainDriver:
+		return (driver as ChaseBrainDriver).agent.navigation.option
+	return 0
+
+
 func _update_intel(step: float) -> void:
 	var list: Array = []
 	for cop: LabVehicle in cops:

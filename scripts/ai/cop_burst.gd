@@ -10,8 +10,10 @@ const SPEED_GAIN: float = 1.3
 var cooldown: float = 4.5
 var left: float = 0.0
 var wait: float = 0.0
-## True on the decision the burst fired.
+## True from a burst firing until the next advance().
 var fired: bool = false
+## Bursts fired since this cop spawned (for training stats).
+var fire_count: int = 0
 
 
 func reset() -> void:
@@ -21,15 +23,29 @@ func reset() -> void:
 
 
 func tick(dt: float, want: bool) -> void:
+	advance(dt)
+	if want:
+		try_fire()
+
+
+## Runs the burst and its recharge on (once per decision).
+func advance(dt: float) -> void:
 	fired = false
 	if left > 0.0:
 		left = maxf(0.0, left - dt)
 	elif wait > 0.0:
 		wait = maxf(0.0, wait - dt)
-	elif want:
-		left = DURATION
-		wait = cooldown
-		fired = true
+
+
+## Fires if recharged; a cop with a reaction delay calls this when its delayed order arrives.
+func try_fire() -> bool:
+	if left > 0.0 or wait > 0.0:
+		return false
+	left = DURATION
+	wait = cooldown
+	fired = true
+	fire_count += 1
+	return true
 
 
 func active() -> bool:

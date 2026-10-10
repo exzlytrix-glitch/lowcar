@@ -11,6 +11,9 @@ extends RefCounted
 ##  4  team size, own health, burst ready, bursting
 ## 31  navigation options (scripts/ai/chase_nav.gd)
 ## 13  the next junction on its own road: distance, then up to 4 exits left to right (turn sin/cos, present)
+## 20  the 4 teammate slots' current navigation choices (one-hot each, same order as the teammates above)
+##  1  this cop's rank by distance to the runner within the squad (0 = closest, /4)
+##  1  its reaction delay (seconds / 0.25): how late its controls land, so it can plan for it
 ##
 ## Runner (165): school senses, with the road route to the navigation target it chose, then
 ## 54  up to 6 cops within 160 m, nearest first: position, velocity, heading, distance, bursting, present
@@ -20,9 +23,9 @@ extends RefCounted
 ##
 ## Brain answers are handled by ChaseAgent (scripts/ai/chase_agent.gd).
 
-const COP_OBS: int = 154
+const COP_OBS: int = 176
 const RUNNER_OBS: int = 165
-const OBS_DIM: int = 165
+const OBS_DIM: int = 176
 const ACT_DIM: int = 5
 const JUNCTION_FEATURES: int = 13
 const TEAM_SLOTS: int = 4
@@ -49,7 +52,7 @@ func reset() -> void:
 
 func observe_cop(route: RouteTrack, progress: float, cars: Array, dt: float, intel: ChaseIntel, sees: bool,
 		runner: LabVehicle, team: Array, team_size: int, burst: CopBurst, nav: RoadNav,
-		navigation: PackedFloat32Array) -> PackedFloat32Array:
+		navigation: PackedFloat32Array, team_options: Dictionary, delay_seconds: float) -> PackedFloat32Array:
 	var obs: PackedFloat32Array = _school(route, progress, cars, dt)
 	var i: int = CopSenses.OBS_DIM
 	var seen: Vector2 = _local(intel.last_position - _here)
@@ -71,6 +74,11 @@ func observe_cop(route: RouteTrack, progress: float, cars: Array, dt: float, int
 	i += 13
 	var believed: Vector2 = intel.believed_position()
 	var mates: Array = _nearest(team, TEAM_SLOTS, INF)
+	var my_gap: float = _here.distance_to(believed)
+	var rank: int = 0
+	for mate: LabVehicle in team:
+		if Vector2(mate.global_position.x, mate.global_position.z).distance_to(believed) < my_gap:
+			rank += 1
 	for slot: int in TEAM_SLOTS:
 		if slot < mates.size():
 			var mate: LabVehicle = mates[slot]
@@ -81,7 +89,12 @@ func observe_cop(route: RouteTrack, progress: float, cars: Array, dt: float, int
 	obs[i + 1] = car.health / maxf(car.max_health, 1.0)
 	obs[i + 2] = burst.readiness()
 	obs[i + 3] = 1.0 if burst.active() else 0.0
-	_append_roads(obs, i + 4, nav, navigation)
+	var at: int = _append_roads(obs, i + 4, nav, navigation)
+	for slot: int in mini(mates.size(), TEAM_SLOTS):
+		obs[at + slot * ChaseNav.OPTIONS + clampi(int(team_options.get(mates[slot], 0)), 0, ChaseNav.OPTIONS - 1)] = 1.0
+	at += TEAM_SLOTS * ChaseNav.OPTIONS
+	obs[at] = minf(rank, 4) / 4.0
+	obs[at + 1] = delay_seconds / 0.25
 	return obs
 
 
@@ -109,14 +122,15 @@ func observe_runner(route: RouteTrack, progress: float, cars: Array, dt: float, 
 
 
 ## Navigation options, then the next junction on this car's road: its distance and up to 4 exits.
-func _append_roads(obs: PackedFloat32Array, i: int, nav: RoadNav, navigation: PackedFloat32Array) -> void:
+## Returns the index after what it wrote.
+func _append_roads(obs: PackedFloat32Array, i: int, nav: RoadNav, navigation: PackedFloat32Array) -> int:
 	for k: int in navigation.size():
 		obs[i + k] = navigation[k]
 	i += navigation.size()
 	var next: Dictionary = nav.next_junction(_here, _forward)
 	if next.is_empty():
 		obs[i] = 3.0
-		return
+		return i + JUNCTION_FEATURES
 	obs[i] = clampf(float(next["distance"]) / 100.0, 0.0, 3.0)
 	var ways: Array = nav.exits(next["node"], next["edge"])
 	for slot: int in mini(ways.size(), 4):
@@ -124,6 +138,7 @@ func _append_roads(obs: PackedFloat32Array, i: int, nav: RoadNav, navigation: Pa
 		obs[i + 1 + slot * 3] = sin(turn)
 		obs[i + 2 + slot * 3] = cos(turn)
 		obs[i + 3 + slot * 3] = 1.0
+	return i + JUNCTION_FEATURES
 
 
 func _school(route: RouteTrack, progress: float, cars: Array, dt: float) -> PackedFloat32Array:

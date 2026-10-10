@@ -7,6 +7,8 @@ extends RefCounted
 ##
 ## Brain answer (wire order): [steer, throttle, handbrake 0/1, special, navigation option 0-4]
 ##   special: cop = fire burst 0/1; runner = boost charge 0 none, 1-4 short to long (RunnerBoost)
+## A reaction delay (delay_frames, physics frames) makes the controls land late, like a human's
+## reaction time; call physics_tick() every physics frame so delayed orders arrive.
 
 const COP_REPLAN: float = 0.5
 const RUNNER_REPLAN: float = 2.0
@@ -32,6 +34,10 @@ var _throttle: float = 0.0
 var _steer: float = 0.0
 var _handbrake: bool = false
 var _hold: bool = false
+## Physics frames between a decision and its controls landing (0 = instant).
+var delay_frames: int = 0
+## Orders still on their way: [frames left, throttle, steer, handbrake, hold boost, fire burst].
+var _orders: Array = []
 
 
 func setup(vehicle: LabVehicle, runner: bool, road_nav: RoadNav, car_mask: int, random: RandomNumberGenerator) -> void:
@@ -58,12 +64,17 @@ func reset() -> void:
 	burst.reset()
 	boost.reset()
 	_hold = false
+	_orders.clear()
+	_throttle = 0.0
+	_steer = 0.0
+	_handbrake = false
 	if is_runner:
 		_pick_goal()
 
 
+## `team_options` maps each teammate car to its current navigation option.
 func observe_cop(dt: float, cars: Array, intel: ChaseIntel, sees: bool, runner: LabVehicle, team: Array,
-		team_size: int) -> PackedFloat32Array:
+		team_size: int, team_options: Dictionary) -> PackedFloat32Array:
 	_dt = dt
 	var believed: Vector2 = intel.believed_position()
 	var heading: Vector2 = intel.last_velocity.normalized() if intel.last_velocity.length() > 3.0 else intel.last_forward
@@ -72,7 +83,8 @@ func observe_cop(dt: float, cars: Array, intel: ChaseIntel, sees: bool, runner: 
 	navigation.measure(_here(), _forward())
 	_follow_route(dt, COP_REPLAN)
 	var options: PackedFloat32Array = navigation.features(_here(), _forward(), [believed])
-	return senses.observe_cop(route, progress, cars, dt, intel, sees, runner, team, team_size, burst, nav, options)
+	return senses.observe_cop(route, progress, cars, dt, intel, sees, runner, team, team_size, burst, nav, options,
+		team_options, delay_frames / float(Engine.physics_ticks_per_second))
 
 
 func observe_runner(dt: float, cars: Array, cops: Array, bursting: Array, intel: ChaseIntel) -> PackedFloat32Array:
@@ -98,18 +110,48 @@ func observe_runner(dt: float, cars: Array, cops: Array, bursting: Array, intel:
 
 ## Drives the car with one slot of a brain answer (starting at `offset`).
 func apply(actions: PackedFloat32Array, offset: int) -> void:
-	_steer = clampf(actions[offset], -1.0, 1.0)
-	_throttle = clampf(actions[offset + 1], -1.0, 1.0)
-	_handbrake = actions[offset + 2] > 0.5
+	var steer: float = clampf(actions[offset], -1.0, 1.0)
+	var throttle: float = clampf(actions[offset + 1], -1.0, 1.0)
+	var handbrake: bool = actions[offset + 2] > 0.5
 	if navigation.open:
 		var before: int = navigation.option
 		navigation.choose(int(round(actions[offset + 4])))
 		if navigation.option != before:
 			_replan = 0.0
+	var hold: bool = false
+	var fire: bool = false
 	if is_runner:
-		_hold = boost.hold(_dt, int(round(actions[offset + 3])), car)
+		hold = boost.hold(_dt, int(round(actions[offset + 3])), car)
 	else:
-		burst.tick(_dt, actions[offset + 3] > 0.5)
+		burst.advance(_dt)
+		fire = actions[offset + 3] > 0.5
+	var order: Array = [delay_frames, throttle, steer, handbrake, hold, fire]
+	if delay_frames <= 0:
+		_carry_out(order)
+	else:
+		_orders.append(order)
+
+
+## Delivers delayed orders whose time has come. Call once per physics frame.
+func physics_tick() -> void:
+	while not _orders.is_empty():
+		var order: Array = _orders[0]
+		order[0] -= 1
+		if order[0] > 0:
+			break
+		_orders.pop_front()
+		_carry_out(order)
+	for index: int in range(1, _orders.size()):
+		_orders[index][0] -= 1
+
+
+func _carry_out(order: Array) -> void:
+	_throttle = order[1]
+	_steer = order[2]
+	_handbrake = order[3]
+	_hold = order[4]
+	if order[5]:
+		burst.try_fire()
 	reapply()
 
 

@@ -9,7 +9,8 @@ extends RefCounted
 ##
 ## Slot 0 is the runner, slots 1-5 the cops. Every decision each slot reports its view, raw reward
 ## parts for what happened since its last action (training/train_chase.py weighs them), and flags
-## (episode ended, slot active, ended by the clock not by anyone, navigation choice used this decision).
+## (episode ended, slot active, ended by the clock not by anyone, navigation choice used this decision,
+## this cop just wrecked: training lets it share the team's later result).
 ## How each car sees and acts is ChaseAgent (shared with the game).
 ##
 ## Reward parts, cop:    0 runner damage (team)  1 runner wrecked (team)  2 metres closed on the runner
@@ -22,7 +23,7 @@ const SLOTS: int = 6
 const MAX_COPS: int = 5
 const COMP_DIM: int = 8
 const PRIV_DIM: int = 12
-const FLAG_DIM: int = 4
+const FLAG_DIM: int = 5
 const STATS_DIM: int = 26
 ## Stats summed over the arena between decisions (for training logs):
 ## 0 matches ended  1 runner wrecked  2 runner survived  3 runner damage  4 runner damage from cop hits
@@ -48,6 +49,9 @@ const RECYCLE_DISTANCE: float = 420.0
 ## already cruising, and share of cops that spawn parked and have to pull out.
 const RUNNER_STANDING_START: float = 0.35
 const COP_PARKED_START: float = 0.15
+## Cop reaction delay, physics frames at 60 per second: 100-250 ms, drawn per cop (GT Sophy trained with
+## similar delays and stayed superhuman; delayed cops have to predict instead of react).
+const COP_DELAY_FRAMES := Vector2i(6, 15)
 ## Chance a match starts with 1, 2, 3, 4 or 5 cops.
 const SQUAD_ODDS: PackedFloat32Array = [0.25, 0.25, 0.2, 0.15, 0.15]
 
@@ -77,6 +81,7 @@ var _pending := PackedFloat32Array()
 var _accum := PackedFloat32Array()
 var _sightings: Array[bool] = []
 var _reinforce_clock: float = 0.0
+var _burst_counts := PackedInt32Array()
 var _dt: float = 0.1
 
 
@@ -93,6 +98,7 @@ func setup(match_index: int, parent: Node, road_nav: RoadNav, random: RandomNumb
 	_accum.resize(SLOTS * COMP_DIM)
 	_respawn_wait.resize(SLOTS)
 	_last_gap.resize(SLOTS)
+	_burst_counts.resize(SLOTS)
 	_pending.resize(SLOTS)
 	for slot: int in SLOTS:
 		var car: LabVehicle = _make_car(slot == 0)
@@ -168,6 +174,7 @@ func decide(dt: float) -> void:
 				parts[slot * COMP_DIM + 5] += 1.0
 				parts[4] += 1.0
 				stats[7] += 1.0
+				flags[slot * FLAG_DIM + 4] = 1.0
 			flags[slot * FLAG_DIM] = 1.0
 			_deactivate(slot)
 			_respawn_wait[slot] = rng.randf_range(3.0, 8.0)
@@ -211,6 +218,13 @@ func decide(dt: float) -> void:
 	_observe(dt, cops)
 
 
+## Delivers delayed controls. Call every physics frame.
+func physics_tick() -> void:
+	for slot: int in SLOTS:
+		if active[slot]:
+			agents[slot].physics_tick()
+
+
 ## Applies the actions for this match's slots, which start at `base` in the action array.
 func act(actions: PackedFloat32Array, base: int) -> void:
 	var here: Vector2 = _flat(runner.global_position)
@@ -227,7 +241,8 @@ func act(actions: PackedFloat32Array, base: int) -> void:
 			stats[22] += 1.0 if handbrake else 0.0
 			continue
 		var cop: LabVehicle = cars[slot]
-		stats[16] += 1.0 if agents[slot].burst.fired else 0.0
+		stats[16] += agents[slot].burst.fire_count - _burst_counts[slot]
+		_burst_counts[slot] = agents[slot].burst.fire_count
 		stats[19] += 1.0 if cop.drifting else 0.0
 		stats[21] += 1.0 if handbrake else 0.0
 		stats[23] += 1.0 if cop.forward_speed < -1.0 else 0.0
@@ -238,13 +253,15 @@ func act(actions: PackedFloat32Array, base: int) -> void:
 		cop.tuning.maximum_speed_mps = cop_top_speed() * lerpf(1.0, CATCH_UP_BOOST, lag) * (CopBurst.SPEED_GAIN if agents[slot].burst.active() else 1.0)
 
 
-## Simple scripted driving for every slot, for self-tests: the runner follows its route, cops drive
-## at where they think the runner is and burst when close and lined up; navigation choices are random.
-func autopilot(actions: PackedFloat32Array, base: int) -> void:
+## Simple scripted driving, for self-tests and as the fixed "scripted" opponent in training exams: the
+## runner follows its route, cops drive at where they think the runner is and burst when close and
+## lined up; navigation choices are random. With `only_marked`, only slots whose navigation action is
+## -1 (Python's "drive this one with the script") are filled.
+func autopilot(actions: PackedFloat32Array, base: int, only_marked: bool = false) -> void:
 	var believed: Vector2 = intel.believed_position()
 	for slot: int in SLOTS:
 		var offset: int = base + slot * ChaseSenses.ACT_DIM
-		if not active[slot]:
+		if not active[slot] or (only_marked and actions[offset + 4] > -0.5):
 			continue
 		var car: LabVehicle = cars[slot]
 		var here: Vector2 = _flat(car.global_position)
@@ -302,6 +319,9 @@ func _observe(dt: float, cops: Array) -> void:
 	_copy(priv, 0, runner_priv, PRIV_DIM)
 	stats[11] += cops.size()
 	stats[14] += cop_speed
+	var team_options: Dictionary = {}
+	for cop: LabVehicle in cops:
+		team_options[cop] = agents[cars.find(cop)].navigation.option
 	var best_gap: float = gaps[0] if not gaps.is_empty() else 999.0
 	for k: int in cops.size():
 		var cop: LabVehicle = cops[k]
@@ -309,7 +329,7 @@ func _observe(dt: float, cops: Array) -> void:
 		flags[slot * FLAG_DIM + 1] = 1.0
 		var team: Array = cops.duplicate()
 		team.erase(cop)
-		view = agents[slot].observe_cop(dt, match_cars, intel, _sightings[k], runner, team, cops.size())
+		view = agents[slot].observe_cop(dt, match_cars, intel, _sightings[k], runner, team, cops.size(), team_options)
 		flags[slot * FLAG_DIM + 3] = 1.0 if agents[slot].navigation.open else 0.0
 		_copy(obs, slot * ChaseSenses.OBS_DIM, view, ChaseSenses.OBS_DIM)
 		var forward: Vector2 = _forward(cop)
@@ -391,6 +411,8 @@ func _spawn_cop(slot: int, behind: bool) -> bool:
 		active[slot] = true
 		agents[slot].reset()
 		agents[slot].burst.cooldown = CopBurst.cooldown_at(minute)
+		agents[slot].delay_frames = rng.randi_range(COP_DELAY_FRAMES.x, COP_DELAY_FRAMES.y)
+		_burst_counts[slot] = agents[slot].burst.fire_count
 		_last_gap[slot] = distance
 		_pending[slot] = 0.0
 		for k: int in COMP_DIM:

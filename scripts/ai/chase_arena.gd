@@ -9,9 +9,10 @@ extends Node3D
 ## randomness): --cop-brain=PATH --runner-brain=PATH, default resources/ai/chase_*_brain.json.
 ##
 ## Wire format (little endian): on connect one JSON line describing the sizes. Then per decision Godot
-## sends int32 byte count + float32[obs S*O, priv S*P, parts S*C, flags S*4 (done, active, truncated,
-## navigation choice used), stats T] for S = matches * 6 slots (slot 0 of each match is the runner), and
-## Python answers with float32[S*5] actions in ChaseAgent's wire order.
+## sends int32 byte count + float32[obs S*O, priv S*P, parts S*C, flags S*5 (done, active, truncated,
+## navigation choice used, cop just wrecked), stats T] for S = matches * 6 slots (slot 0 of each match is
+## the runner), and Python answers with float32[S*5] actions in ChaseAgent's wire order; a navigation
+## value of -1 means "drive this slot with the scripted autopilot" (the fixed exam opponent).
 
 var port: int = 0
 var matches: int = 6
@@ -92,6 +93,8 @@ func slots() -> int:
 func _physics_process(_delta: float) -> void:
 	if _matches.is_empty():
 		return
+	for chase: ChaseMatch in _matches:
+		chase.physics_tick()
 	_frame += 1
 	if _frame % repeat != 0:
 		return
@@ -114,6 +117,8 @@ func _physics_process(_delta: float) -> void:
 		if not _receive():
 			get_tree().quit()
 			return
+		for index: int in matches:
+			_matches[index].autopilot(_actions, index * ChaseMatch.SLOTS * ChaseSenses.ACT_DIM, true)
 	for index: int in matches:
 		_matches[index].act(_actions, index * ChaseMatch.SLOTS * ChaseSenses.ACT_DIM)
 	_since_city += 1
