@@ -59,6 +59,8 @@ if [ -f "$ROOT/training/seeds/chase_seed.pt" ]; then
   # The critics learn the current rewards for a few updates before the brains change.
   START="--resume $ROOT/training/seeds/chase_seed.pt --warmup-on-resume --critic-warmup 10"
 fi
+# Past runners of varied strength and style for the cops to spar with (training/seeds/league).
+[ -d "$ROOT/training/seeds/league" ] && START="$START --league-in $ROOT/training/seeds/league"
 mkdir -p "$OUT"
 echo "== training $HOURS h on $DEVICE with $CHASES chases at once ($START)"
 python3 "$ROOT/training/train_chase.py" --gpu-world "$WORLD" --gpu-matches "$CHASES" --device "$DEVICE" \

@@ -4,10 +4,14 @@ Two brains learn at the same time. The cop brain is shared by every cop in every
 changing mid-chase); the runner brain drives a car with the player's advantages. Each new trick one
 side finds is a problem the other side has to solve, like OpenAI's hide-and-seek.
 
-Rewards only score winning, not tactics: cops score for damage on the runner and for wrecking it,
-the runner for staying alive and in one piece (plus a little for wrecking cops, like the game's chaos
-score). Small extras keep driving sane: wall hits cost a little, and early on cops get a hint for
-closing in, which fades out (--approach-fade-steps) so they are left with winning only.
+The goal is smart cops (to chase a human player); the runner is their sparring partner. Rewards
+score winning, not tactics: each cop scores mostly for the damage IT deals to the runner (a shared team
+reward made every cop paid for its teammates' hits, so hanging back was the best deal and the cops went
+passive), plus a team bonus for wrecking it and a small, permanent hint for closing in; the runner
+scores for staying alive and in one piece (plus a little for wrecking cops, like the game's chaos
+score). Wall hits and wrecks cost a little. The runner learns at --runner-lr-scale of the cops' rate,
+and in --past-runner-share of chases the cops meet past runners picked so they win about half the time
+(some of them driving like a human: hesitating and wobbling, --human-runners).
 
 Each brain is an actor (what runs in the game, small enough for GDScript) and a critic that sees extra
 facts the actor does not, such as where the runner really is (centralised training, decentralised
@@ -51,9 +55,10 @@ ROLES = ("cop", "runner")
 WEIGHTS = {
     # runner damage (team), runner wrecked (team), metres closed (fades out), own wall damage,
     # own damage from car hits, own wreck, damage it dealt to the runner, damage it dealt to other cops
-    # Runner damage doubled (0.05 -> 0.1): with wrecks rare, the crash penalties outweighed attacking,
-    # and cops learned to follow safely instead of to win.
-    "cop": [0.1, 3.0, 0.02, -0.015, -0.004, -1.25, 0.02, -0.02],
+    # Each cop is paid mostly for its own hits (0.12/HP), only a little for the team's (0.02/HP): with a
+    # big shared reward, cops on "far"/"cover" routes earned as much as the ones taking the risks.
+    # The closing-in hint (0.005/m) stays on for good.
+    "cop": [0.02, 3.0, 0.005, -0.015, -0.004, -1.25, 0.12, -0.02],
     # alive, damage taken, wrecked, damage dealt to cops, cops wrecked, speed, wall damage, survived
     "runner": [0.02, -0.05, -3.0, 0.01, 0.4, 0.0, 0.0, 0.0],
 }
@@ -118,12 +123,18 @@ def parse_args():
     p.add_argument("--radius", type=float, default=450.0)
     p.add_argument("--world-cities", action="store_true",
                    help="train in pieces of the game's endless city (WorldGen) instead of round cities")
-    p.add_argument("--past-share", type=float, default=0.2,
-                   help="share of chases where one side is a past version (each side)")
+    p.add_argument("--past-runner-share", type=float, default=0.4,
+                   help="share of chases where the cops face a past runner (picked so they win about half)")
+    p.add_argument("--past-cop-share", type=float, default=0.15,
+                   help="share of chases where the runner faces past cops")
+    p.add_argument("--human-runners", type=float, default=0.5,
+                   help="share of past-runner chases where the runner drives like a human (hesitates, wobbles)")
+    p.add_argument("--runner-lr-scale", type=float, default=0.25,
+                   help="runner learning rate as a share of its settings: the cops must keep up with it")
     p.add_argument("--pool-size", type=int, default=40)
     p.add_argument("--snapshot-minutes", type=float, default=20.0)
-    p.add_argument("--approach-fade-steps", type=float, default=30e6,
-                   help="cop decisions over which the closing-in hint fades to zero")
+    p.add_argument("--approach-fade-steps", type=float, default=0.0,
+                   help="cop decisions over which the closing-in hint fades to zero (0: never fades)")
     p.add_argument("--save-minutes", type=float, default=10.0)
     p.add_argument("--resume", default="")
     p.add_argument("--genome", default="", help="this line's settings (genome.json from the last merge); "
@@ -574,16 +585,20 @@ class League:
     def pick(self):
         """(runner, cops) controllers for a new chase: CURRENT or the uid of a past version."""
         roll = self.rng.random()
-        share = self.args.past_share
-        if roll < share and self.pool["runner"]:
+        if roll < self.args.past_runner_share and self.pool["runner"]:
             return self._choose("runner"), self.CURRENT
-        if roll < 2 * share and self.pool["cop"]:
+        if roll < self.args.past_runner_share + self.args.past_cop_share and self.pool["cop"]:
             return self.CURRENT, self._choose("cop")
         return self.CURRENT, self.CURRENT
 
     def _choose(self, role):
         pool = self.pool[role]
-        weights = np.array([(1.0 - s.learner_win) ** 1.5 + 0.1 for s in pool])
+        if role == "runner":
+            # Sparring partners for the cops: runners they beat about half the time teach the most
+            # (always losing or always winning teaches little).
+            weights = np.array([s.learner_win * (1.0 - s.learner_win) + 0.05 for s in pool])
+        else:
+            weights = np.array([(1.0 - s.learner_win) ** 1.5 + 0.1 for s in pool])
         return pool[int(self.rng.choice(len(pool), p=weights / weights.sum()))].uid
 
     def record(self, uid, learner_won):
@@ -656,7 +671,10 @@ def main():
         with open(args.genome) as handle:
             genome = json.load(handle)
     for role in ROLES:
-        learners[role].use_genome(genome[role])
+        side = dict(genome[role])
+        if role == "runner":
+            side["lr"] = side["lr"] * args.runner_lr_scale
+        learners[role].use_genome(side)
     with open(os.path.join(args.out, "genome.json"), "w") as handle:
         json.dump(genome, handle, indent=1)
     print(f"settings: {json.dumps(genome)}")
@@ -680,6 +698,17 @@ def main():
 
     raw_obs, raw_priv, _, flags, _ = to_device(env.reset())
     controllers = np.array([league.pick() for _ in range(M)], dtype=np.int64).reshape(M, 2)  # per chase: (runner, cops)
+    # How sharply a past runner drives in each chase: 1 = as it learned, lower = more human (it hesitates,
+    # keeping its last controls, and its steering wobbles), so cops learn to punish human mistakes.
+    skill_rng = np.random.default_rng(args.seed + 17)
+
+    def draw_skill(runner_ctrl):
+        if runner_ctrl == League.CURRENT or skill_rng.random() >= args.human_runners:
+            return 1.0
+        return float(skill_rng.uniform(0.35, 0.9))
+    runner_skill = np.array([draw_skill(c[0]) for c in controllers], dtype=np.float32)
+    runner_skill_t = torch.as_tensor(runner_skill, device=DEVICE)
+    last_runner_out = None
     controllers_t = torch.as_tensor(controllers, device=DEVICE)
     slots_t = {role: torch.as_tensor(slots[role], device=DEVICE) for role in ROLES}
     match_t = {role: torch.as_tensor(match_of[role], device=DEVICE) for role in ROLES}
@@ -749,7 +778,7 @@ def main():
             update_start = time.time()
             env_seconds = 0.0
             stats_sum = np.zeros(env.stats_dim)
-            fade = max(0.0, 1.0 - learners["cop"].steps / max(args.approach_fade_steps, 1.0))
+            fade = 1.0 if args.approach_fade_steps <= 0 else max(0.0, 1.0 - learners["cop"].steps / args.approach_fade_steps)
             weights = {role: learners[role].weights.copy() for role in ROLES}
             weights["cop"][APPROACH_PART] *= fade
             weights_t = {role: torch.as_tensor(weights[role], dtype=torch.float32, device=DEVICE) for role in ROLES}
@@ -775,6 +804,14 @@ def main():
                             rows = torch.nonzero(act_here & (ctrl == uid)).squeeze(1)
                             if rows.numel():
                                 out[rows] = league.by_uid[uid].act(o_raw[rows])
+                        if role == "runner":
+                            skill = runner_skill_t[match_t["runner"]]
+                            human = (skill < 1.0) & act_here & (ctrl != League.CURRENT)
+                            if last_runner_out is not None and bool(human.any()):
+                                hesitate = human & (torch.rand(len(idx), device=DEVICE) < 0.4 * (1.0 - skill))
+                                out[hesitate] = last_runner_out[hesitate]
+                                out[:, 0] = out[:, 0] + torch.where(human, torch.randn(len(idx), device=DEVICE) * 0.35 * (1.0 - skill), 0.0)
+                            last_runner_out = out.clone()
                     b["obs"][t], b["priv"][t], b["act"][t], b["nav"][t] = o_n, p_n, act, nav
                     b["valid"][t] = valid.float()
                     out[:, :learner.actor.n_gauss] = out[:, :learner.actor.n_gauss].clamp(-1.0, 1.0)
@@ -826,7 +863,9 @@ def main():
                                 outcomes["vs_past_cops"].append(float(survived))
                                 league.record(int(cop_ctrl), survived)
                         controllers[m] = league.pick()
+                        runner_skill[m] = draw_skill(controllers[m][0])
                     controllers_t = torch.as_tensor(controllers, device=DEVICE)
+                    runner_skill_t = torch.as_tensor(runner_skill, device=DEVICE)
                     past = {role: sorted(set(controllers[:, 0 if role == "runner" else 1].tolist()) - {League.CURRENT}) for role in ROLES}
                 raw_obs, raw_priv, flags = next_obs, next_priv, next_flags
 
