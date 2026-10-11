@@ -414,9 +414,7 @@ class GpuChase:
         damage = torch.where(hurt, torch.minimum(torch.full_like(speed, self.c["standoff_damage"] * self.dt), car.health[r]), 0.0)
         car.health[r] = (car.health[r] - damage).clamp(min=0.0)
         self.accum[r, 1] += damage
-        share = damage / near.sum(1).clamp(min=1)
-        credit = torch.where(near, share[:, None], 0.0).reshape(-1)
-        self.accum[:, 6] += credit
+        # Team credit only, never a cop's own hit (cops parked at standoff range to farm it).
         cops = (self.slot > 0) & self.active
         self.accum[:, 0] += torch.where(cops, self._m(damage), 0.0)
         self.stats[3] += damage.sum()

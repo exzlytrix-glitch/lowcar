@@ -2,9 +2,10 @@ class_name StandoffRule
 extends RefCounted
 ## "Slowing down means death": when the runner crawls (under SPEED) with a cop close by (within RANGE,
 ## centre to centre, about two car lengths) for more than GRACE seconds, it takes DAMAGE_PER_SECOND
-## until it gets moving or the cops are gone. The damage counts as the nearby cops', so cops learn that
-## closing in on a slowed runner pays, and the runner learns that standoffs always lose. The same rule
-## runs in chase training and in the lab, for the AI runner and for you.
+## until it gets moving or the cops are gone. In training it counts for the cops as a team, not as any
+## cop's own hit (paid for it per cop, they parked at exactly this range and let the rule do the work):
+## the runner learns that standoffs always lose, and the cops still have to ram a slowed runner to score.
+## The same rule runs in chase training and in the lab, for the AI runner and for you.
 
 const SPEED: float = 15.0 / 3.6
 const RANGE: float = 12.0

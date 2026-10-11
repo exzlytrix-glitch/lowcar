@@ -235,12 +235,10 @@ func physics_tick() -> void:
 	for slot: int in SLOTS:
 		if active[slot]:
 			agents[slot].physics_tick()
-	var before: float = runner.health
-	var near: Array = _standoff.tick(runner, _active_cops(), 1.0 / Engine.physics_ticks_per_second)
-	var damage: float = before - runner.health
-	if damage > 0.0:
-		for cop: LabVehicle in near:
-			_accum[cars.find(cop) * COMP_DIM + 6] += damage / near.size()
+	# Standoff damage hurts the runner and counts for the cops as a team (part 0, via the damage
+	# signal), but never as a cop's own hit: paid per own hit, cops learned to park at standoff range
+	# around a slowed runner and let the rule do the work instead of ramming it.
+	_standoff.tick(runner, _active_cops(), 1.0 / Engine.physics_ticks_per_second)
 
 
 ## Applies the actions for this match's slots, which start at `base` in the action array.
